@@ -7,20 +7,14 @@ import com.atguigu.system.service.IChatKnowledgeService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.atguigu.common.annotation.Log;
 import com.atguigu.common.core.controller.BaseController;
 import com.atguigu.common.core.domain.AjaxResult;
 import com.atguigu.common.enums.BusinessType;
 import com.atguigu.common.utils.poi.ExcelUtil;
 import com.atguigu.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 知识库管理Controller
@@ -101,5 +95,24 @@ public class ChatKnowledgeController extends BaseController
     public AjaxResult remove(@PathVariable Long[] knowledgeIds)
     {
         return toAjax(chatKnowledgeService.deleteChatKnowledgeByKnowledgeIds(knowledgeIds));
+    }
+
+    /**
+     * 根据项目id查询知识库列表
+     */
+    @PreAuthorize("@ss.hasPermi('chat:knowledge:queryVo')")
+    @GetMapping
+    public TableDataInfo getInfoByProjectId(ChatKnowledge chatKnowledge)
+    {
+        //分页查询
+        startPage();
+        List<ChatKnowledge> list = chatKnowledgeService.selectChatKnowledgeList(chatKnowledge);
+        return getDataTable(list);
+    }
+
+    @PostMapping("upload")
+    public AjaxResult upload(ChatKnowledge chatKnowledge, @RequestParam("file") MultipartFile file){
+        this.chatKnowledgeService.upload(chatKnowledge,file);
+        return success();
     }
 }
