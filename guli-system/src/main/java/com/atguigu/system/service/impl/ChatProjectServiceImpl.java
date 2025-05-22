@@ -2,7 +2,7 @@ package com.atguigu.system.service.impl;
 
 import java.util.List;
 import com.atguigu.common.utils.DateUtils;
-import com.atguigu.system.domain.ChatProject;
+import com.atguigu.guliai.domain.ChatProject;
 import com.atguigu.system.mapper.ChatProjectMapper;
 import com.atguigu.system.service.IChatProjectService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.atguigu.system.service;
 
-import com.atguigu.system.domain.ChatProject;
+import com.atguigu.guliai.domain.ChatProject;
 
 import java.util.List;
 

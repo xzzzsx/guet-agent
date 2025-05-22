@@ -64,6 +64,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.atguigu</groupId>
+            <artifactId>guli-common</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

@@ -2,7 +2,7 @@ package com.atguigu.web.controller.chat;
 
 import java.util.List;
 
-import com.atguigu.system.domain.ChatKnowledge;
+import com.atguigu.guliai.domain.ChatKnowledge;
 import com.atguigu.system.service.IChatKnowledgeService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
