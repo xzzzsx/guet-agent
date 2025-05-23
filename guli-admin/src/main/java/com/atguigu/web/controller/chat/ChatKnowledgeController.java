@@ -114,6 +114,7 @@ public class ChatKnowledgeController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('chat:knowledge:add')")
     @PostMapping("upload")
     public AjaxResult upload(ChatKnowledge chatKnowledge, @RequestParam("file") MultipartFile file){
         this.aiService.upload(chatKnowledge,file);

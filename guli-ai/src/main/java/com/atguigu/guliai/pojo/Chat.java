@@ -1,0 +1,29 @@
+package com.atguigu.guliai.pojo;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
+
+@Data
+@Document
+public class Chat {
+
+    @Schema(description = "聊天历史id")
+    @Id
+    private Long chatId;
+
+    @Schema(description = "项目id")
+    private Long projectId;
+
+    @Schema(description = "用户在该项目中的唯一标识")
+    private Long userId;
+
+    @Schema(description = "聊天历史标题")
+    private String title;
+
+    @Schema(description = "聊天历史创建时间")
+    private Date createTime;
+}

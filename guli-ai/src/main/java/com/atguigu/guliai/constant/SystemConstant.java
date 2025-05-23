@@ -6,4 +6,10 @@ public class SystemConstant {
 
     public static final String MODEL_TYPE_OPENAI = "openai";
     public static final String MODEL_TYPE_OLLAMA = "ollama";
+
+    public static final String CHAT_COLLECTION_PREFIX = "chat_";
+    public static final String MSG_COLLECTION_PREFIX = "message_";
+
+    public static final int CHAT_COLLECTION_COUNT = 100;
+    public static final int MSG_COLLECTION_COUNT = 1000;
 }

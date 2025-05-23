@@ -73,6 +73,12 @@
             <groupId>com.atguigu</groupId>
             <artifactId>guli-common</artifactId>
         </dependency>-->
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.8</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
