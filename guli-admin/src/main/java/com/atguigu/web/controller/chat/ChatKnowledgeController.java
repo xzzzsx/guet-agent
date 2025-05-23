@@ -2,7 +2,8 @@ package com.atguigu.web.controller.chat;
 
 import java.util.List;
 
-import com.atguigu.guliai.domain.ChatKnowledge;
+import com.atguigu.guliai.service.AiService;
+import com.atguigu.system.domain.ChatKnowledge;
 import com.atguigu.system.service.IChatKnowledgeService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,9 @@ public class ChatKnowledgeController extends BaseController
 {
     @Autowired
     private IChatKnowledgeService chatKnowledgeService;
+
+    @Autowired
+    private AiService aiService;
 
     /**
      * 查询知识库管理列表
@@ -112,7 +116,7 @@ public class ChatKnowledgeController extends BaseController
 
     @PostMapping("upload")
     public AjaxResult upload(ChatKnowledge chatKnowledge, @RequestParam("file") MultipartFile file){
-        this.chatKnowledgeService.upload(chatKnowledge,file);
+        this.aiService.upload(chatKnowledge,file);
         return success();
     }
 }

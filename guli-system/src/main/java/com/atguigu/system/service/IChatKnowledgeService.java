@@ -1,6 +1,6 @@
 package com.atguigu.system.service;
 
-import com.atguigu.guliai.domain.ChatKnowledge;
+import com.atguigu.system.domain.ChatKnowledge;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -61,10 +61,4 @@ public interface IChatKnowledgeService
      */
     public int deleteChatKnowledgeByKnowledgeId(Long knowledgeId);
 
-    /**
-     * 知识库上传
-     * @param chatKnowledge
-     * @param file
-     */
-    void upload(ChatKnowledge chatKnowledge, MultipartFile file);
 }

@@ -1,6 +1,6 @@
 package com.atguigu.system.mapper;
 
-import com.atguigu.guliai.domain.ChatKnowledge;
+import com.atguigu.system.domain.ChatKnowledge;
 
 import java.util.List;
 

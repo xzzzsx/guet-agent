@@ -39,7 +39,7 @@ public class QdrantVectorStoreConfig {
     public QdrantVectorStore ollamaVectorStore(OllamaEmbeddingModel ollamaEmbeddingModel) {
         //ollama本地模型
         return QdrantVectorStore.builder(qdrantClient, ollamaEmbeddingModel) // 传入必需参数
-                .collectionName(SystemConstant.VECTOR_STORE_OPENAI)
+                .collectionName(SystemConstant.VECTOR_STORE_OLLAMA)
                 .initializeSchema(properties.isInitializeSchema())
                 .build();
     }

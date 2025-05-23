@@ -67,8 +67,12 @@
 
         <dependency>
             <groupId>com.atguigu</groupId>
-            <artifactId>guli-common</artifactId>
+            <artifactId>guli-system</artifactId>
         </dependency>
+        <!--<dependency>
+            <groupId>com.atguigu</groupId>
+            <artifactId>guli-common</artifactId>
+        </dependency>-->
     </dependencies>
     <dependencyManagement>
         <dependencies>

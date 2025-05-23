@@ -1,10 +1,9 @@
 package com.atguigu.system.service.impl;
 
 import java.util.List;
+
 import com.atguigu.common.utils.DateUtils;
-import com.atguigu.guliai.service.AiService;
-import com.atguigu.guliai.utils.FileUtil;
-import com.atguigu.guliai.domain.ChatKnowledge;
+import com.atguigu.system.domain.ChatKnowledge;
 import com.atguigu.system.mapper.ChatKnowledgeMapper;
 import com.atguigu.system.service.IChatKnowledgeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,6 @@ public class ChatKnowledgeServiceImpl implements IChatKnowledgeService
 {
     @Autowired
     private ChatKnowledgeMapper chatKnowledgeMapper;
-
-    @Autowired
-    private AiService aiService;
 
     /**
      * 查询知识库管理
@@ -100,17 +96,4 @@ public class ChatKnowledgeServiceImpl implements IChatKnowledgeService
         return chatKnowledgeMapper.deleteChatKnowledgeByKnowledgeId(knowledgeId);
     }
 
-    @Override
-    public void upload(ChatKnowledge chatKnowledge, MultipartFile file) {
-        //从文件中把内容取出来,通过工具类
-        String content = FileUtil.getContentFromFile(file);
-
-        //保存知识库到本地数据库(mysql)
-        chatKnowledge.setFileName(file.getOriginalFilename());
-        chatKnowledge.setContent(content);
-        this.chatKnowledgeMapper.insertChatKnowledge(chatKnowledge);
-
-        //保存知识库到向量数据库:projectId knowledgeId content
-        this.aiService.saveKnowledge(chatKnowledge);
-    }
 }
