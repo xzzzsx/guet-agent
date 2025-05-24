@@ -19,7 +19,10 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,5 +92,13 @@ public class AiService {
         //保存到MongoDB,并指定保存到MongoDB的哪个集合中
         this.mongoTemplate.insert(chat, MongoUtil.getChatCollectionName(chatVo.getUserId()));
         return chatId.toString();
+    }
+
+    public List<Chat> listChat(Long projectId, Long userId) {
+        // 根据projectId和userId进行查询，并且根据创建时间降序排列
+        return this.mongoTemplate.find(Query.query(Criteria
+                        .where("projectId").is(projectId)
+                        .and("userId").is(userId)).with(Sort.by(Sort.Order.desc("createTime"))),
+                Chat.class, MongoUtil.getChatCollectionName(userId));
     }
 }

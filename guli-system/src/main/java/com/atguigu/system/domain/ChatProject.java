@@ -30,39 +30,39 @@ public class ChatProject extends BaseEntity
     @Excel(name = "具体模型：deepseek-r1:7B、gpt-3.5-turbo")
     private String model;
 
-    public void setProjectId(Long projectId) 
+    public void setProjectId(Long projectId)
     {
         this.projectId = projectId;
     }
 
-    public Long getProjectId() 
+    public Long getProjectId()
     {
         return projectId;
     }
-    public void setProjectName(String projectName) 
+    public void setProjectName(String projectName)
     {
         this.projectName = projectName;
     }
 
-    public String getProjectName() 
+    public String getProjectName()
     {
         return projectName;
     }
-    public void setType(String type) 
+    public void setType(String type)
     {
         this.type = type;
     }
 
-    public String getType() 
+    public String getType()
     {
         return type;
     }
-    public void setModel(String model) 
+    public void setModel(String model)
     {
         this.model = model;
     }
 
-    public String getModel() 
+    public String getModel()
     {
         return model;
     }
@@ -70,15 +70,15 @@ public class ChatProject extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("projectId", getProjectId())
-            .append("projectName", getProjectName())
-            .append("type", getType())
-            .append("model", getModel())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+                .append("projectId", getProjectId())
+                .append("projectName", getProjectName())
+                .append("type", getType())
+                .append("model", getModel())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .toString();
     }
 }

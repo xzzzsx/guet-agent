@@ -95,7 +95,7 @@ spring:
       base-url: https://api.xty.app
       api-key: sk-sugd0wT7yiRne4Tsjz9KIutWCEQYUTxyLUqC0ApA7pHQJqmY
     ollama:
-      # ollama config: qwen2:7b  llama3:latest
+      # ollama config: deepseek-r1:7b  llama3:latest
       base-url: http://localhost:11434
       embedding:
         model: deepseek-r1:7b

@@ -97,7 +97,7 @@ public class ChatProjectController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('chat:project:remove')")
     @Log(title = "项目配置", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{projectIds}")
+    @DeleteMapping("/{projectIds}")
     public AjaxResult remove(@PathVariable Long[] projectIds)
     {
         return toAjax(chatProjectService.deleteChatProjectByProjectIds(projectIds));
