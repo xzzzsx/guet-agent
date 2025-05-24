@@ -12,4 +12,6 @@ public class SystemConstant {
 
     public static final int CHAT_COLLECTION_COUNT = 100;
     public static final int MSG_COLLECTION_COUNT = 1000;
+
+    public static final int TOP_K = 3;
 }

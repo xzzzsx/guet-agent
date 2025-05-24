@@ -14,7 +14,7 @@ public class Message {
     @Id
     private Long id;
 
-    @Schema(description = "聊天历史id")
+    @Schema(description = "会话id")
     private Long chatId;
 
     @Schema(description = "问答类型：0-用户的提问  1-AI大模型的回答内容")
