@@ -260,7 +260,7 @@ public class AiService {
     }
 
     /**
-     * 删除聊天记录
+     * 删除当前会话及其消息集合
      * @param chatId
      * @param projectId
      */
@@ -274,5 +274,11 @@ public class AiService {
         this.mongoTemplate.remove(Query
                         .query(Criteria.where("chatId").is(chatId)),
                 Message.class, MongoUtil.getMsgCollectionName(chatId));
+
+        // 3. 删除当前会话的消息集合
+        String msgCollectionName = MongoUtil.getMsgCollectionName(chatId);
+        if(this.mongoTemplate.collectionExists(msgCollectionName)) {
+            this.mongoTemplate.dropCollection(msgCollectionName);
+        }
     }
 }
