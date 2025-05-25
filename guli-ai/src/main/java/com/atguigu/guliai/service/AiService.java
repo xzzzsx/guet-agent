@@ -11,6 +11,7 @@ import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.utils.FileUtil;
 import com.atguigu.guliai.utils.MongoUtil;
 import com.atguigu.guliai.vo.ChatVo;
+import com.atguigu.guliai.vo.MessageVo;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
 import com.atguigu.system.domain.ChatProject;
@@ -69,6 +70,11 @@ public class AiService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    /**
+     * 获取知识库列表
+     * @param chatKnowledge
+     * @param file
+     */
     @Transactional
     public void upload(ChatKnowledge chatKnowledge, MultipartFile file) {
         //从文件中把内容取出来,通过工具类
@@ -100,6 +106,11 @@ public class AiService {
 
     }
 
+    /**
+     * 创建会话
+     * @param chatVo
+     * @return
+     */
     public String createChat(ChatVo chatVo) {
         Chat chat = new Chat();
         BeanUtils.copyProperties(chatVo, chat);
@@ -114,6 +125,12 @@ public class AiService {
         return chatId.toString();
     }
 
+    /**
+     * 获取会话列表
+     * @param projectId
+     * @param userId
+     * @return
+     */
     public List<Chat> listChat(Long projectId, Long userId) {
         // 根据projectId和userId进行查询，并且根据创建时间降序排列
         return this.mongoTemplate.find(Query.query(Criteria
@@ -122,12 +139,21 @@ public class AiService {
                 Chat.class, MongoUtil.getChatCollectionName(projectId));
     }
 
+    /**
+     * 更新会话标题
+     * @param chatVo
+     */
     public void updateChat(ChatVo chatVo) {
         //根据id更新会话标题
         this.mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(chatVo.getChatId())),
                 Update.update("title", chatVo.getTitle()), MongoUtil.getChatCollectionName(chatVo.getProjectId()));
     }
 
+    /**
+     * 聊天
+     * @param queryVo
+     * @return
+     */
     public Flux<String> chatStream(QueryVo queryVo) {
         //1.记录用户的问题:MongoDB的对应的聊天的集合中
         String collectionName = MongoUtil.getMsgCollectionName(queryVo.getChatId());
@@ -198,11 +224,55 @@ public class AiService {
         Flux<String> result = null;
         if (type.equals(SystemConstant.MODEL_TYPE_OPENAI)) {
             result = this.openAiChatModel.stream(msgs.toArray(new org.springframework.ai.chat.messages.Message[]{}));
-        }else if (type.equals(SystemConstant.MODEL_TYPE_OLLAMA)){
+        } else if (type.equals(SystemConstant.MODEL_TYPE_OLLAMA)) {
             result = this.ollamaChatModel.stream(msgs.toArray(new org.springframework.ai.chat.messages.Message[]{}));
         }
 
         //5.ai模型的响应结果,如果直接从流中提取结果的话和页面从流中提取的结果 完全不一样
         return result;
+    }
+
+    /**
+     * 保存聊天记录
+     * @param messageVo
+     */
+    public void saveMsg(MessageVo messageVo) {
+        Message message = new Message();
+        //生成聊天消息的id
+        message.setId(IdUtil.getSnowflake().nextId());
+        message.setChatId(messageVo.getChatId());
+        message.setType(1);
+        message.setContent(messageVo.getContent());
+        message.setCreateTime(new Date());
+        this.mongoTemplate.insert(message, MongoUtil.getMsgCollectionName(messageVo.getChatId()));
+    }
+
+    /**
+     * 查询消息列表
+     * @param chatId
+     * @return
+     */
+    public List<Message> listMsg(Long chatId) {
+        return this.mongoTemplate.find(Query
+                        .query(Criteria.where("chatId").is(chatId))
+                        .with(Sort.by(Sort.Order.asc("createTime"))),
+                Message.class, MongoUtil.getMsgCollectionName(chatId));
+    }
+
+    /**
+     * 删除聊天记录
+     * @param chatId
+     * @param projectId
+     */
+    public void deleteChat(Long chatId, Long projectId) {
+        //1.删除MongoDB中的聊天记录
+        this.mongoTemplate.remove(Query
+                        .query(Criteria.where("chatId").is(chatId)),
+                Chat.class, MongoUtil.getChatCollectionName(projectId));
+
+        //2.删除该聊天相关的所有消息
+        this.mongoTemplate.remove(Query
+                        .query(Criteria.where("chatId").is(chatId)),
+                Message.class, MongoUtil.getMsgCollectionName(chatId));
     }
 }
