@@ -8,6 +8,8 @@ import com.atguigu.common.utils.SecurityUtils;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.pojo.Chat;
 import com.atguigu.guliai.pojo.Message;
+import com.atguigu.guliai.stategy.AiBean;
+import com.atguigu.guliai.stategy.AiOperator;
 import com.atguigu.guliai.utils.FileUtil;
 import com.atguigu.guliai.utils.MongoUtil;
 import com.atguigu.guliai.vo.ChatVo;
@@ -28,7 +30,10 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -40,26 +45,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
-public class AiService {
-
-    @Autowired
-    private QdrantVectorStore openAiVectorStore;
-
-    @Autowired
-    private QdrantVectorStore ollamaVectorStore;
-
-    @Autowired
-    private OpenAiChatModel openAiChatModel;
-
-    @Autowired
-    private OllamaChatModel ollamaChatModel;
+public class AiService implements ApplicationContextAware {
 
     @Autowired
     private ChatKnowledgeMapper chatKnowledgeMapper;
@@ -69,6 +60,30 @@ public class AiService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    private static final Map<String, AiOperator> MAP = new ConcurrentHashMap<>();
+
+    /**
+     * 统一获取spring容器中的AiOperator具体策略类,并放入map中方便切换
+     * @param applicationContext
+     * @throws BeansException
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        Map<String, Object> beanMap = applicationContext.getBeansWithAnnotation(AiBean.class);
+        if (CollectionUtils.isEmpty(beanMap)) {
+            return;
+        }
+        Collection<Object> beans = beanMap.values();
+        beans.forEach(bean -> {
+            AiBean aiBean = bean.getClass().getAnnotation(AiBean.class);
+            MAP.put(aiBean.value(), (AiOperator)bean);
+        });
+    }
+
+    public AiOperator getAiOperator(String type) {
+        return MAP.get(type);
+    }
 
     /**
      * 获取知识库列表
@@ -94,16 +109,8 @@ public class AiService {
         //根据projectId查询项目(模型的类型)
         ChatProject chatProject = this.chatProjectMapper.selectChatProjectByProjectId(chatKnowledge.getProjectId());
 
-        if (chatProject.getType().equals(SystemConstant.MODEL_TYPE_OPENAI)) {
-            //保存到向量数据库
-            this.openAiVectorStore.add(List.of(new Document(chatKnowledge.getContent(),
-                    Map.of("projectId", chatKnowledge.getProjectId().toString(), "knowledgeId", chatKnowledge.getKnowledgeId().toString()))));
-        } else if (chatProject.getType().equals(SystemConstant.MODEL_TYPE_OLLAMA)) {
-            //保存到向量数据库
-            this.ollamaVectorStore.add(List.of(new Document(chatKnowledge.getContent(),
-                    Map.of("projectId", chatKnowledge.getProjectId().toString(), "knowledgeId", chatKnowledge.getKnowledgeId().toString()))));
-        }
-
+        //向向量数据库初始化知识库
+        this.getAiOperator(chatProject.getType()).addDocs(chatKnowledge);
     }
 
     /**
@@ -174,26 +181,7 @@ public class AiService {
         }
         //获取项目所采用的模型类型
         String type = chatProject.getType();
-        List<Document> docs = null;//本地知识库的内容,要作为系统提示
-        if (type.equals(SystemConstant.MODEL_TYPE_OPENAI)) {
-            //如果是openAI模型
-            SearchRequest request = SearchRequest.builder()
-                    .query(queryVo.getMsg())  //相似度的查询条件
-                    .filterExpression(new FilterExpressionBuilder()
-                            .eq("projectId", queryVo.getProjectId()).build())  //只查询当前项目的知识库
-                    .topK(SystemConstant.TOP_K)  //相似度排名前3
-                    .build();
-            docs = this.openAiVectorStore.similaritySearch(request);
-        } else if (type.equals(SystemConstant.MODEL_TYPE_OLLAMA)) {
-            //如果是ollama模型
-            SearchRequest request = SearchRequest.builder()
-                    .query(queryVo.getMsg())  //相似度的查询条件
-                    .filterExpression(new FilterExpressionBuilder()
-                            .eq("projectId", queryVo.getProjectId()).build())  //只查询当前项目的知识库
-                    .topK(SystemConstant.TOP_K)  //相似度排名前3
-                    .build();
-            docs = this.ollamaVectorStore.similaritySearch(request);
-        }
+        List<Document> docs = this.getAiOperator(type).similaritySearch(queryVo);//本地知识库的内容,要作为系统提示
 
         //3.查询历史问答,作为联系上下文的提示
         List<Message> messages = this.mongoTemplate.find(Query
@@ -220,13 +208,12 @@ public class AiService {
             });
         }
 
-        //4.发送请求给大模型,获取问答结果
-        Flux<String> result = null;
-        if (type.equals(SystemConstant.MODEL_TYPE_OPENAI)) {
-            result = this.openAiChatModel.stream(msgs.toArray(new org.springframework.ai.chat.messages.Message[]{}));
-        } else if (type.equals(SystemConstant.MODEL_TYPE_OLLAMA)) {
-            result = this.ollamaChatModel.stream(msgs.toArray(new org.springframework.ai.chat.messages.Message[]{}));
-        }
+        // 4.发送请求给大模型，获取问答结果
+        // 将List转换为数组，确保类型一致
+        org.springframework.ai.chat.messages.Message[] messagesArray =
+                msgs.toArray(new org.springframework.ai.chat.messages.Message[0]);
+
+        Flux<String> result = this.getAiOperator(type).chat_stream(messagesArray);
 
         //5.ai模型的响应结果,如果直接从流中提取结果的话和页面从流中提取的结果 完全不一样
         return result;
@@ -281,4 +268,6 @@ public class AiService {
             this.mongoTemplate.dropCollection(msgCollectionName);
         }
     }
+
+
 }
