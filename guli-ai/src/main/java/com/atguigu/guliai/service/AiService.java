@@ -20,6 +20,7 @@ import com.atguigu.system.domain.ChatProject;
 import com.atguigu.system.mapper.ChatKnowledgeMapper;
 import com.atguigu.system.mapper.ChatProjectMapper;
 import com.atguigu.system.service.IChatKnowledgeService;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -60,6 +61,9 @@ public class AiService implements ApplicationContextAware {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private List<String> sensitiveWords;
 
     private static final Map<String, AiOperator> MAP = new ConcurrentHashMap<>();
 
@@ -171,6 +175,12 @@ public class AiService implements ApplicationContextAware {
         message.setChatId(queryVo.getChatId());
         message.setType(0);
         message.setContent(queryVo.getMsg());
+        // 检查敏感词
+        for (String word : sensitiveWords) {
+            if (message.getContent().contains(word)) {
+                throw new RuntimeException("消息包含敏感词: " + word);
+            }
+        }
         message.setCreateTime(new Date());
         this.mongoTemplate.insert(message, collectionName);
 
