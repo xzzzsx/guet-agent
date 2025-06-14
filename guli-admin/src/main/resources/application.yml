@@ -90,10 +90,18 @@ spring:
           # #连接池最大阻塞等待时间（使用负值表示没有限制）
           max-wait: -1ms
   ai:
-    openai:
+    openai: #openai配置
       # openai: gpt-3.5-turbo gpt-4o
-      base-url: https://api.xty.app
-      api-key: sk-sugd0wT7yiRne4Tsjz9KIutWCEQYUTxyLUqC0ApA7pHQJqmY
+      #      base-url: https://api.xty.app #api中转地址
+      base-url: https://dashscope.aliyuncs.com/compatible-mode #阿里百炼api地址
+      #      api-key: ${OPENAI_API_KEY}
+      api-key: ${ALIYUN_API_KEY} #读取环境变量中的阿里百炼 api key
+      chat:
+        options:
+          model: qwen-plus
+      embedding:
+        options:
+          model: text-embedding-v1 #如果要使用阿里云百炼,一定要手动配置这个embedding的model
     ollama:
       # ollama config: deepseek-r1:7b  llama3:latest
       base-url: http://localhost:11434
