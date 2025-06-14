@@ -16,37 +16,37 @@ import java.util.List;
 @Configuration
 public class AiAdvisorConfig {
 
-    /**
-     * 将openAiChatModel标记为主要的ChatModel bean
-     */
-    @Primary
-    @Bean
-    public ChatModel primaryChatModel(@Qualifier("openAiChatModel") ChatModel chatModel) {
-        return chatModel;
-    }
-
-    /**
-     * 创建并返回一个ChatClient的Spring Bean实例。
-     *
-     * @param builder 用于构建ChatClient实例的构建者对象
-     * @return 构建好的ChatClient实例
-     */
-    @Bean
-    public ChatClient chatClient(ChatClient.Builder builder,
-                                 Advisor simpleLoggerAdvisor) {
-        return builder
-                .defaultSystem(SystemConstant.SYSTEM_ROLE) // 设置默认的系统角色
-                .defaultAdvisors(simpleLoggerAdvisor) // 设置默认的Advisor
-                .build();
-    }
-
-    /**
-     * 创建并返回一个SimpleLoggerAdvisor的Spring Bean实例。
-     */
-    @Bean
-    public Advisor simpleLoggerAdvisor() {
-        return new SimpleLoggerAdvisor();
-    }
+    // /**
+    //  * 将openAiChatModel标记为主要的ChatModel bean
+    //  */
+    // @Primary
+    // @Bean
+    // public ChatModel primaryChatModel(@Qualifier("ollamaChatModel") ChatModel chatModel) {
+    //     return chatModel;
+    // }
+    //
+    // /**
+    //  * 创建并返回一个ChatClient的Spring Bean实例。
+    //  *
+    //  * @param builder 用于构建ChatClient实例的构建者对象
+    //  * @return 构建好的ChatClient实例
+    //  */
+    // @Bean
+    // public ChatClient chatClient(ChatClient.Builder builder,
+    //                              Advisor simpleLoggerAdvisor) {
+    //     return builder
+    //             .defaultSystem(SystemConstant.SYSTEM_ROLE) // 设置默认的系统角色
+    //             .defaultAdvisors(simpleLoggerAdvisor) // 设置默认的Advisor
+    //             .build();
+    // }
+    //
+    // /**
+    //  * 创建并返回一个SimpleLoggerAdvisor的Spring Bean实例。
+    //  */
+    // @Bean
+    // public Advisor simpleLoggerAdvisor() {
+    //     return new SimpleLoggerAdvisor();
+    // }
 
     /**
      * 创建并返回一个SafeGuardAdvisor的Spring Bean实例。

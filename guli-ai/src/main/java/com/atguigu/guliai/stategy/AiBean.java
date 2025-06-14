@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 @Component
 public @interface AiBean {
 
-    String value() default SystemConstant.MODEL_TYPE_OPENAI;
+    String value() default SystemConstant.MODEL_TYPE_OLLAMA;
 }
