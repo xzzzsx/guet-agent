@@ -4,6 +4,7 @@ import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
+import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -14,12 +15,16 @@ import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * openai的具体策略类
  */
 @AiBean(SystemConstant.MODEL_TYPE_OPENAI)
 public class OpenAiOperator implements AiOperator {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenAiOperator.class);
 
     @Autowired
     private QdrantVectorStore openAiVectorStore;
@@ -39,15 +44,28 @@ public class OpenAiOperator implements AiOperator {
                 .query(queryVo.getMsg())  //相似度的查询条件
                 .filterExpression(new FilterExpressionBuilder()
                         .eq("projectId", queryVo.getProjectId().toString()).build())  //只查询当前项目的知识库
-                .topK(SystemConstant.TOP_K)  //相似度排名前3
+                .topK(5)  //增加返回文档数量以提高召回率
+                .similarityThreshold(0.4f)  //降低阈值以捕获更多潜在相关文档
                 .build();
 
-        return this.openAiVectorStore.similaritySearch(request);
+        List<Document> documents = this.openAiVectorStore.similaritySearch(request);
+        // 记录检索结果日志
+        log.info("OpenAI向量检索: 查询词={}, 项目ID={}, 检索到{}条文档", 
+                queryVo.getMsg(), queryVo.getProjectId(), documents.size());
+        for (int i = 0; i < documents.size(); i++) {
+            Document doc = documents.get(i);
+            double score = doc.getScore() != null ? doc.getScore() : 0.0d;
+            log.info("文档{}: 相似度={}, 内容={}", i+1, score, doc.getText().substring(0, Math.min(100, doc.getText().length())));
+        }
+        return documents;
     }
 
     @Override
     public Flux<String> chat_stream(org.springframework.ai.chat.messages.Message[] messages) {
-        // 确保传入的数组类型正确
-        return openAiChatModel.stream(messages);
+        // 添加系统提示：基于提供的知识库内容回答问题
+        org.springframework.ai.chat.messages.Message[] newMessages = new org.springframework.ai.chat.messages.Message[messages.length + 1];
+        newMessages[0] = new SystemMessage("请严格基于提供的知识库内容回答问题，不要编造信息。");
+        System.arraycopy(messages, 0, newMessages, 1, messages.length);
+        return openAiChatModel.stream(newMessages);
     }
 }

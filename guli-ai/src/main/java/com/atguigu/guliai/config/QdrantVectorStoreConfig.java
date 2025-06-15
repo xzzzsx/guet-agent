@@ -26,21 +26,30 @@ public class QdrantVectorStoreConfig {
     @Autowired
     QdrantVectorStoreProperties properties;
 
+    /**
+     * OpenAi向量数据库
+     * @param openAiEmbeddingModel
+     * @return
+     */
     @Bean
     public QdrantVectorStore openAiVectorStore(OpenAiEmbeddingModel openAiEmbeddingModel) {
         //不同的大模型使用的维度是不同的
         return QdrantVectorStore.builder(qdrantClient, openAiEmbeddingModel) // 传入必需参数
                 .collectionName(SystemConstant.VECTOR_STORE_OPENAI)
-                .initializeSchema(properties.isInitializeSchema())
+                .initializeSchema(true)  // 强制初始化schema确保维度配置生效
                 .build();
     }
 
+    /**
+     * Ollama向量数据库
+     * @param ollamaEmbeddingModel
+     * @return
+     */
     @Bean
     public QdrantVectorStore ollamaVectorStore(OllamaEmbeddingModel ollamaEmbeddingModel) {
-        //ollama本地模型
         return QdrantVectorStore.builder(qdrantClient, ollamaEmbeddingModel) // 传入必需参数
                 .collectionName(SystemConstant.VECTOR_STORE_OLLAMA)
-                .initializeSchema(properties.isInitializeSchema())
+                .initializeSchema(true)  // 强制初始化schema确保维度配置生效
                 .build();
     }
 }
