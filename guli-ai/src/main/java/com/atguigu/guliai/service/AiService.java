@@ -5,11 +5,13 @@ import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import com.atguigu.common.core.domain.model.LoginUser;
 import com.atguigu.common.utils.SecurityUtils;
+import com.atguigu.common.utils.StringUtils;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.pojo.Chat;
 import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.stategy.AiBean;
 import com.atguigu.guliai.stategy.AiOperator;
+import com.atguigu.guliai.stategy.OllamaAiOperator;
 import com.atguigu.guliai.utils.FileUtil;
 import com.atguigu.guliai.utils.MongoUtil;
 import com.atguigu.guliai.vo.ChatVo;
@@ -20,6 +22,7 @@ import com.atguigu.system.domain.ChatProject;
 import com.atguigu.system.mapper.ChatKnowledgeMapper;
 import com.atguigu.system.mapper.ChatProjectMapper;
 import com.atguigu.system.service.IChatKnowledgeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.SystemMessage;
@@ -50,6 +53,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AiService implements ApplicationContextAware {
 
@@ -191,7 +195,11 @@ public class AiService implements ApplicationContextAware {
         }
         //获取项目所采用的模型类型
         String type = chatProject.getType();
-        List<Document> docs = this.getAiOperator(type).similaritySearch(queryVo);//本地知识库的内容,要作为系统提示
+        // 执行向量数据库检索并记录日志
+        AiOperator retrievalOperator = this.getAiOperator(type);
+        List<Document> docs = retrievalOperator.similaritySearch(queryVo);
+        log.info("文档检索完成 - 模型类型: {}", type);
+        log.info("检索到相关文档数量: {}", docs != null ? docs.size() : 0); //本地知识库的内容,要作为系统提示
 
         //3.查询历史问答,作为联系上下文的提示
         List<Message> messages = this.mongoTemplate.find(Query
@@ -208,14 +216,14 @@ public class AiService implements ApplicationContextAware {
                 } else { //如果type为1,则说明是AI的回答内容
                     msg = new AssistantMessage(m.getContent());
                 }
-                msgs.add(msg);
+                if (msg != null && StringUtils.hasText(msg.getText())) { msgs.add(msg); }
             });
         }
-        //系统提示: SystemMessage
-        if (!CollectionUtils.isEmpty(docs)) {
-            docs.forEach(doc -> {
-                msgs.add(new SystemMessage(doc.getText()));
-            });
+        // 设置检索到的文档
+        AiOperator aiOperator = this.getAiOperator(type);
+        log.info("使用AI模型类型: {}", type);
+        if (aiOperator instanceof OllamaAiOperator) {
+            ((OllamaAiOperator) aiOperator).setRetrievedDocuments(docs);
         }
 
         // 4.发送请求给大模型，获取问答结果
@@ -223,7 +231,7 @@ public class AiService implements ApplicationContextAware {
         org.springframework.ai.chat.messages.Message[] messagesArray =
                 msgs.toArray(new org.springframework.ai.chat.messages.Message[0]);
 
-        Flux<String> result = this.getAiOperator(type).chat_stream(messagesArray);
+        Flux<String> result = aiOperator.chat_stream(messagesArray);
 
         //5.ai模型的响应结果,如果直接从流中提取结果的话和页面从流中提取的结果 完全不一样
         return result;
