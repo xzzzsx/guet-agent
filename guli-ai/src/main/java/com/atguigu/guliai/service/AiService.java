@@ -12,6 +12,7 @@ import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.stategy.AiBean;
 import com.atguigu.guliai.stategy.AiOperator;
 import com.atguigu.guliai.stategy.OllamaAiOperator;
+import com.atguigu.guliai.stategy.OpenAiOperator;
 import com.atguigu.guliai.utils.FileUtil;
 import com.atguigu.guliai.utils.MongoUtil;
 import com.atguigu.guliai.vo.ChatVo;
@@ -224,6 +225,10 @@ public class AiService implements ApplicationContextAware {
         log.info("使用AI模型类型: {}", type);
         if (aiOperator instanceof OllamaAiOperator) {
             ((OllamaAiOperator) aiOperator).setRetrievedDocuments(docs);
+        }
+        // 为OpenAI模型设置检索到的文档
+        if (aiOperator instanceof OpenAiOperator) {
+            ((OpenAiOperator) aiOperator).setRetrievedDocuments(docs);
         }
 
         // 4.发送请求给大模型，获取问答结果
