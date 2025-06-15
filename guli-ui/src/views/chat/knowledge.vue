@@ -281,9 +281,9 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       console.log(row)
-      const knowledgeData = {knowledgeId: row.knowledgeId, projectId: row.projectId};
-      this.$modal.confirm('是否确认删除知识库编号为"' + knowledgeData.knowledgeId + '"的数据项？').then(function() {
-        return delKnowledge(knowledgeData);
+      const knowledgeId = row.knowledgeId;
+      this.$modal.confirm('是否确认删除知识库编号为"' + knowledgeId + '"的数据项？').then(function() {
+        return delKnowledge(knowledgeId);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");

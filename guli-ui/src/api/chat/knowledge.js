@@ -35,10 +35,9 @@ export function addKnowledge(data) {
 }
 
 // 删除知识库
-export function delKnowledge(data) {
+export function delKnowledge(knowledgeIds) {
   return request({
-    url: '/chat/knowledge',
-    method: 'delete',
-    data: data
+    url: `/chat/knowledge/${knowledgeIds}`,
+    method: 'delete'
   })
 }
