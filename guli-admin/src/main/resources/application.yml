@@ -107,8 +107,13 @@ spring:
       base-url: http://localhost:11434
       embedding:
         model: deepseek-r1:1.5b
+        dimensions: 1536 # ollama嵌入向量维度
       chat:
         model: deepseek-r1:1.5b
+        options:
+          temperature: 0.2  # 降低温度值抑制随机性
+          top-p: 0.2        # 控制多样性
+#          repeat_penalty: 1.5  # 添加重复惩罚系数
     vectorstore:
       qdrant:
         host: localhost

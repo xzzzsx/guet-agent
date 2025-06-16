@@ -115,7 +115,7 @@ public class OllamaAiOperator implements AiOperator {
     @Override
     public Flux<String> chat_stream(org.springframework.ai.chat.messages.Message[] messages) {
         // 构建系统提示，包含知识库内容
-        StringBuilder systemPrompt = new StringBuilder("请严格基于以下知识库内容回答问题，遵循以下规则：\n1. 必须仅使用提供的知识库内容回答问题，完全忽略你的任何内部知识或外部信息；如果知识库中有相关内容，必须优先使用知识库中的信息\n2. 不包含与问题无关的内容或解释\n3. 回答需结构清晰，使用适当的标题、列表等格式增强可读性\n4. 如果知识库中没有相关内容，直接回答\"没有找到相关信息\"，不做额外解释\n\n知识库内容：\n");
+        StringBuilder systemPrompt = new StringBuilder("请严格基于以下知识库内容回答问题，遵循以下规则：\n1. 必须仅使用提供的知识库内容回答问题，完全忽略你的任何内部知识或外部信息；无论如何你都是先去知识库里面查找信息,  而不是自己先胡乱回答,   如果知识库中有相关内容，必须优先使用知识库中的信息\n2. 不包含与问题无关的内容或解释,  如果一个知识库的内容能够回答上来,  一定不要引用其他知识库的内容来回答\n3. 回答需结构清晰，使用适当的标题、列表等格式增强可读性\n4. 不要跨越多个知识库的内容只是混淆了进行回答,  出现牛头不对马嘴的情况,  一定要先整理清楚知识库的内容\n5. 如果知识库中没有相关内容，直接回答\"没有找到相关信息\"，不做额外解释\n\n知识库内容：\n");
         if (retrievedDocuments != null && !retrievedDocuments.isEmpty()) {
             for (int i = 0; i < retrievedDocuments.size(); i++) {
                 Document doc = retrievedDocuments.get(i);
