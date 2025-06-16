@@ -103,12 +103,12 @@ spring:
         options:
           model: text-embedding-v1 #如果要使用阿里云百炼,一定要手动配置这个embedding的model
     ollama:
-      # ollama config: deepseek-r1:7b  llama3:latest
+      # ollama config: deepseek-r1:1.5b  llama3:latest
       base-url: http://localhost:11434
       embedding:
-        model: deepseek-r1:7b
+        model: deepseek-r1:1.5b
       chat:
-        model: deepseek-r1:7b
+        model: deepseek-r1:1.5b
     vectorstore:
       qdrant:
         host: localhost

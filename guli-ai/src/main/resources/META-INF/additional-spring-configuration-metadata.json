@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.ai.ollama.embedding.dimensions",
+      "type": "java.lang.String",
+      "description": "Description for spring.ai.ollama.embedding.dimensions."
+  }
+] }

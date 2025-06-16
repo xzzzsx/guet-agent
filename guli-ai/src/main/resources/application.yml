@@ -6,3 +6,9 @@ logging:
           chat:
             client:
               advisor: DEBUG
+
+spring:
+  ai:
+    ollama:
+      embedding:
+        dimensions: 3584 # ollama嵌入向量维度

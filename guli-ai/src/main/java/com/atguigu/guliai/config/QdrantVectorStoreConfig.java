@@ -48,7 +48,7 @@ public class QdrantVectorStoreConfig {
     @Bean
     public QdrantVectorStore ollamaVectorStore(OllamaEmbeddingModel ollamaEmbeddingModel) {
         return QdrantVectorStore.builder(qdrantClient, ollamaEmbeddingModel) // 传入必需参数
-                .collectionName(SystemConstant.VECTOR_STORE_OLLAMA)
+                // .collectionName(SystemConstant.VECTOR_STORE_OLLAMA)
                 .initializeSchema(true)  // 强制初始化schema确保维度配置生效
                 .build();
     }

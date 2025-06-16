@@ -26,8 +26,8 @@ public class ChatProject extends BaseEntity
     @Excel(name = "模型类型：ollama、openai")
     private String type;
 
-    /** 具体模型：deepseek-r1:7B、gpt-3.5-turbo */
-    @Excel(name = "具体模型：deepseek-r1:7B、gpt-3.5-turbo")
+    /** 具体模型：deepseek-r1:1.5B、gpt-3.5-turbo */
+    @Excel(name = "具体模型：deepseek-r1:1.5B、gpt-3.5-turbo")
     private String model;
 
     public void setProjectId(Long projectId)
