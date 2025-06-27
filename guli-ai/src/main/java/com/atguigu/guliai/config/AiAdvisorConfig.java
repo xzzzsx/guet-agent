@@ -1,17 +1,21 @@
 package com.atguigu.guliai.config;
 
 import com.atguigu.guliai.tools.CourseTools;
+import com.atguigu.guliai.tools.DatabaseQueryTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SafeGuardAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.model.ChatModel; // 新增导入
 import com.atguigu.guliai.constant.SystemConstant;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -33,14 +37,21 @@ public class AiAdvisorConfig {
      * @param courseTools 课程工具类实例
      * @return 构建好的ChatClient实例
      */
+    @Autowired
+    private DatabaseQueryTools databaseQueryTools;
+
     @Bean
-    public ChatClient chatClient(ChatClient.Builder builder,
-                               Advisor simpleLoggerAdvisor,
-                               CourseTools courseTools) {
-        return builder
+    public ChatClient serviceChatClient(OpenAiChatModel openAiChatModel,
+                                 Advisor simpleLoggerAdvisor,
+                                 CourseTools courseTools,
+                                 DatabaseQueryTools databaseQueryTools) {
+        List<Object> allTools = new ArrayList<>();
+        allTools.add(courseTools);
+        allTools.add(databaseQueryTools);
+        return ChatClient.builder(openAiChatModel)
                 .defaultSystem(SystemConstant.CUSTOMER_SERVICE_SYSTEM)
-                .defaultAdvisors(simpleLoggerAdvisor)
-                .defaultTools(courseTools)  // 确保课程工具已注册
+                .defaultAdvisors(new SimpleLoggerAdvisor())
+                .defaultTools(courseTools,databaseQueryTools)  // 包含课程工具和数据库查询工具
                 .build();
     }
     //

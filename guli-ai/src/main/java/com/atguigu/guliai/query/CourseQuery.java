@@ -1,4 +1,4 @@
-package com.atguigu.system.query;
+package com.atguigu.guliai.query;
 
 import lombok.Data;
 import org.springframework.ai.tool.annotation.ToolParam;

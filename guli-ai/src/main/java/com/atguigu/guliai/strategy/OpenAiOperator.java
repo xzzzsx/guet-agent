@@ -1,9 +1,11 @@
 package com.atguigu.guliai.strategy;
 
 import com.atguigu.common.utils.StringUtils;
+import com.atguigu.guliai.config.AiAdvisorConfig;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -32,6 +34,9 @@ public class OpenAiOperator implements AiOperator {
 
     @Autowired
     private OpenAiChatModel openAiChatModel;
+
+    @Autowired
+    private ChatClient chatClient;
 
     @Override
     public void addDocs(ChatKnowledge chatKnowledge) {
@@ -69,7 +74,7 @@ public class OpenAiOperator implements AiOperator {
 
     @Override
     public Flux<String> chat_stream(org.springframework.ai.chat.messages.Message[] messages) {
-        // 构建系统提示，包含知识库内容
+        /*// 构建系统提示，包含知识库内容
         StringBuilder systemPrompt = new StringBuilder("请严格基于以下知识库内容回答问题，遵循以下规则：\n1. 必须仅使用提供的知识库内容回答问题，完全忽略你的任何内部知识或外部信息；如果知识库中有相关内容，必须优先使用知识库中的信息\n2. 不包含与问题无关的内容或解释\n3. 回答需结构清晰，使用适当的标题、列表等格式增强可读性\n4. 如果知识库中没有相关内容，直接回答\"没有找到相关信息\"，不做额外解释\n\n知识库内容：\n");
         if (retrievedDocuments != null && !retrievedDocuments.isEmpty()) {
             for (int i = 0; i < retrievedDocuments.size(); i++) {
@@ -87,19 +92,25 @@ public class OpenAiOperator implements AiOperator {
         String systemPromptStr = systemPrompt.toString();
         if (!StringUtils.hasText(systemPromptStr)) {
             systemPromptStr = "请基于你的知识回答问题。\n";
-        }
-
-        // 构建消息数组，过滤null消息
-        List<org.springframework.ai.chat.messages.Message> validMessages = Arrays.stream(messages)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        List<org.springframework.ai.chat.messages.Message> messageList = new ArrayList<>();
-        messageList.add(new SystemMessage(systemPromptStr));
-        messageList.addAll(validMessages);
-        org.springframework.ai.chat.messages.Message[] newMessages = messageList.stream()
-                .filter(Objects::nonNull)
-                .toArray(org.springframework.ai.chat.messages.Message[]::new);
-        return openAiChatModel.stream(newMessages);
+        }*/
+        // 2.请求模型
+        return chatClient
+                .prompt()
+                .messages(messages)
+                .stream()
+                .content();
     }
-}
+        // // 构建消息数组，过滤null消息
+        // List<org.springframework.ai.chat.messages.Message> validMessages = Arrays.stream(messages)
+        //         .filter(Objects::nonNull)
+        //         .collect(Collectors.toList());
+        //
+        // List<org.springframework.ai.chat.messages.Message> messageList = new ArrayList<>();
+        // // messageList.add(new SystemMessage(systemPromptStr));
+        // messageList.addAll(validMessages);
+        // org.springframework.ai.chat.messages.Message[] newMessages = messageList.stream()
+        //         .filter(Objects::nonNull)
+        //         .toArray(org.springframework.ai.chat.messages.Message[]::new);
+        // return openAiChatModel.stream(newMessages);
+    }
+

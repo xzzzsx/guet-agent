@@ -1,17 +1,14 @@
 package com.atguigu.guliai.service;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import com.atguigu.common.core.domain.model.LoginUser;
 import com.atguigu.common.utils.SecurityUtils;
 import com.atguigu.common.utils.StringUtils;
-import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.pojo.Chat;
 import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.strategy.AiBean;
 import com.atguigu.guliai.strategy.AiOperator;
-import com.atguigu.guliai.strategy.OllamaAiOperator;
 import com.atguigu.guliai.strategy.OpenAiOperator;
 import com.atguigu.guliai.utils.FileUtil;
 import com.atguigu.guliai.utils.MongoUtil;
@@ -22,18 +19,10 @@ import com.atguigu.system.domain.ChatKnowledge;
 import com.atguigu.system.domain.ChatProject;
 import com.atguigu.system.mapper.ChatKnowledgeMapper;
 import com.atguigu.system.mapper.ChatProjectMapper;
-import com.atguigu.system.service.IChatKnowledgeService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.AssistantMessage;
-import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
-import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +41,6 @@ import reactor.core.publisher.Flux;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -199,8 +187,7 @@ public class AiService implements ApplicationContextAware {
         // 执行向量数据库检索并记录日志
         AiOperator retrievalOperator = this.getAiOperator(type);
         List<Document> docs = retrievalOperator.similaritySearch(queryVo);
-        log.info("文档检索完成 - 模型类型: {}", type);
-        log.info("检索到相关文档数量: {}", docs != null ? docs.size() : 0); //本地知识库的内容,要作为系统提示
+ //本地知识库的内容,要作为系统提示
 
         //3.查询历史问答,作为联系上下文的提示
         List<Message> messages = this.mongoTemplate.find(Query
@@ -222,10 +209,10 @@ public class AiService implements ApplicationContextAware {
         }
         // 设置检索到的文档
         AiOperator aiOperator = this.getAiOperator(type);
-        log.info("使用AI模型类型: {}", type);
-        if (aiOperator instanceof OllamaAiOperator) {
+        System.out.println("使用AI模型类型: " + type);
+        /*if (aiOperator instanceof OllamaAiOperator) {
             ((OllamaAiOperator) aiOperator).setRetrievedDocuments(docs);
-        }
+        }*/
         // 为OpenAI模型设置检索到的文档
         if (aiOperator instanceof OpenAiOperator) {
             ((OpenAiOperator) aiOperator).setRetrievedDocuments(docs);
