@@ -1,5 +1,6 @@
 package com.atguigu.guliai.config;
 
+import com.atguigu.guliai.tools.CourseTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SafeGuardAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -16,37 +17,40 @@ import java.util.List;
 @Configuration
 public class AiAdvisorConfig {
 
+    /**
+     * 将ollamaChatModel标记为主要的ChatModel bean
+     */
+    @Primary
+    @Bean
+    public ChatModel primaryChatModel(@Qualifier("ollamaChatModel") ChatModel chatModel) {
+        return chatModel;
+    }
     // /**
-    //  * 将openAiChatModel标记为主要的ChatModel bean
-    //  */
-    // @Primary
-    // @Bean
-    // public ChatModel primaryChatModel(@Qualifier("ollamaChatModel") ChatModel chatModel) {
-    //     return chatModel;
-    // }
+    /**
+     * 创建并返回一个ChatClient的Spring Bean实例。
+     *
+     * @param builder 用于构建ChatClient实例的构建者对象
+     * @param courseTools 课程工具类实例
+     * @return 构建好的ChatClient实例
+     */
+    @Bean
+    public ChatClient chatClient(ChatClient.Builder builder,
+                               Advisor simpleLoggerAdvisor,
+                               CourseTools courseTools) {
+        return builder
+                .defaultSystem(SystemConstant.CUSTOMER_SERVICE_SYSTEM)
+                .defaultAdvisors(simpleLoggerAdvisor)
+                .defaultTools(courseTools)  // 确保课程工具已注册
+                .build();
+    }
     //
-    // /**
-    //  * 创建并返回一个ChatClient的Spring Bean实例。
-    //  *
-    //  * @param builder 用于构建ChatClient实例的构建者对象
-    //  * @return 构建好的ChatClient实例
-    //  */
-    // @Bean
-    // public ChatClient chatClient(ChatClient.Builder builder,
-    //                              Advisor simpleLoggerAdvisor) {
-    //     return builder
-    //             .defaultSystem(SystemConstant.SYSTEM_ROLE) // 设置默认的系统角色
-    //             .defaultAdvisors(simpleLoggerAdvisor) // 设置默认的Advisor
-    //             .build();
-    // }
-    //
-    // /**
-    //  * 创建并返回一个SimpleLoggerAdvisor的Spring Bean实例。
-    //  */
-    // @Bean
-    // public Advisor simpleLoggerAdvisor() {
-    //     return new SimpleLoggerAdvisor();
-    // }
+    /**
+     * 创建并返回一个SimpleLoggerAdvisor的Spring Bean实例。
+     */
+    @Bean
+    public Advisor simpleLoggerAdvisor() {
+        return new SimpleLoggerAdvisor();
+    }
 
     /**
      * 创建并返回一个SafeGuardAdvisor的Spring Bean实例。

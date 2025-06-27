@@ -1,4 +1,4 @@
-package com.atguigu.guliai.stategy;
+package com.atguigu.guliai.strategy;
 
 import com.atguigu.guliai.constant.SystemConstant;
 import org.springframework.stereotype.Component;

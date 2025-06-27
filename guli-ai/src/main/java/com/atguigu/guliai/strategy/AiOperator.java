@@ -1,6 +1,5 @@
-package com.atguigu.guliai.stategy;
+package com.atguigu.guliai.strategy;
 
-import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
 import org.springframework.ai.document.Document;

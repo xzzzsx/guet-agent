@@ -1,8 +1,9 @@
-package com.atguigu.guliai.stategy;
-
+package com.atguigu.guliai.strategy;
 import com.atguigu.common.utils.StringUtils;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.pojo.Message;
+import com.atguigu.guliai.strategy.AiBean;
+import com.atguigu.guliai.strategy.AiOperator;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
 import com.huaban.analysis.jieba.JiebaSegmenter;
@@ -69,37 +70,37 @@ public class OllamaAiOperator implements AiOperator {
                 .collect(Collectors.toList());
         // 添加完整查询词作为关键词
         keywords.add(queryText);
-        
+
         // 输出关键词拆分日志
         log.info("查询关键词拆分: {}", keywords);
-        
+
         // 优化二次排序：优先包含核心关键词的文档，其次按相似度降序
         return documents.stream()
                 .peek(doc -> {
                     String docText = doc.getText().toLowerCase();
                     long matchCount = keywords.stream().filter(docText::contains).count();
-                    log.info("文档匹配: 内容前200字={}, 关键词匹配数={}", 
+                    log.info("文档匹配: 内容前200字={}, 关键词匹配数={}",
                             docText.substring(0, Math.min(200, docText.length())), matchCount);
                 })
                 .sorted((d1, d2) -> {
                     String d1Text = Objects.requireNonNull(d1.getText()).toLowerCase();
                     String d2Text = Objects.requireNonNull(d2.getText()).toLowerCase();
-                    
+
                     // 计算关键词匹配数量
                     long d1MatchCount = keywords.stream().filter(d1Text::contains).count();
                     long d2MatchCount = keywords.stream().filter(d2Text::contains).count();
-                    
+
                     if (d1MatchCount != d2MatchCount) {
                         return Long.compare(d2MatchCount, d1MatchCount);
                     }
-                    
+
                     // 检查是否包含完整查询词
                     boolean d1FullMatch = d1Text.contains(queryText);
                     boolean d2FullMatch = d2Text.contains(queryText);
                     if (d1FullMatch != d2FullMatch) {
                         return d2FullMatch ? 1 : -1;
                     }
-                    
+
                     // 最后按相似度排序
                     return Double.compare(d2.getScore(), d1.getScore());
                 })
@@ -127,7 +128,7 @@ public class OllamaAiOperator implements AiOperator {
         } else {
             systemPrompt.append("无相关知识库内容\n");
         }
-        
+
         // 确保系统提示不为空
         String systemPromptStr = systemPrompt.toString();
         if (!StringUtils.hasText(systemPromptStr)) {
@@ -138,13 +139,13 @@ public class OllamaAiOperator implements AiOperator {
         List<org.springframework.ai.chat.messages.Message> validMessages = Arrays.stream(messages)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        
+
         List<org.springframework.ai.chat.messages.Message> messageList = new ArrayList<>();
         messageList.add(new SystemMessage(systemPromptStr));
         messageList.addAll(validMessages);
         org.springframework.ai.chat.messages.Message[] newMessages = messageList.stream()
-            .filter(Objects::nonNull)
-            .toArray(org.springframework.ai.chat.messages.Message[]::new);
+                .filter(Objects::nonNull)
+                .toArray(org.springframework.ai.chat.messages.Message[]::new);
         return ollamaChatModel.stream(newMessages);
     }
 }

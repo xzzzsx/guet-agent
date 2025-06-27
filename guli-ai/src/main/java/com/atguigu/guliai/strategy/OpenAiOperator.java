@@ -1,8 +1,7 @@
-package com.atguigu.guliai.stategy;
+package com.atguigu.guliai.strategy;
 
 import com.atguigu.common.utils.StringUtils;
 import com.atguigu.guliai.constant.SystemConstant;
-import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
 import org.springframework.ai.chat.messages.SystemMessage;
