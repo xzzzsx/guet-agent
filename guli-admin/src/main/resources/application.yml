@@ -36,6 +36,8 @@ logging:
   level:
     com.atguigu: debug
     org.springframework: warn
+    # 关闭ChatResponseMetadata的调试日志
+    org.springframework.ai.chat.metadata: warn  # 添加这一行
     org.springframework.ai.chat: TRACE  # 添加这一行
     org.springframework.ai: debug # AI对话的日志级别
     com.itheima.ai: debug # 本项目的日志级别

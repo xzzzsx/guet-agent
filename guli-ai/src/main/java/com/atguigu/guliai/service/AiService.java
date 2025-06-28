@@ -201,10 +201,10 @@ public class AiService implements ApplicationContextAware {
 // 明确排除OpenAI模型的向量检索
         if (retrievalOperator instanceof OpenAiOperator) {
             log.info("OpenAI模型跳过向量数据库检索");
-        } else if (retrievalOperator != null) {
+        } else if (retrievalOperator instanceof OllamaAiOperator) {
             docs = retrievalOperator.similaritySearch(queryVo);
             log.debug("执行向量检索，获取{}条文档", docs.size());
-        } else {
+        }else {
             docs = new ArrayList<>();
             log.warn("未找到对应模型的检索实现，不执行向量数据库检索");
         }

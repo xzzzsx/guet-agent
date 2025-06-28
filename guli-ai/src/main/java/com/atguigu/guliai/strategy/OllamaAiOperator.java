@@ -74,7 +74,7 @@ public class OllamaAiOperator implements AiOperator {
         List<SegToken> segTokens = segmenter.process(queryText, JiebaSegmenter.SegMode.SEARCH);
         List<String> keywords = segTokens.stream()
                 .map(token -> token.word)  // 新版属性访问方式
-                .filter(word -> !word.isEmpty())
+                .filter(word -> !word.trim().isEmpty())
                 .collect(Collectors.toList());
         // 添加完整查询词作为关键词
         keywords.add(queryText);
