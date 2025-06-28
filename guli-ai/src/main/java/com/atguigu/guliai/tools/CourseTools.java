@@ -1,9 +1,8 @@
 package com.atguigu.guliai.tools;
-
+import com.atguigu.guliai.query.CourseQuery;
 import com.atguigu.system.domain.Course;
 import com.atguigu.system.domain.CourseReservation;
 import com.atguigu.system.domain.School;
-import com.atguigu.guliai.query.CourseQuery;
 import com.atguigu.system.service.ICourseReservationService;
 import com.atguigu.system.service.ICourseService;
 import com.atguigu.system.service.ISchoolService;
@@ -23,9 +22,8 @@ public class CourseTools {
     private final ISchoolService schoolService;
     private final ICourseReservationService courseReservationService;
 
-    @Tool(name = "queryCourse", description = "description = \"根据条件查询课程信息。当用户询问任何课程相关问题时，必须使用此工具查询数据库！参数示例：{type: '编程', edu: 4}\"")
-    public List<Course> queryCourse(
-            @ToolParam(required = false, description = "课程查询条件") CourseQuery query) {
+    @Tool(description = "根据条件查询课程")
+    public List<Course> queryCourse(@ToolParam(required = false, description = "课程查询条件") CourseQuery query) {
         QueryChainWrapper<Course> wrapper = courseService.query();
         wrapper
                 .eq(query.getType() != null, "type", query.getType())
@@ -38,18 +36,14 @@ public class CourseTools {
         return wrapper.list();
     }
 
-    @Tool(name = "querySchools", description = "查询所有校区信息")
-    public List<School> query_schools() {
+    @Tool(description = "查询所有校区")
+    public List<School> queryAllSchools() {
         return schoolService.list();
     }
 
-    @Tool(name = "generateReservation", description = "生成课程预约单")
+    @Tool(description = "生成课程预约单,并返回生成的预约单号")
     public String generateCourseReservation(
-            @ToolParam(description = "课程名称") String courseName,
-            @ToolParam(description = "学生姓名") String studentName,
-            @ToolParam(description = "联系方式") String contactInfo,
-            @ToolParam(description = "校区名称") String school,
-            @ToolParam(description = "备注", required = false) String remark) {
+            String courseName, String studentName, String contactInfo, String school, String remark) {
         CourseReservation courseReservation = new CourseReservation();
         courseReservation.setCourse(courseName);
         courseReservation.setStudentName(studentName);

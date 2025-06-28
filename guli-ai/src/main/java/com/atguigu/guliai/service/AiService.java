@@ -9,6 +9,7 @@ import com.atguigu.guliai.pojo.Chat;
 import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.strategy.AiBean;
 import com.atguigu.guliai.strategy.AiOperator;
+import com.atguigu.guliai.strategy.OllamaAiOperator;
 import com.atguigu.guliai.strategy.OpenAiOperator;
 import com.atguigu.guliai.utils.FileUtil;
 import com.atguigu.guliai.utils.MongoUtil;
@@ -19,8 +20,10 @@ import com.atguigu.system.domain.ChatKnowledge;
 import com.atguigu.system.domain.ChatProject;
 import com.atguigu.system.mapper.ChatKnowledgeMapper;
 import com.atguigu.system.mapper.ChatProjectMapper;
+import com.atguigu.guliai.constant.SystemConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.document.Document;
 import org.springframework.beans.BeanUtils;
@@ -62,6 +65,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 统一获取spring容器中的AiOperator具体策略类,并放入map中方便切换
+     *
      * @param applicationContext
      * @throws BeansException
      */
@@ -74,7 +78,7 @@ public class AiService implements ApplicationContextAware {
         Collection<Object> beans = beanMap.values();
         beans.forEach(bean -> {
             AiBean aiBean = bean.getClass().getAnnotation(AiBean.class);
-            MAP.put(aiBean.value(), (AiOperator)bean);
+            MAP.put(aiBean.value(), (AiOperator) bean);
         });
     }
 
@@ -84,6 +88,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 获取知识库列表
+     *
      * @param chatKnowledge
      * @param file
      */
@@ -112,6 +117,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 创建会话
+     *
      * @param chatVo
      * @return
      */
@@ -131,6 +137,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 获取会话列表
+     *
      * @param projectId
      * @param userId
      * @return
@@ -145,6 +152,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 更新会话标题
+     *
      * @param chatVo
      */
     public void updateChat(ChatVo chatVo) {
@@ -155,6 +163,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 聊天
+     *
      * @param queryVo
      * @return
      */
@@ -184,10 +193,22 @@ public class AiService implements ApplicationContextAware {
         }
         //获取项目所采用的模型类型
         String type = chatProject.getType();
-        // 执行向量数据库检索并记录日志
+        // 执行向量数据库检索并记录日志 - 仅对非OpenAI模型执行
+        // 修改后代码
+        List<Document> docs = new ArrayList<>();
         AiOperator retrievalOperator = this.getAiOperator(type);
-        List<Document> docs = retrievalOperator.similaritySearch(queryVo);
- //本地知识库的内容,要作为系统提示
+
+// 明确排除OpenAI模型的向量检索
+        if (retrievalOperator instanceof OpenAiOperator) {
+            log.info("OpenAI模型跳过向量数据库检索");
+        } else if (retrievalOperator != null) {
+            docs = retrievalOperator.similaritySearch(queryVo);
+            log.debug("执行向量检索，获取{}条文档", docs.size());
+        } else {
+            docs = new ArrayList<>();
+            log.warn("未找到对应模型的检索实现，不执行向量数据库检索");
+        }
+        //本地知识库的内容,要作为系统提示
 
         //3.查询历史问答,作为联系上下文的提示
         List<Message> messages = this.mongoTemplate.find(Query
@@ -196,6 +217,8 @@ public class AiService implements ApplicationContextAware {
 
         //组装上下文提示
         List<org.springframework.ai.chat.messages.Message> msgs = new ArrayList<>();
+        String systemPrompt = "你是一个AI助手，负责回答用户问题。当需要查询课程信息时，必须使用提供的工具进行查询。所有工具调用必须包含projectId参数，其值为当前项目ID。";
+        msgs.add(new SystemMessage(systemPrompt));
         if (!CollectionUtils.isEmpty(messages)) {//用户问答提示
             messages.forEach(m -> {
                 org.springframework.ai.chat.messages.Message msg = null;
@@ -204,19 +227,19 @@ public class AiService implements ApplicationContextAware {
                 } else { //如果type为1,则说明是AI的回答内容
                     msg = new AssistantMessage(m.getContent());
                 }
-                if (msg != null && StringUtils.hasText(msg.getText())) { msgs.add(msg); }
+                if (msg != null && StringUtils.hasText(msg.getText())) {
+                    msgs.add(msg);
+                }
             });
         }
         // 设置检索到的文档
         AiOperator aiOperator = this.getAiOperator(type);
         System.out.println("使用AI模型类型: " + type);
-        /*if (aiOperator instanceof OllamaAiOperator) {
+        // 仅对Ollama模型设置检索文档
+        if (aiOperator instanceof OllamaAiOperator) {
             ((OllamaAiOperator) aiOperator).setRetrievedDocuments(docs);
-        }*/
-        // 为OpenAI模型设置检索到的文档
-        if (aiOperator instanceof OpenAiOperator) {
-            ((OpenAiOperator) aiOperator).setRetrievedDocuments(docs);
         }
+        // OpenAI模型不使用向量数据库检索结果
 
         // 4.发送请求给大模型，获取问答结果
         // 将List转换为数组，确保类型一致
@@ -231,6 +254,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 保存聊天记录
+     *
      * @param messageVo
      */
     public void saveMsg(MessageVo messageVo) {
@@ -246,6 +270,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 查询消息列表
+     *
      * @param chatId
      * @return
      */
@@ -258,6 +283,7 @@ public class AiService implements ApplicationContextAware {
 
     /**
      * 删除当前会话及其消息集合
+     *
      * @param chatId
      * @param projectId
      */
@@ -274,7 +300,7 @@ public class AiService implements ApplicationContextAware {
 
         // 3. 删除当前会话的消息集合
         String msgCollectionName = MongoUtil.getMsgCollectionName(chatId);
-        if(this.mongoTemplate.collectionExists(msgCollectionName)) {
+        if (this.mongoTemplate.collectionExists(msgCollectionName)) {
             this.mongoTemplate.dropCollection(msgCollectionName);
         }
     }

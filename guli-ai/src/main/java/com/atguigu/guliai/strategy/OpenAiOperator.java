@@ -6,6 +6,7 @@ import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -46,6 +47,11 @@ public class OpenAiOperator implements AiOperator {
 
     @Override
     public List<Document> similaritySearch(QueryVo queryVo) {
+        return null;
+    }
+
+    /*@Override
+    public List<Document> similaritySearch(QueryVo queryVo) {
         SearchRequest request = SearchRequest.builder()
                 .query(queryVo.getMsg())  //相似度的查询条件
                 .filterExpression(new FilterExpressionBuilder()
@@ -61,10 +67,10 @@ public class OpenAiOperator implements AiOperator {
         for (int i = 0; i < documents.size(); i++) {
             Document doc = documents.get(i);
             double score = doc.getScore() != null ? doc.getScore() : 0.0d;
-            log.info("文档{}: 相似度={}, 内容={}", i+1, score, doc.getText().substring(0, Math.min(100, doc.getText().length())));
+            log.info("文档{}: projectId={}, 相似度={}, 内容={}", i+1, doc.getMetadata().get("projectId"), score, doc.getText().substring(0, Math.min(100, doc.getText().length())));
         }
         return documents;
-    }
+    }*/
 
     private List<Document> retrievedDocuments;
 
@@ -93,24 +99,36 @@ public class OpenAiOperator implements AiOperator {
         if (!StringUtils.hasText(systemPromptStr)) {
             systemPromptStr = "请基于你的知识回答问题。\n";
         }*/
-        // 2.请求模型
-        return chatClient
-                .prompt()
-                .messages(messages)
+        // 深度清理历史消息：移除所有系统消息（可能携带知识库内容）
+        List<Message> cleanedMessages = Arrays.stream(messages)
+                .filter(msg ->
+                        !(msg instanceof SystemMessage) ||
+                                !((SystemMessage) msg).getText().contains("知识库内容")
+                )
+                .collect(Collectors.toList());
+
+        // 添加当前系统角色提示（不含知识库）
+        cleanedMessages.add(0, new SystemMessage(SystemConstant.CUSTOMER_SERVICE_SYSTEM));
+        // 在OpenAiOperator中添加调试日志
+        cleanedMessages.forEach(msg ->
+                log.debug("Cleaned message: {} - {}", msg.getMessageType(), msg.getText())
+        );
+        return chatClient.prompt()
+                .messages(cleanedMessages.toArray(new Message[0]))
                 .stream()
                 .content();
     }
-        // // 构建消息数组，过滤null消息
-        // List<org.springframework.ai.chat.messages.Message> validMessages = Arrays.stream(messages)
-        //         .filter(Objects::nonNull)
-        //         .collect(Collectors.toList());
-        //
-        // List<org.springframework.ai.chat.messages.Message> messageList = new ArrayList<>();
-        // // messageList.add(new SystemMessage(systemPromptStr));
-        // messageList.addAll(validMessages);
-        // org.springframework.ai.chat.messages.Message[] newMessages = messageList.stream()
-        //         .filter(Objects::nonNull)
-        //         .toArray(org.springframework.ai.chat.messages.Message[]::new);
-        // return openAiChatModel.stream(newMessages);
-    }
+    // // 构建消息数组，过滤null消息
+    // List<org.springframework.ai.chat.messages.Message> validMessages = Arrays.stream(messages)
+    //         .filter(Objects::nonNull)
+    //         .collect(Collectors.toList());
+    //
+    // List<org.springframework.ai.chat.messages.Message> messageList = new ArrayList<>();
+    // // messageList.add(new SystemMessage(systemPromptStr));
+    // messageList.addAll(validMessages);
+    // org.springframework.ai.chat.messages.Message[] newMessages = messageList.stream()
+    //         .filter(Objects::nonNull)
+    //         .toArray(org.springframework.ai.chat.messages.Message[]::new);
+    // return openAiChatModel.stream(newMessages);
+}
 

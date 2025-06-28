@@ -51,14 +51,22 @@ public class OllamaAiOperator implements AiOperator {
                 .topK(10)  //增加返回文档数量确保相关内容被包含
                 .similarityThreshold(0.2f)  //降低阈值以提高召回率
                 .build();
+        log.info("应用项目ID过滤: {}", queryVo.getProjectId());
         List<Document> documents = this.ollamaVectorStore.similaritySearch(request);
+        // 手动过滤确保只返回当前项目的文档
+        documents = documents.stream()
+            .filter(doc -> {
+                String docProjectId = (String) doc.getMetadata().get("projectId");
+                return queryVo.getProjectId().toString().equals(docProjectId);
+            })
+            .collect(Collectors.toList());
         // 记录检索结果日志
         log.info("Ollama向量检索: 查询词={}, 项目ID={}, 检索到{}条文档", queryVo.getMsg(), queryVo.getProjectId(), documents.size());
         for (int i = 0; i < documents.size(); i++) {
             Document doc = documents.get(i);
             double score = doc.getScore() != null ? doc.getScore() : 0.0d;
             String content = doc.getText() != null ? doc.getText().substring(0, Math.min(200, doc.getText().length())) : "无内容";
-            log.info("文档{}: 相似度={}, 内容={}", i+1, score, content);
+            log.info("文档{}: projectId={}, 相似度={}, 内容={}", i+1, doc.getMetadata().get("projectId"), score, content);
         }
         String queryText = queryVo.getMsg().toLowerCase();
         // 使用Jieba分词提取中文关键词
