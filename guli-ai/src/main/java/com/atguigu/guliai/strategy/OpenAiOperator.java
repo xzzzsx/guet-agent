@@ -47,16 +47,11 @@ public class OpenAiOperator implements AiOperator {
 
     @Override
     public List<Document> similaritySearch(QueryVo queryVo) {
-        return null;
-    }
-
-    /*@Override
-    public List<Document> similaritySearch(QueryVo queryVo) {
         SearchRequest request = SearchRequest.builder()
                 .query(queryVo.getMsg())  //相似度的查询条件
                 .filterExpression(new FilterExpressionBuilder()
                         .eq("projectId", queryVo.getProjectId().toString()).build())  //只查询当前项目的知识库
-                .topK(10)  //增加返回文档数量以提高召回率
+                .topK(3)  //增加返回文档数量以提高召回率
                 .similarityThreshold(0.2f)  //降低阈值以捕获更多潜在相关文档
                 .build();
 
@@ -70,7 +65,7 @@ public class OpenAiOperator implements AiOperator {
             log.info("文档{}: projectId={}, 相似度={}, 内容={}", i+1, doc.getMetadata().get("projectId"), score, doc.getText().substring(0, Math.min(100, doc.getText().length())));
         }
         return documents;
-    }*/
+    }
 
     private List<Document> retrievedDocuments;
 
