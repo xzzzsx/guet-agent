@@ -1,4 +1,5 @@
 package com.atguigu.guliai.strategy;
+
 import com.atguigu.common.utils.StringUtils;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.pojo.Message;
@@ -6,12 +7,10 @@ import com.atguigu.guliai.strategy.AiBean;
 import com.atguigu.guliai.strategy.AiOperator;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
-import com.huaban.analysis.jieba.JiebaSegmenter;
-import com.huaban.analysis.jieba.SegToken;
-import org.springframework.ai.chat.messages.SystemMessage;
-import org.springframework.ai.document.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.ai.document.Document;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
@@ -45,21 +44,21 @@ public class OllamaAiOperator implements AiOperator {
     @Override
     public List<Document> similaritySearch(QueryVo queryVo) {
         SearchRequest request = SearchRequest.builder()
-                .query(queryVo.getMsg())  //相似度的查询条件
+                .query(queryVo.getMsg())  // 相似度的查询条件
                 .filterExpression(new FilterExpressionBuilder()
-                        .eq("projectId", queryVo.getProjectId().toString()).build())  //只查询当前项目的知识库
-                .topK(10)  //增加返回文档数量确保相关内容被包含
-                .similarityThreshold(0.2f)  //降低阈值以提高召回率
+                        .eq("projectId", queryVo.getProjectId().toString()).build())  // 只查询当前项目的知识库
+                .topK(10)  // 增加返回文档数量确保相关内容被包含
+                .similarityThreshold(0.2f)  // 降低阈值以提高召回率
                 .build();
         log.info("应用项目ID过滤: {}", queryVo.getProjectId());
         List<Document> documents = this.ollamaVectorStore.similaritySearch(request);
         // 手动过滤确保只返回当前项目的文档
         documents = documents.stream()
-            .filter(doc -> {
-                String docProjectId = (String) doc.getMetadata().get("projectId");
-                return queryVo.getProjectId().toString().equals(docProjectId);
-            })
-            .collect(Collectors.toList());
+                .filter(doc -> {
+                    String docProjectId = (String) doc.getMetadata().get("projectId");
+                    return queryVo.getProjectId().toString().equals(docProjectId);
+                })
+                .collect(Collectors.toList());
         // 记录检索结果日志
         log.info("Ollama向量检索: 查询词={}, 项目ID={}, 检索到{}条文档", queryVo.getMsg(), queryVo.getProjectId(), documents.size());
         for (int i = 0; i < documents.size(); i++) {
@@ -68,51 +67,9 @@ public class OllamaAiOperator implements AiOperator {
             String content = doc.getText() != null ? doc.getText().substring(0, Math.min(200, doc.getText().length())) : "无内容";
             log.info("文档{}: projectId={}, 相似度={}, 内容={}", i+1, doc.getMetadata().get("projectId"), score, content);
         }
-        String queryText = queryVo.getMsg().toLowerCase();
-        // 使用Jieba分词提取中文关键词
-        JiebaSegmenter segmenter = new JiebaSegmenter();
-        List<SegToken> segTokens = segmenter.process(queryText, JiebaSegmenter.SegMode.SEARCH);
-        List<String> keywords = segTokens.stream()
-                .map(token -> token.word)  // 新版属性访问方式
-                .filter(word -> !word.trim().isEmpty())
-                .collect(Collectors.toList());
-        // 添加完整查询词作为关键词
-        keywords.add(queryText);
 
-        // 输出关键词拆分日志
-        log.info("查询关键词拆分: {}", keywords);
-
-        // 优化二次排序：优先包含核心关键词的文档，其次按相似度降序
-        return documents.stream()
-                .peek(doc -> {
-                    String docText = doc.getText().toLowerCase();
-                    long matchCount = keywords.stream().filter(docText::contains).count();
-                    log.info("文档匹配: 内容前200字={}, 关键词匹配数={}",
-                            docText.substring(0, Math.min(200, docText.length())), matchCount);
-                })
-                .sorted((d1, d2) -> {
-                    String d1Text = Objects.requireNonNull(d1.getText()).toLowerCase();
-                    String d2Text = Objects.requireNonNull(d2.getText()).toLowerCase();
-
-                    // 计算关键词匹配数量
-                    long d1MatchCount = keywords.stream().filter(d1Text::contains).count();
-                    long d2MatchCount = keywords.stream().filter(d2Text::contains).count();
-
-                    if (d1MatchCount != d2MatchCount) {
-                        return Long.compare(d2MatchCount, d1MatchCount);
-                    }
-
-                    // 检查是否包含完整查询词
-                    boolean d1FullMatch = d1Text.contains(queryText);
-                    boolean d2FullMatch = d2Text.contains(queryText);
-                    if (d1FullMatch != d2FullMatch) {
-                        return d2FullMatch ? 1 : -1;
-                    }
-
-                    // 最后按相似度排序
-                    return Double.compare(d2.getScore(), d1.getScore());
-                })
-                .toList();
+        // 直接返回检索结果，取消二次检索（分词和关键词匹配排序）
+        return documents;
     }
 
     private List<Document> retrievedDocuments;
