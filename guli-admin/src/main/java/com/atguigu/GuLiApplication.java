@@ -7,11 +7,18 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 /**
  * 启动程序
- * 
+ *
  * @author lixianfeng
  */
 @MapperScan("com.atguigu.system.mapper")
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+@SpringBootApplication(
+        exclude = { DataSourceAutoConfiguration.class },
+        scanBasePackages = {
+                "com.atguigu",
+                "com.atguigu.guliai",
+                "com.atguigu.guliai.agent"  // 显式添加agent包的扫描
+        }
+)
 public class GuLiApplication
 {
     public static void main(String[] args)

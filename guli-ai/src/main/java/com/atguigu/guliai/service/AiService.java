@@ -61,6 +61,9 @@ public class AiService implements ApplicationContextAware {
     @Autowired
     private List<String> sensitiveWords;
 
+    @Autowired
+    private AgentCoordinatorService agentCoordinatorService; // 新增注入
+
     private static final Map<String, AiOperator> MAP = new ConcurrentHashMap<>();
 
     /**
@@ -162,12 +165,31 @@ public class AiService implements ApplicationContextAware {
     }
 
     /**
-     * 聊天
+     * 直接模型处理（绕过智能体路由系统）
+     * 用于处理RouteAgent回退请求或其他非路由场景
      *
-     * @param queryVo
-     * @return
+     * @param queryVo 查询参数
+     * @return 模型响应流
      */
-    public Flux<String> chatStream(QueryVo queryVo) {
+    public Flux<String> directModelProcessing(QueryVo queryVo) {
+        log.info("【直接模型处理】开始处理问题，绕过路由系统: {}", queryVo.getMsg());
+
+        // 项目验证（复用原逻辑）
+        if (queryVo.getProjectId() == null) {
+            throw new IllegalArgumentException("项目ID不能为空");
+        }
+        ChatProject project = chatProjectMapper.selectChatProjectByProjectId(queryVo.getProjectId());
+        if (project == null) {
+            throw new RuntimeException("找不到ID为 " + queryVo.getProjectId() + " 的项目");
+        }
+
+        return this.processChatRequest(queryVo, project.getType());
+    }
+
+    /**
+     * 核心聊天请求处理方法（无路由逻辑）
+     */
+    private Flux<String> processChatRequest(QueryVo queryVo, String modelType) {
         //1.记录用户的问题:MongoDB的对应的聊天的集合中
         String collectionName = MongoUtil.getMsgCollectionName(queryVo.getChatId());
         Message message = new Message();
@@ -191,24 +213,21 @@ public class AiService implements ApplicationContextAware {
         if (chatProject == null) {
             throw new RuntimeException("对应的项目不存在!");
         }
-        //获取项目所采用的模型类型
-        String type = chatProject.getType();
-        // 执行向量数据库检索并记录日志 - 仅对非OpenAI模型执行
-        // 修改后代码
-        List<Document> docs = new ArrayList<>();
-        AiOperator retrievalOperator = this.getAiOperator(type);
 
-// 明确排除OpenAI模型的向量检索
+        // 执行向量数据库检索
+        List<Document> docs = new ArrayList<>();
+        AiOperator retrievalOperator = this.getAiOperator(modelType);
+
+        // 明确排除OpenAI模型的向量检索
         if (retrievalOperator instanceof OpenAiOperator) {
             log.info("OpenAI模型跳过向量数据库检索");
         } else if (retrievalOperator instanceof OllamaAiOperator) {
             docs = retrievalOperator.similaritySearch(queryVo);
             log.debug("执行向量检索，获取{}条文档", docs.size());
-        }else {
+        } else {
             docs = new ArrayList<>();
             log.warn("未找到对应模型的检索实现，不执行向量数据库检索");
         }
-        //本地知识库的内容,要作为系统提示
 
         //3.查询历史问答,作为联系上下文的提示
         List<Message> messages = this.mongoTemplate.find(Query
@@ -233,8 +252,8 @@ public class AiService implements ApplicationContextAware {
             });
         }
         // 设置检索到的文档
-        AiOperator aiOperator = this.getAiOperator(type);
-        System.out.println("使用AI模型类型: " + type);
+        AiOperator aiOperator = this.getAiOperator(modelType);
+        System.out.println("使用AI模型类型: " + modelType);
         // 仅对Ollama模型设置检索文档
         if (aiOperator instanceof OllamaAiOperator) {
             ((OllamaAiOperator) aiOperator).setRetrievedDocuments(docs);
@@ -246,10 +265,40 @@ public class AiService implements ApplicationContextAware {
         org.springframework.ai.chat.messages.Message[] messagesArray =
                 msgs.toArray(new org.springframework.ai.chat.messages.Message[0]);
 
-        Flux<String> result = aiOperator.chat_stream(messagesArray);
+        return aiOperator.chat_stream(messagesArray);
+    }
 
-        //5.ai模型的响应结果,如果直接从流中提取结果的话和页面从流中提取的结果 完全不一样
-        return result;
+    /**
+     * 聊天
+     *
+     * @param queryVo
+     * @return
+     */
+    public Flux<String> chatStream(QueryVo queryVo) {
+
+        // 添加项目ID空值检查
+        if (queryVo.getProjectId() == null) {
+            throw new IllegalArgumentException("项目ID不能为空");
+        }
+
+        // 只对OpenAI项目启用智能体路由
+        ChatProject project = chatProjectMapper.selectChatProjectByProjectId(queryVo.getProjectId());
+        if (project == null) {
+            throw new RuntimeException("找不到ID为 " + queryVo.getProjectId() + " 的项目");
+        }
+
+        if (SystemConstant.MODEL_TYPE_OPENAI.equals(project.getType())) {
+            log.info("【智能体路由】OpenAI项目进入路由系统");
+            return agentCoordinatorService.coordinate(
+                    queryVo.getMsg(),
+                    queryVo.getChatId().toString(),
+                    queryVo.getProjectId() // 直接使用请求中的 projectId
+            );
+        }
+
+        // 非OpenAI项目直接处理
+        log.info("【直接模型处理】非OpenAI项目直接处理");
+        return this.directModelProcessing(queryVo);
     }
 
     /**
