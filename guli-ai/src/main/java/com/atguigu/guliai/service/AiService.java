@@ -171,11 +171,7 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
     }
 
     /**
-     * 直接模型处理（绕过智能体路由系统）
-     * 用于处理RouteAgent回退请求或其他非路由场景
-     *
-     * @param queryVo 查询参数
-     * @return 模型响应流
+     * 直接模型处理（移除内部的消息保存）
      */
     public Flux<String> directModelProcessing(QueryVo queryVo) {
         log.info("【直接模型处理】开始处理问题，绕过路由系统: {}", queryVo.getMsg());
@@ -189,31 +185,15 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
             throw new RuntimeException("找不到ID为 " + queryVo.getProjectId() + " 的项目");
         }
 
+        // +++ 移除原有的用户消息保存代码 +++
+
         return this.processChatRequest(queryVo, project.getType());
     }
 
-    /**
-     * 核心聊天请求处理方法（无路由逻辑）
-     */
     private Flux<String> processChatRequest(QueryVo queryVo, String modelType) {
-        //1.记录用户的问题:MongoDB的对应的聊天的集合中
-        String collectionName = MongoUtil.getMsgCollectionName(queryVo.getChatId());
-        Message message = new Message();
-        //聊天的id
-        long msgId = IdUtil.getSnowflake().nextId();
-        message.setId(msgId);
-        message.setChatId(queryVo.getChatId());
-        message.setType(0);
-        message.setContent(queryVo.getMsg());
-        // 检查敏感词
-        for (String word : sensitiveWords) {
-            if (message.getContent().contains(word)) {
-                throw new RuntimeException("消息包含敏感词: " + word);
-            }
-        }
-        message.setCreateTime(new Date());
-        this.mongoTemplate.insert(message, collectionName);
+        // +++ 此处已移除用户消息保存代码 +++
 
+        // 仅保留以下逻辑：
         //2.查询本地知识库:Qdrant
         ChatProject chatProject = this.chatProjectMapper.selectChatProjectByProjectId(queryVo.getProjectId());
         if (chatProject == null) {
@@ -235,7 +215,8 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
             log.warn("未找到对应模型的检索实现，不执行向量数据库检索");
         }
 
-        //3.查询历史问答,作为联系上下文的提示
+        //3.查询历史问答（包含刚保存的用户消息）
+        String collectionName = MongoUtil.getMsgCollectionName(queryVo.getChatId());
         List<Message> messages = this.mongoTemplate.find(Query
                 .query(Criteria.where("chatId").is(queryVo.getChatId()))
                 .with(Sort.by(Sort.Order.asc("createTime"))), Message.class, collectionName);
@@ -291,6 +272,9 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
             return Flux.error(new RuntimeException("找不到ID为 " + queryVo.getProjectId() + " 的项目"));
         }
 
+        // +++ 新增：在路由前保存用户消息 +++
+        saveUserMessage(queryVo); // 确保用户提问消息存入MongoDB
+
         // 只对OpenAI项目启用智能体路由
         if (SystemConstant.MODEL_TYPE_OPENAI.equals(project.getType())) {
             log.info("【智能体路由】OpenAI项目进入路由系统");
@@ -304,6 +288,30 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
         // 非OpenAI项目直接处理
         log.info("【直接模型处理】非OpenAI项目直接处理");
         return this.directModelProcessing(queryVo);
+    }
+
+    /**
+     * 保存用户消息到MongoDB（新增方法）
+     * @param queryVo 查询参数
+     */
+    private void saveUserMessage(QueryVo queryVo) {
+        String collectionName = MongoUtil.getMsgCollectionName(queryVo.getChatId());
+        Message message = new Message();
+        message.setId(IdUtil.getSnowflake().nextId());
+        message.setChatId(queryVo.getChatId());
+        message.setType(0); // 用户消息类型
+        message.setContent(queryVo.getMsg());
+        message.setCreateTime(new Date());
+
+        // 检查敏感词
+        for (String word : sensitiveWords) {
+            if (message.getContent().contains(word)) {
+                throw new RuntimeException("消息包含敏感词: " + word);
+            }
+        }
+
+        mongoTemplate.insert(message, collectionName);
+        log.info("保存用户消息到集合 {}: {}", collectionName, queryVo.getMsg());
     }
 
     /**
