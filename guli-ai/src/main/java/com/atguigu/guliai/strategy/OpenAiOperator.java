@@ -7,6 +7,7 @@ import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -14,6 +15,7 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import reactor.core.publisher.Flux;
 
 import java.util.*;
@@ -27,6 +29,17 @@ import org.slf4j.LoggerFactory;
  */
 @AiBean(SystemConstant.MODEL_TYPE_OPENAI)
 public class OpenAiOperator implements AiOperator {
+
+    @Autowired
+    public OpenAiOperator(
+            @Lazy ChatClient chatClient, // 关键修改：使用@Lazy延迟注入
+            QdrantVectorStore openAiVectorStore,
+            OpenAiChatModel openAiChatModel
+    ) {
+        this.chatClient = chatClient;
+        this.openAiVectorStore = openAiVectorStore;
+        this.openAiChatModel = openAiChatModel;
+    }
 
     private static final Logger log = LoggerFactory.getLogger(OpenAiOperator.class);
 
@@ -75,39 +88,27 @@ public class OpenAiOperator implements AiOperator {
 
     @Override
     public Flux<String> chat_stream(org.springframework.ai.chat.messages.Message[] messages) {
-        /*// 构建系统提示，包含知识库内容
-        StringBuilder systemPrompt = new StringBuilder("请严格基于以下知识库内容回答问题，遵循以下规则：\n1. 必须仅使用提供的知识库内容回答问题，完全忽略你的任何内部知识或外部信息；如果知识库中有相关内容，必须优先使用知识库中的信息\n2. 不包含与问题无关的内容或解释\n3. 回答需结构清晰，使用适当的标题、列表等格式增强可读性\n4. 如果知识库中没有相关内容，直接回答\"没有找到相关信息\"，不做额外解释\n\n知识库内容：\n");
-        if (retrievedDocuments != null && !retrievedDocuments.isEmpty()) {
-            for (int i = 0; i < retrievedDocuments.size(); i++) {
-                Document doc = retrievedDocuments.get(i);
-                // 过滤null文档和空内容
-                if (doc != null && StringUtils.hasText(doc.getText())) {
-                    systemPrompt.append("文档").append(i+1).append(": ").append(doc.getText()).append("\n\n");
-                }
-            }
-        } else {
-            systemPrompt.append("无相关知识库内容\n");
+        // 只保留最新的用户消息
+        Optional<Message> latestUserMessage = Arrays.stream(messages)
+                .filter(msg -> msg.getMessageType() == MessageType.USER)
+                .reduce((first, second) -> second); // 获取最后一个用户消息
+
+        List<Message> cleanedMessages = new ArrayList<>();
+
+        // 添加路由智能体提示词
+        cleanedMessages.add(0, new SystemMessage(SystemConstant.ROUTE_AGENT_PROMPT));
+
+        // 添加最新的用户消息（如果存在）
+        latestUserMessage.ifPresent(cleanedMessages::add);
+
+        // 调试日志
+        if (log.isDebugEnabled()) {
+            cleanedMessages.forEach(msg ->
+                    log.debug("Final message: {} - {}", msg.getMessageType(),
+                            msg.getText().substring(0, Math.min(100, msg.getText().length())))
+            );
         }
 
-        // 确保系统提示不为空
-        String systemPromptStr = systemPrompt.toString();
-        if (!StringUtils.hasText(systemPromptStr)) {
-            systemPromptStr = "请基于你的知识回答问题。\n";
-        }*/
-        // 深度清理历史消息：移除所有系统消息（可能携带知识库内容）
-        List<Message> cleanedMessages = Arrays.stream(messages)
-                .filter(msg ->
-                        !(msg instanceof SystemMessage) ||
-                                !((SystemMessage) msg).getText().contains("知识库内容")
-                )
-                .collect(Collectors.toList());
-
-        // 添加当前系统角色提示（不含知识库）
-        cleanedMessages.add(0, new SystemMessage(SystemConstant.CUSTOMER_SERVICE_SYSTEM));
-        // 在OpenAiOperator中添加调试日志
-        cleanedMessages.forEach(msg ->
-                log.debug("Cleaned message: {} - {}", msg.getMessageType(), msg.getText())
-        );
         return chatClient.prompt()
                 .messages(cleanedMessages.toArray(new Message[0]))
                 .stream()

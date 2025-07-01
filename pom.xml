@@ -41,6 +41,11 @@
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-core</artifactId>
+                <version>1.0.0-M6</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -244,12 +249,9 @@
 
     <repositories>
         <repository>
-            <id>public</id>
-            <name>aliyun nexus</name>
+            <id>aliyun-public</id>
+            <name>Aliyun Public</name>
             <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
         </repository>
         <repository>
             <id>spring-milestones</id>

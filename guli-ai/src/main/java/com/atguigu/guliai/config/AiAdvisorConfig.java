@@ -1,12 +1,16 @@
 package com.atguigu.guliai.config;
 
+import com.atguigu.guliai.advisor.RecordOptimizationAdvisor;
+import com.atguigu.guliai.service.AiService;
+import com.atguigu.guliai.tools.CourseQueryTools;
 import com.atguigu.guliai.tools.CourseTools;
 import com.atguigu.guliai.tools.DatabaseQueryTools;
+import com.atguigu.guliai.tools.ReservationTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SafeGuardAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
-import org.springframework.ai.chat.model.ChatModel; // 新增导入
+import org.springframework.ai.chat.model.ChatModel;
 import com.atguigu.guliai.constant.SystemConstant;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,66 +19,49 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 public class AiAdvisorConfig {
 
-    /**
-     * 将ollamaChatModel标记为主要的ChatModel bean
-     */
     @Primary
     @Bean
     public ChatModel primaryChatModel(@Qualifier("ollamaChatModel") ChatModel chatModel) {
         return chatModel;
     }
-    // /**
-    /**
-     * 创建并返回一个ChatClient的Spring Bean实例。
-     *
-     * @param builder 用于构建ChatClient实例的构建者对象
-     * @param courseTools 课程工具类实例
-     * @return 构建好的ChatClient实例
-     */
-    @Autowired
-    private DatabaseQueryTools databaseQueryTools;
+
+    @Bean
+    public Advisor recordOptimizationAdvisor() {
+        return new RecordOptimizationAdvisor(); // 不再需要AiService参数
+    }
 
     @Bean
     public ChatClient serviceChatClient(OpenAiChatModel openAiChatModel,
-                                 Advisor simpleLoggerAdvisor,
-                                 CourseTools courseTools,
-                                 DatabaseQueryTools databaseQueryTools) {
-        List<Object> allTools = new ArrayList<>();
-        allTools.add(courseTools);
-        allTools.add(databaseQueryTools);
+                                        Advisor simpleLoggerAdvisor,
+                                        Advisor safeGuardAdvisor,
+                                        Advisor recordOptimizationAdvisor) {
+
         return ChatClient.builder(openAiChatModel)
-                .defaultSystem(SystemConstant.CUSTOMER_SERVICE_SYSTEM)
-                .defaultAdvisors(new SimpleLoggerAdvisor())
-                .defaultTools(courseTools,databaseQueryTools)  // 包含课程工具和数据库查询工具
+                .defaultAdvisors(
+                        simpleLoggerAdvisor,           // 日志记录
+                        safeGuardAdvisor,              // 安全防护
+                        recordOptimizationAdvisor      // 记录优化
+                )
                 .build();
     }
-    //
-    /**
-     * 创建并返回一个SimpleLoggerAdvisor的Spring Bean实例。
-     */
+
     @Bean
     public Advisor simpleLoggerAdvisor() {
         return new SimpleLoggerAdvisor();
     }
 
-    /**
-     * 创建并返回一个SafeGuardAdvisor的Spring Bean实例。
-     */
     @Bean
     public List<String> sensitiveWords() {
-        // 敏感词列表（示例数据，建议实际使用时从配置文件或数据库读取）
         return List.of("敏感词1", "敏感词2");
     }
 
     @Bean
     public Advisor safeGuardAdvisor(List<String> sensitiveWords) {
-        // 创建安全防护Advisor，参数依次为：敏感词库、违规提示语、advisor处理优先级，数字越小越优先
         return new SafeGuardAdvisor(
                 sensitiveWords,
                 "敏感词提示：请勿输入敏感词！",

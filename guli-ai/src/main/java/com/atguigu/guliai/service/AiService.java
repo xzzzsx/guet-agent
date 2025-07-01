@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import com.atguigu.common.core.domain.model.LoginUser;
 import com.atguigu.common.utils.SecurityUtils;
 import com.atguigu.common.utils.StringUtils;
+import com.atguigu.guliai.advisor.RecordOptimizationAdvisor;
 import com.atguigu.guliai.pojo.Chat;
 import com.atguigu.guliai.pojo.Message;
 import com.atguigu.guliai.strategy.AiBean;
@@ -31,6 +32,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -47,7 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
-public class AiService implements ApplicationContextAware {
+public class AiService implements ApplicationContextAware, ApplicationListener<RecordOptimizationAdvisor.DeleteMessagesEvent> {
 
     @Autowired
     private ChatKnowledgeMapper chatKnowledgeMapper;
@@ -65,6 +67,8 @@ public class AiService implements ApplicationContextAware {
     private AgentCoordinatorService agentCoordinatorService; // 新增注入
 
     private static final Map<String, AiOperator> MAP = new ConcurrentHashMap<>();
+
+
 
     /**
      * 统一获取spring容器中的AiOperator具体策略类,并放入map中方便切换
@@ -354,5 +358,28 @@ public class AiService implements ApplicationContextAware {
         }
     }
 
+    // 在 AiService 类中添加以下方法
+    public void deleteLastTwoMessages(Long chatId) {
+        String collectionName = MongoUtil.getMsgCollectionName(chatId);
 
+        // 按创建时间倒序，取前两条消息
+        Query query = new Query().with(Sort.by(Sort.Direction.DESC, "createTime")).limit(2);
+        List<Message> messages = mongoTemplate.find(query, Message.class, collectionName);
+
+        // 删除这两条消息
+        if (!messages.isEmpty()) {
+            Criteria criteria = new Criteria().orOperator(
+                    messages.stream().map(msg ->
+                            Criteria.where("id").is(msg.getId())
+                    ).toArray(Criteria[]::new)
+            );
+            Query deleteQuery = Query.query(criteria);
+            mongoTemplate.remove(deleteQuery, Message.class, collectionName);
+        }
+    }
+
+    @Override
+    public void onApplicationEvent(RecordOptimizationAdvisor.DeleteMessagesEvent event) {
+        deleteLastTwoMessages(event.getSessionId());
+    }
 }

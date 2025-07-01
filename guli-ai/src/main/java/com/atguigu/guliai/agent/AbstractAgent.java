@@ -22,4 +22,7 @@ public abstract class AbstractAgent implements Agent {
         // 重要修改：调用AiService的直接处理方法，绕过智能体路由系统
         return aiService.directModelProcessing(queryVo);
     }
+
+    // 新增抽象方法供子类实现（返回智能体需要的工具列表）
+    public abstract Object[] tools();
 }
