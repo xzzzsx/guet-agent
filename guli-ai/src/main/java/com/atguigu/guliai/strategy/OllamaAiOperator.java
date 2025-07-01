@@ -2,13 +2,11 @@ package com.atguigu.guliai.strategy;
 
 import com.atguigu.common.utils.StringUtils;
 import com.atguigu.guliai.constant.SystemConstant;
-import com.atguigu.guliai.pojo.Message;
-import com.atguigu.guliai.strategy.AiBean;
-import com.atguigu.guliai.strategy.AiOperator;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.ollama.OllamaChatModel;
@@ -78,6 +76,7 @@ public class OllamaAiOperator implements AiOperator {
         this.retrievedDocuments = documents;
     }
 
+    // 修改方法签名以匹配接口定义（移除Map<String, Object> context参数）
     @Override
     public Flux<String> chat_stream(org.springframework.ai.chat.messages.Message[] messages) {
         // 构建系统提示，包含知识库内容

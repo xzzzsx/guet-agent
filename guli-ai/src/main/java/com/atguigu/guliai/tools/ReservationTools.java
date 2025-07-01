@@ -15,13 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationTools {
 
-    private final ISchoolService schoolService;
     private final ICourseReservationService courseReservationService;
-
-    @Tool(description = "查询所有校区")
-    public List<School> queryAllSchools() {
-        return schoolService.list();
-    }
 
     @Tool(description = "生成课程预约单,并返回生成的预约单号")
     public String generateReservation(

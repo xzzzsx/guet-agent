@@ -1,3 +1,4 @@
+/*
 package com.atguigu.guliai.tools;
 import com.atguigu.guliai.query.CourseQuery;
 import com.atguigu.system.domain.Course;
@@ -53,4 +54,4 @@ public class CourseTools {
         courseReservationService.save(courseReservation);
         return String.valueOf(courseReservation.getId());
     }
-}
+}*/

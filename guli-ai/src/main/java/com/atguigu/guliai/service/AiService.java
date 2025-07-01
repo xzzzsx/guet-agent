@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -64,6 +65,7 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
     private List<String> sensitiveWords;
 
     @Autowired
+    @Lazy // 添加延迟加载注解解决循环依赖
     private AgentCoordinatorService agentCoordinatorService; // 新增注入
 
     private static final Map<String, AiOperator> MAP = new ConcurrentHashMap<>();
@@ -279,24 +281,23 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
      * @return
      */
     public Flux<String> chatStream(QueryVo queryVo) {
-
-        // 添加项目ID空值检查
+        // 项目验证
         if (queryVo.getProjectId() == null) {
-            throw new IllegalArgumentException("项目ID不能为空");
+            return Flux.error(new IllegalArgumentException("项目ID不能为空"));
+        }
+
+        ChatProject project = chatProjectMapper.selectChatProjectByProjectId(queryVo.getProjectId());
+        if (project == null) {
+            return Flux.error(new RuntimeException("找不到ID为 " + queryVo.getProjectId() + " 的项目"));
         }
 
         // 只对OpenAI项目启用智能体路由
-        ChatProject project = chatProjectMapper.selectChatProjectByProjectId(queryVo.getProjectId());
-        if (project == null) {
-            throw new RuntimeException("找不到ID为 " + queryVo.getProjectId() + " 的项目");
-        }
-
         if (SystemConstant.MODEL_TYPE_OPENAI.equals(project.getType())) {
             log.info("【智能体路由】OpenAI项目进入路由系统");
             return agentCoordinatorService.coordinate(
                     queryVo.getMsg(),
                     queryVo.getChatId().toString(),
-                    queryVo.getProjectId() // 直接使用请求中的 projectId
+                    queryVo.getProjectId()
             );
         }
 

@@ -15,7 +15,7 @@ import reactor.core.publisher.Flux;
 public class AiAgentController {
     @Autowired
     private AiService aiService;
-    
+
     @PostMapping("/chat")
     public Flux<String> agentChat(@RequestBody QueryVo queryVo) {
         return aiService.chatStream(queryVo);

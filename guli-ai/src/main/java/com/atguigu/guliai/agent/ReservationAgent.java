@@ -1,6 +1,7 @@
 package com.atguigu.guliai.agent;
 
 import com.atguigu.guliai.config.AiAdvisorConfig;
+import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.enums.AgentTypeEnum;
 import com.atguigu.guliai.tools.DatabaseQueryTools;
 import com.atguigu.guliai.tools.ReservationTools;
@@ -13,16 +14,23 @@ public class ReservationAgent extends AbstractAgent {
 
     private final ReservationTools reservationTools;
     private final DatabaseQueryTools databaseQueryTools;
+    private final AiAdvisorConfig.ServiceChatClient serviceChatClient; // 新增
 
     @Autowired
-    public ReservationAgent(ReservationTools reservationTools, DatabaseQueryTools databaseQueryTools) {
+    public ReservationAgent(ReservationTools reservationTools, DatabaseQueryTools databaseQueryTools, AiAdvisorConfig.ServiceChatClient serviceChatClient) {
         this.reservationTools = reservationTools;
         this.databaseQueryTools = databaseQueryTools;
+        this.serviceChatClient = serviceChatClient;
     }
 
     @Override
     public Flux<String> processStream(String question, String sessionId, Long projectId) {
-        return baseChatStream(question, projectId, sessionId);
+        // 使用预约智能体的提示词和工具
+        return serviceChatClient.prompt()
+                .system(s -> s.text(SystemConstant.RESERVATION_AGENT_PROMPT))
+                .user(question)
+                .stream()
+                .content();
     }
 
     @Override
@@ -30,7 +38,6 @@ public class ReservationAgent extends AbstractAgent {
         return AgentTypeEnum.RESERVATION;
     }
 
-    // 预约智能体需要预约和数据库查询工具
     @Override
     public Object[] tools() {
         return new Object[]{reservationTools, databaseQueryTools};

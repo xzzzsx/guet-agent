@@ -7,7 +7,8 @@ import lombok.Getter;
 public enum AgentTypeEnum {
     ROUTE("ROUTE", "路由智能体"),
     RECOMMEND("RECOMMEND", "课程推荐智能体"),
-    RESERVATION("RESERVATION", "课程预约智能体");
+    RESERVATION("RESERVATION", "课程预约智能体"),
+    SCHOOL_QUERY("SCHOOL_QUERY", "校区查询智能体"); // 新增校区查询智能体
 
     private final String agentName;
     private final String desc;

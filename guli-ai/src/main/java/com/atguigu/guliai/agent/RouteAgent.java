@@ -1,15 +1,26 @@
 package com.atguigu.guliai.agent;
 
+import com.atguigu.guliai.config.AiAdvisorConfig;
+import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.enums.AgentTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 @Component
 public class RouteAgent extends AbstractAgent {
+
+    @Autowired
+    private AiAdvisorConfig.ServiceChatClient serviceChatClient; // 使用专用ChatClient
+
     @Override
     public Flux<String> processStream(String question, String sessionId, Long projectId) {
-        // 路由逻辑
-        return baseChatStream(question, projectId, sessionId);
+        // 构建路由请求
+        return serviceChatClient.prompt()
+                .system(s -> s.text(SystemConstant.ROUTE_AGENT_PROMPT))
+                .user(question)
+                .stream()
+                .content();
     }
 
     @Override
@@ -19,9 +30,6 @@ public class RouteAgent extends AbstractAgent {
 
     @Override
     public Object[] tools() {
-        // 路由智能体不需要特殊工具
-        return new Object[0];
+        return new Object[0]; // 路由智能体不需要工具
     }
-
-    // 路由智能体不需要特殊工具
 }

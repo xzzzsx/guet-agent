@@ -2,95 +2,70 @@ package com.atguigu.guliai.service;
 
 import com.atguigu.guliai.agent.Agent;
 import com.atguigu.guliai.enums.AgentTypeEnum;
-import jakarta.annotation.PostConstruct;
+import com.atguigu.guliai.vo.QueryVo;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.SmartLifecycle;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.Map;
 
 @Slf4j
 @Service
-public class AgentCoordinatorService implements SmartLifecycle {
-    private final ApplicationContext context;
-    private Map<String, Agent> agents;
-    private boolean isRunning = false;
+public class AgentCoordinatorService {
 
-    // 确保在所有Bean初始化完成后执行
-    @Override
-    public void start() {
-        if (!isRunning) {
-            initAgents();
-            isRunning = true;
-        }
-    }
+    private final Map<String, Agent> agents;
+    @Lazy // 添加延迟加载注解解决循环依赖
+    private AiService aiService; // 从构造器注入改为字段注入
 
-    @Override
-    public void stop() {
-        isRunning = false;
-    }
-
-    @Override
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    // 最高优先级，确保最后执行
-    @Override
-    public int getPhase() {
-        return Integer.MAX_VALUE;
-    }
-
-    private void initAgents() {
-        log.info("===== 智能体延迟初始化 =====");
+    @Autowired
+    public AgentCoordinatorService(ApplicationContext context, AiService aiService) {
         this.agents = context.getBeansOfType(Agent.class);
-        log.info("智能体注册检查 - 已注册agents: {}", agents.keySet());
+        this.aiService = aiService;
 
-        // 详细输出每个Agent的状态
-        agents.forEach((name, agent) -> {
-            AgentTypeEnum type = agent.getAgentType();
-            log.info("智能体[{}]: class={}, type={}", name, agent.getClass().getSimpleName(), type);
-        });
-
-        Arrays.stream(AgentTypeEnum.values()).forEach(type -> {
+        // 注册检查
+        log.info("===== 智能体注册检查 =====");
+        for (AgentTypeEnum type : AgentTypeEnum.values()) {
             try {
                 Agent agent = getAgentByType(type);
                 log.info("✅ 智能体注册成功: {} => {}", type, agent.getClass().getSimpleName());
             } catch (Exception e) {
-                log.error("❌ 智能体注册检查失败: {}", type, e);
+                log.error("❌❌ 智能体注册失败: {}", type, e);
             }
-        });
+        }
     }
 
-    @Autowired
-    public AgentCoordinatorService(ApplicationContext context) {
-        this.context = context;
-    }
-
-    public Flux<String> coordinate(String question, String sessionId, Long projectId) { // 新增 projectId 参数
+    public Flux<String> coordinate(String question, String sessionId, Long projectId) {
         log.info("【智能体路由】开始处理问题: {}", question);
 
+        // 1. 使用RouteAgent进行意图识别
         Agent routeAgent = getAgentByType(AgentTypeEnum.ROUTE);
-        return routeAgent.processStream(question, sessionId, projectId) // 传递 projectId
-                .doOnNext(intent -> log.info("【智能体路由】识别到意图: {}", intent))
-                .flatMap(intent -> {
-                    AgentTypeEnum agentType = AgentTypeEnum.agentNameOf(intent);
 
+        // 修改点：收集所有响应片段并合并为完整字符串
+        return routeAgent.processStream(question, sessionId, projectId)
+                .collectList()  // 收集所有响应片段
+                .flatMapMany(parts -> {
+                    // 合并片段为完整意图字符串
+                    String fullIntent = String.join("", parts);
+                    log.info("【智能体路由】完整意图: {}", fullIntent);
+
+                    // 2. 转换为AgentType
+                    AgentTypeEnum agentType = AgentTypeEnum.agentNameOf(fullIntent.trim());
+
+                    // 3. 处理非路由类型
                     if (agentType != null && agentType != AgentTypeEnum.ROUTE) {
                         log.info("【智能体路由】分发到 {} 智能体", agentType.getDesc());
                         Agent targetAgent = getAgentByType(agentType);
-                        return targetAgent.processStream(question, sessionId, projectId) // 传递 projectId
-                                .doOnSubscribe(s -> log.info("【{}智能体】开始处理问题", agentType.getDesc()));
+
+                        // 直接调用目标智能体处理
+                        return targetAgent.processStream(question, sessionId, projectId);
                     }
 
-                    // 重要：非路由结果直接返回，不再重新进入路由系统
-                    return Flux.just(intent);
+                    // 4. 非路由结果直接返回
+                    return Flux.just(fullIntent);
                 });
     }
 
