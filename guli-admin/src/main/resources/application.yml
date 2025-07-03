@@ -126,7 +126,16 @@ spring:
         port: 6334
         initialize-schema: true
 
-#  datasource:
+    mcp:
+      client:
+        connection-timeout: 60s
+        type: ASYNC
+      amap:
+        api:
+          key: ${AMAP_API_KEY}  # 替换为实际的高德API密钥
+
+
+  #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://localhost:3306/itheima?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowPublicKeyRetrieval=true&allowMultiQueries=true&useServerPrepStmts=false
 #    username: root

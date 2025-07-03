@@ -2,10 +2,7 @@ package com.atguigu.guliai.config;
 
 import com.atguigu.guliai.advisor.RecordOptimizationAdvisor;
 import com.atguigu.guliai.constant.SystemConstant;
-import com.atguigu.guliai.tools.CourseQueryTools;
-import com.atguigu.guliai.tools.DatabaseQueryTools;
-import com.atguigu.guliai.tools.ReservationTools;
-import com.atguigu.guliai.tools.SchoolQueryTools;
+import com.atguigu.guliai.tools.*;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SafeGuardAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -152,7 +149,8 @@ public class AiAdvisorConfig {
                                  CourseQueryTools courseQueryTools,      // 注入工具
                                  DatabaseQueryTools databaseQueryTools, // 注入工具
                                  ReservationTools reservationTools,
-                                 SchoolQueryTools schoolQueryTools) {   // 注入工具
+                                 SchoolQueryTools schoolQueryTools,
+                                 AmapTools amapTools) {   // 注入工具
 
         return ChatClient.builder(openAiChatModel)
                 .defaultAdvisors(
@@ -161,7 +159,7 @@ public class AiAdvisorConfig {
                         recordOptimizationAdvisor
                 )
                 // 注册所有可能用到的工具
-                .defaultTools(courseQueryTools, databaseQueryTools, reservationTools,schoolQueryTools)
+                .defaultTools(courseQueryTools, databaseQueryTools, reservationTools,schoolQueryTools,amapTools)
                 .build();
     }
 

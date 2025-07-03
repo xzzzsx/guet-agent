@@ -33,7 +33,7 @@ public class AgentCoordinatorService {
                 Agent agent = getAgentByType(type);
                 log.info("✅ 智能体注册成功: {} => {}", type, agent.getClass().getSimpleName());
             } catch (Exception e) {
-                log.error("❌❌ 智能体注册失败: {}", type, e);
+                log.error("❌❌❌❌ 智能体注册失败: {}", type, e);
             }
         }
     }
