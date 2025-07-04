@@ -103,11 +103,11 @@ spring:
       api-key: ${ALIYUN_API_KEY} #读取环境变量中的阿里百炼 api key
       chat:
         options:
-          model: qwen-plus
+          model: qwen-plus-2025-04-28
           max-tokens: 2000
       embedding:
         options:
-          model: text-embedding-v1 #如果要使用阿里云百炼,一定要手动配置这个embedding的model
+          model: text-embedding-v3 #如果要使用阿里云百炼,一定要手动配置这个embedding的model
     ollama:
       # ollama config: deepseek-r1:1.5b  llama3:latest
       base-url: http://localhost:11434

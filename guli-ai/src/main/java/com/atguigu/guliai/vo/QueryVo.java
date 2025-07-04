@@ -1,15 +1,14 @@
 package com.atguigu.guliai.vo;
 
+import com.atguigu.guliai.pojo.Message; // 新增导入
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List; // 新增导入
+
 @Data
 public class QueryVo {
-
-
-//    @Schema(name = "user", description = "用户的唯一标识，用户首次进入系统页面时生成一个唯一标识")
-//    private String user = SystemConfig.ADMIN; // 用户的唯一标识：如果是普通用户进入系统时，暂时随机分配一个唯一标识；如果是管理员则是admin
 
     @Schema(name = "projectId", description = "项目id，不同项目不同本地知识库")
     @NotNull
@@ -26,4 +25,7 @@ public class QueryVo {
     @NotNull
     private String msg;
 
+    // 新增历史消息字段
+    @Schema(name = "historyMessages", description = "历史消息列表")
+    private List<Message> historyMessages;
 }
