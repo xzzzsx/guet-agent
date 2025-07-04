@@ -81,4 +81,125 @@ public class AmapTools {
                 json.getStr("city"),
                 json.getStr("ip"));
     }
+
+    // 地理编码服务（地址转坐标）
+    private String geocodeAddress(String address) {
+        String url = "https://restapi.amap.com/v3/geocode/geo?key=" + apiKey + "&address=" + address;
+        String response = HttpUtil.get(url);
+        JSONObject json = JSONUtil.parseObj(response);
+
+        if ("1".equals(json.getStr("status"))) {
+            JSONArray geocodes = json.getJSONArray("geocodes");
+            if (geocodes != null && !geocodes.isEmpty()) {
+                return geocodes.getJSONObject(0).getStr("location");
+            }
+        }
+        return null;
+    }
+
+    // 统一路线规划工具（支持所有交通方式）
+    @Tool(name = "maps_route", description = "统一路线规划工具，支持驾车、公交、步行、骑行")
+    public String getRoute(
+            @ToolParam(description = "起点地址（城市+地点名称）") String origin,
+            @ToolParam(description = "终点地址（城市+地点名称）") String destination,
+            @ToolParam(description = "交通方式：driving（驾车）、transit（公交）、walking（步行）、bicycling（骑行）") String mode) {
+
+        // 地理编码转换
+        String originLocation = geocodeAddress(origin);
+        String destLocation = geocodeAddress(destination);
+
+        if (originLocation == null || destLocation == null) {
+            return "无法解析地址，请确认地点名称是否正确";
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("key", apiKey);
+        params.put("origin", originLocation);
+        params.put("destination", destLocation);
+
+        String url;
+        switch (mode.toLowerCase()) {
+            case "transit":
+                url = "https://restapi.amap.com/v3/direction/transit/integrated";
+                params.put("city", origin.split("市")[0]); // 提取城市名
+                params.put("strategy", 0); // 最快捷模式
+                break;
+            case "walking":
+                url = "https://restapi.amap.com/v3/direction/walking";
+                break;
+            case "bicycling":
+                url = "https://restapi.amap.com/v4/direction/bicycling";
+                break;
+            case "driving":
+            default:
+                url = "https://restapi.amap.com/v3/direction/driving";
+                params.put("strategy", 10); // 速度最快
+                break;
+        }
+
+        String response = HttpUtil.get(url, params);
+        JSONObject json = JSONUtil.parseObj(response);
+
+        if (!("1".equals(json.getStr("status")) || "0".equals(json.getStr("errcode")))) {
+            return "路线规划失败：" + json.getStr("info");
+        }
+
+        // 统一解析结果
+        String distance = "";
+        String duration = "";
+        String routeInfo = "";
+
+        switch (mode.toLowerCase()) {
+            case "driving":
+            case "walking":
+                JSONObject route = json.getJSONObject("route");
+                JSONArray paths = route.getJSONArray("paths");
+                JSONObject path = paths.getJSONObject(0);
+                distance = path.getStr("distance");
+                duration = path.getStr("duration");
+                routeInfo = path.getStr("strategy");
+                break;
+            case "transit":
+                route = json.getJSONObject("route");
+                JSONArray transits = route.getJSONArray("transits");
+                JSONObject transit = transits.getJSONObject(0);
+                distance = transit.getStr("distance");
+                duration = transit.getStr("duration");
+                JSONArray segments = transit.getJSONArray("segments");
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < segments.size(); i++) {
+                    JSONObject segment = segments.getJSONObject(i);
+                    sb.append(segment.getStr("instruction")).append(" → ");
+                }
+                routeInfo = sb.toString();
+                break;
+            case "bicycling":
+                JSONObject data = json.getJSONObject("data");
+                paths = data.getJSONArray("paths");
+                path = paths.getJSONObject(0);
+                distance = path.getStr("distance");
+                duration = path.getStr("duration");
+                break;
+        }
+
+        // 转换时间为分钟
+        long minutes = Long.parseLong(duration) / 60;
+
+        return String.format("%s路线：%s\n距离：%s米\n预计时间：%d分钟",
+                getModeChinese(mode),
+                routeInfo,
+                distance,
+                minutes);
+    }
+
+    // 获取中文交通方式
+    private String getModeChinese(String mode) {
+        switch (mode.toLowerCase()) {
+            case "driving": return "驾车";
+            case "transit": return "公交";
+            case "walking": return "步行";
+            case "bicycling": return "骑行";
+            default: return "驾车";
+        }
+    }
 }
