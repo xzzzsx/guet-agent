@@ -185,13 +185,13 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
             throw new RuntimeException("找不到ID为 " + queryVo.getProjectId() + " 的项目");
         }
 
-        // 使用传入的历史消息
+        // +++ 移除原有的用户消息保存代码 +++
+
         return this.processChatRequest(queryVo, project.getType());
     }
 
     private Flux<String> processChatRequest(QueryVo queryVo, String modelType) {
-        // 使用传入的历史消息
-        List<Message> historyMessages = queryVo.getHistoryMessages();
+        // +++ 此处已移除用户消息保存代码 +++
 
         // 仅保留以下逻辑：
         //2.查询本地知识库:Qdrant
@@ -216,16 +216,21 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
         }
 
         //3.查询历史问答（包含刚保存的用户消息）
-        List<org.springframework.ai.chat.messages.Message> msgs = new ArrayList<>();
-        String systemPrompt = "你是一个AI助手，负责回答用户问题...";
-        msgs.add(new SystemMessage(systemPrompt));
+        String collectionName = MongoUtil.getMsgCollectionName(queryVo.getChatId());
+        List<Message> messages = this.mongoTemplate.find(Query
+                .query(Criteria.where("chatId").is(queryVo.getChatId()))
+                .with(Sort.by(Sort.Order.asc("createTime"))), Message.class, collectionName);
 
-        if (!CollectionUtils.isEmpty(historyMessages)) {
-            historyMessages.forEach(m -> {
+        //组装上下文提示
+        List<org.springframework.ai.chat.messages.Message> msgs = new ArrayList<>();
+        String systemPrompt = "你是一个AI助手，负责回答用户问题。当需要查询课程信息时，必须使用提供的工具进行查询。所有工具调用必须包含projectId参数，其值为当前项目ID。";
+        msgs.add(new SystemMessage(systemPrompt));
+        if (!CollectionUtils.isEmpty(messages)) {//用户问答提示
+            messages.forEach(m -> {
                 org.springframework.ai.chat.messages.Message msg = null;
-                if (m.getType() == 0) {
+                if (m.getType().intValue() == 0) { //如果type为0,则说明是用户的提问UserMessage
                     msg = new UserMessage(m.getContent());
-                } else {
+                } else { //如果type为1,则说明是AI的回答内容
                     msg = new AssistantMessage(m.getContent());
                 }
                 if (msg != null && StringUtils.hasText(msg.getText())) {
@@ -251,8 +256,10 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
     }
 
     /**
-     * 聊天（流式）
-     * 修复问题：确保在调用路由系统前正确构建包含用户消息的历史消息列表
+     * 聊天
+     *
+     * @param queryVo
+     * @return
      */
     public Flux<String> chatStream(QueryVo queryVo) {
         // 项目验证
@@ -265,30 +272,14 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
             return Flux.error(new RuntimeException("找不到ID为 " + queryVo.getProjectId() + " 的项目"));
         }
 
-        // +++ 修复开始 +++
-        // 保存用户消息到MongoDB
-        saveUserMessage(queryVo);
-
-        // 获取当前会话的完整历史消息（包含刚保存的用户消息）
-        List<Message> historyMessages = listMsg(queryVo.getChatId());
-
-        // 如果查询结果为空，手动添加当前用户消息
-        if (historyMessages.isEmpty()) {
-            Message userMessage = new Message();
-            userMessage.setId(IdUtil.getSnowflake().nextId());
-            userMessage.setChatId(queryVo.getChatId());
-            userMessage.setType(0);
-            userMessage.setContent(queryVo.getMsg());
-            userMessage.setCreateTime(new Date());
-            historyMessages.add(userMessage);
-        }
-        // +++ 修复结束 +++
+        // +++ 新增：在路由前保存用户消息 +++
+        saveUserMessage(queryVo); // 确保用户提问消息存入MongoDB
 
         // 只对OpenAI项目启用智能体路由
         if (SystemConstant.MODEL_TYPE_OPENAI.equals(project.getType())) {
             log.info("【智能体路由】OpenAI项目进入路由系统");
             return agentCoordinatorService.coordinate(
-                    historyMessages,
+                    queryVo.getMsg(),
                     queryVo.getChatId().toString(),
                     queryVo.getProjectId()
             );

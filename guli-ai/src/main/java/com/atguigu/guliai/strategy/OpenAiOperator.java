@@ -88,8 +88,31 @@ public class OpenAiOperator implements AiOperator {
 
     @Override
     public Flux<String> chat_stream(org.springframework.ai.chat.messages.Message[] messages) {
-        // 直接使用传入的消息数组
-        return openAiChatModel.stream(messages);
+        // 只保留最新的用户消息
+        Optional<Message> latestUserMessage = Arrays.stream(messages)
+                .filter(msg -> msg.getMessageType() == MessageType.USER)
+                .reduce((first, second) -> second); // 获取最后一个用户消息
+
+        List<Message> cleanedMessages = new ArrayList<>();
+
+        // 添加路由智能体提示词
+        cleanedMessages.add(0, new SystemMessage(SystemConstant.ROUTE_AGENT_PROMPT));
+
+        // 添加最新的用户消息（如果存在）
+        latestUserMessage.ifPresent(cleanedMessages::add);
+
+        // 调试日志
+        if (log.isDebugEnabled()) {
+            cleanedMessages.forEach(msg ->
+                    log.debug("Final message: {} - {}", msg.getMessageType(),
+                            msg.getText().substring(0, Math.min(100, msg.getText().length())))
+            );
+        }
+
+        return chatClient.prompt()
+                .messages(cleanedMessages.toArray(new Message[0]))
+                .stream()
+                .content();
     }
     // // 构建消息数组，过滤null消息
     // List<org.springframework.ai.chat.messages.Message> validMessages = Arrays.stream(messages)
