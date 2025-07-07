@@ -17,7 +17,7 @@ public class CourseQueryTools {
 
     private final ICourseService courseService;
 
-    @Tool(description = "根据条件查询课程")
+    @Tool(description = "根据条件查询专业")
     public List<Course> queryCourse(@ToolParam(required = false, description = "课程查询条件") CourseQuery query) {
         return courseService.query()
                 .eq(query.getType() != null, "type", query.getType())

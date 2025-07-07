@@ -7,9 +7,9 @@ import java.util.List;
 
 @Data
 public class CourseQuery {
-    @ToolParam(required = false, description = "课程类型：编程、设计、自媒体、其它")
+    @ToolParam(required = false, description = "学院类型：计算机工程学院、经济与管理学院、海洋工程学院、电子信息学院、设计与创意学院")
     private String type;
-    @ToolParam(required = false, description = "学历要求：0-无、1-初中、2-高中、3-大专、4-本科及本科以上")
+    @ToolParam(required = false, description = "高考分数要求：0-380分以下(包含380分)、1-380分到405分(包含405分)、2-405分到425分(包含425分)、3-425分到455分(包含455分)、4-455分以上")
     private Integer edu;
     @ToolParam(required = false, description = "排序方式")
     private List<Sort> sorts;

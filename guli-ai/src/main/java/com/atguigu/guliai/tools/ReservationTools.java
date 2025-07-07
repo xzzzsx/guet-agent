@@ -17,7 +17,7 @@ public class ReservationTools {
 
     private final ICourseReservationService courseReservationService;
 
-    @Tool(description = "生成课程预约单,并返回生成的预约单号")
+    @Tool(description = "生成课程预约单,并返回生成的预约单号和预约的个人信息")
     public String generateReservation(
             String courseName, String studentName, String contactInfo, String school, String remark) {
         CourseReservation reservation = new CourseReservation();
