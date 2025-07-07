@@ -170,7 +170,7 @@ public class AiAdvisorConfig {
 
     @Bean
     public List<String> sensitiveWords() {
-        return List.of("敏感词1", "敏感词2");
+        return List.of("敏感词", "学生个人信息", "成绩排名", "学生档案");
     }
 
     @Bean
