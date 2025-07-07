@@ -105,7 +105,7 @@ public class AmapTools {
         return null;
     }
 
-    @Tool(name = "maps_route", description = "路线规划工具，支持驾车和步行")
+    @Tool(name = "maps_route", description = "路线规划工具，支持驾车和步行，携带地图信息")
     public String getRoute(
             @ToolParam(description = "起点地址（城市+地点名称）") String origin,
             @ToolParam(description = "终点地址（城市+地点名称）") String destination,

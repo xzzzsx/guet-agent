@@ -107,7 +107,7 @@ spring:
           max-tokens: 2000
       embedding:
         options:
-          model: text-embedding-v3 #如果要使用阿里云百炼,一定要手动配置这个embedding的model
+          model: text-embedding-v4 #如果要使用阿里云百炼,一定要手动配置这个embedding的model
     ollama:
       # ollama config: deepseek-r1:1.5b  llama3:latest
       base-url: http://localhost:11434
