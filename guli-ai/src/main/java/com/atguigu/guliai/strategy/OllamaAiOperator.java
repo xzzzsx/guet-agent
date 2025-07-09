@@ -9,7 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.document.DocumentTransformer;
 import org.springframework.ai.ollama.OllamaChatModel;
+import java.io.File;
+import java.io.FileInputStream;
+// 删除未使用的错误导入
+import org.springframework.ai.transformer.splitter.TokenTextSplitter;
+// import org.springframework.ai.transformer.splitter.RecursiveCharacterTextSplitter; // 删除此行
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
@@ -33,8 +39,33 @@ public class OllamaAiOperator implements AiOperator {
 
     @Override
     public void addDocs(ChatKnowledge chatKnowledge) {
-        this.ollamaVectorStore.add(List.of(new org.springframework.ai.document.Document(chatKnowledge.getContent(),
-                Map.of("projectId", chatKnowledge.getProjectId().toString(), "knowledgeId", chatKnowledge.getKnowledgeId().toString()))));
+        String content = chatKnowledge.getContent();
+        if (StringUtils.isEmpty(content)) {
+            log.error("文档内容为空，无法添加知识库: {}", chatKnowledge.getFileName());
+            throw new IllegalArgumentException("上传文件内容解析失败，请检查文件格式");
+        }
+        
+        try {
+            // 创建文档对象
+            Document document = new Document(content, 
+                Map.of("projectId", chatKnowledge.getProjectId().toString(), 
+                       "knowledgeId", chatKnowledge.getKnowledgeId().toString()));
+            
+            // 使用TokenTextSplitter进行文档分块（适配当前版本API）
+            // 将分块大小从1000增加到2000
+            TokenTextSplitter splitter = TokenTextSplitter.builder()
+                .withChunkSize(2000)
+                .withMinChunkSizeChars(200)
+                .build();
+            List<Document> splitDocuments = splitter.apply(List.of(document));
+            
+            // 添加向量存储操作
+            this.ollamaVectorStore.add(splitDocuments);
+            log.info("文档成功添加到向量存储: {}，共{}个块", chatKnowledge.getFileName(), splitDocuments.size());
+        } catch (Exception e) {
+            log.error("向量存储添加文档失败: {}", e.getMessage(), e);
+            throw new RuntimeException("知识库向量存储失败: " + e.getMessage());
+        }
     }
 
     private static final Logger log = LoggerFactory.getLogger(OllamaAiOperator.class);

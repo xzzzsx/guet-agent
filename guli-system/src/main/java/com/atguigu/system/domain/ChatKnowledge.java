@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.atguigu.common.annotation.Excel;
 import com.atguigu.common.core.domain.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 
 /**
  * 知识库管理对象 chat_knowledge
@@ -32,6 +33,7 @@ public class ChatKnowledge extends BaseEntity
 
     /** 文件内容 */
     @Excel(name = "文件内容")
+    @TableField(typeHandler = com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler.class)
     private String content;
 
     public void setKnowledgeId(Long knowledgeId) 

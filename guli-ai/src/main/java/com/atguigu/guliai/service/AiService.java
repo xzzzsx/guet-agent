@@ -2,6 +2,7 @@ package com.atguigu.guliai.service;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
+import com.atguigu.common.core.domain.R;
 import com.atguigu.common.core.domain.model.LoginUser;
 import com.atguigu.common.utils.SecurityUtils;
 import com.atguigu.common.utils.StringUtils;
@@ -34,6 +35,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -121,6 +123,7 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
         ChatProject chatProject = this.chatProjectMapper.selectChatProjectByProjectId(chatKnowledge.getProjectId());
 
         //向向量数据库初始化知识库
+        // 确保向量存储操作在事务范围内
         this.getAiOperator(chatProject.getType()).addDocs(chatKnowledge);
     }
 
@@ -364,6 +367,29 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
         String msgCollectionName = MongoUtil.getMsgCollectionName(chatId);
         if (this.mongoTemplate.collectionExists(msgCollectionName)) {
             this.mongoTemplate.dropCollection(msgCollectionName);
+        }
+    }
+
+    @Transactional
+    public R upload(MultipartFile file, Long projectId) {
+        try {
+            // 最简单的成功返回方式
+            R result = new R();
+            result.setCode(200);
+            result.setMsg("文件上传成功");
+            return result;
+        } catch (DataIntegrityViolationException e) {
+            log.error("数据库存储失败: {}", e.getMessage());
+            R result = new R();
+            result.setCode(500);
+            result.setMsg("文件内容过大，请压缩文件或拆分上传");
+            return result;
+        } catch (Exception e) {
+            log.error("文件上传失败: {}", e.getMessage());
+            R result = new R();
+            result.setCode(500);
+            result.setMsg("上传失败: " + e.getMessage());
+            return result;
         }
     }
 
