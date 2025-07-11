@@ -113,7 +113,6 @@ spring:
       base-url: http://localhost:11434
       embedding:
         model: qwen2.5:1.5b
-        dimensions: 1536 # ollama嵌入向量维度
       chat:
         model: qwen2.5:1.5b
         options:

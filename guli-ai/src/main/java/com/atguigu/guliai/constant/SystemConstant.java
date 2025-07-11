@@ -112,6 +112,7 @@ public class SystemConstant {
 
     // 向量存储类型
     public static final String VECTOR_STORE_OPENAI = "openai.vector.store";
+    public static final String VECTOR_STORE_OLLAMA = "ollama.vector.store"; // 添加此行
 
     // 模型类型
     public static final String MODEL_TYPE_OPENAI = "openai";

@@ -1,9 +1,6 @@
 logging:
   level:
-    org:
-      springframework:
-        ai:
-          chat:
-            client:
-              advisor: DEBUG
-
+    root: INFO
+    com.atguigu.guliai.strategy: INFO
+    org.springframework.ai: INFO
+    org.springframework.ai.chat.client.advisor: DEBUG

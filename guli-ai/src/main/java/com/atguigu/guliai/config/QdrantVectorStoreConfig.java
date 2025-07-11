@@ -35,7 +35,7 @@ public class QdrantVectorStoreConfig {
     public QdrantVectorStore openAiVectorStore(OpenAiEmbeddingModel openAiEmbeddingModel) {
         //不同的大模型使用的维度是不同的
         return QdrantVectorStore.builder(qdrantClient, openAiEmbeddingModel) // 传入必需参数
-                .collectionName(SystemConstant.VECTOR_STORE_OPENAI)
+                // .collectionName(SystemConstant.VECTOR_STORE_OPENAI)
                 .initializeSchema(true)  // 强制初始化schema确保维度配置生效
                 .build();
     }
@@ -47,9 +47,9 @@ public class QdrantVectorStoreConfig {
      */
     @Bean
     public QdrantVectorStore ollamaVectorStore(OllamaEmbeddingModel ollamaEmbeddingModel) {
-        return QdrantVectorStore.builder(qdrantClient, ollamaEmbeddingModel) // 传入必需参数
-                // .collectionName(SystemConstant.VECTOR_STORE_OLLAMA)
-                .initializeSchema(true)  // 强制初始化schema确保维度配置生效
+        return QdrantVectorStore.builder(qdrantClient, ollamaEmbeddingModel)
+                .collectionName(SystemConstant.VECTOR_STORE_OLLAMA)
+                .initializeSchema(true)
                 .build();
     }
 }
