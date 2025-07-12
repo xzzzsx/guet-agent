@@ -1,7 +1,7 @@
 {
   "name": "atguigu",
   "version": "3.8.7",
-  "description": "小谷同学管理系统",
+  "description": "智能助手管理系统",
   "author": "li xianfeng",
   "license": "MIT",
   "scripts": {
