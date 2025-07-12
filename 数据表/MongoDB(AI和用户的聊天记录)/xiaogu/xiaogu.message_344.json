@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$numberLong": "1939707938646142976"
+  },
+  "chatId": {
+    "$numberLong": "1939707914285625344"
+  },
+  "type": 0,
+  "content": "预约课程\n\n",
+  "createTime": {
+    "$date": "2025-06-30T15:29:45.261Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1939707961102446592"
+  },
+  "chatId": {
+    "$numberLong": "1939707914285625344"
+  },
+  "type": 1,
+  "content": "没有找到相关信息。",
+  "createTime": {
+    "$date": "2025-06-30T15:29:50.615Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

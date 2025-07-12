@@ -1,0 +1,32 @@
+[{
+  "_id": {
+    "$numberLong": "1943294984962899968"
+  },
+  "projectId": {
+    "$numberLong": "128"
+  },
+  "userId": {
+    "$numberLong": "888200"
+  },
+  "title": "新会话5yl57",
+  "createTime": {
+    "$date": "2025-07-10T13:03:23.747Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Chat"
+},
+{
+  "_id": {
+    "$numberLong": "1943307842413129728"
+  },
+  "projectId": {
+    "$numberLong": "128"
+  },
+  "userId": {
+    "$numberLong": "888200"
+  },
+  "title": "新会话avg3f",
+  "createTime": {
+    "$date": "2025-07-10T13:54:29.202Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Chat"
+}]

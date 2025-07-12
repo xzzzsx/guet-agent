@@ -1,0 +1,84 @@
+[{
+  "_id": {
+    "$numberLong": "1942902863227400192"
+  },
+  "chatId": {
+    "$numberLong": "1942902817324937216"
+  },
+  "type": 0,
+  "content": "你好,你是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-09T11:05:14.640Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942902886820360192"
+  },
+  "chatId": {
+    "$numberLong": "1942902817324937216"
+  },
+  "type": 1,
+  "content": "我是来自阿里云的AI助手，我叫通义千问。",
+  "createTime": {
+    "$date": "2025-07-09T11:05:20.265Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942945088460181504"
+  },
+  "chatId": {
+    "$numberLong": "1942902817324937216"
+  },
+  "type": 0,
+  "content": "你好,你是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-09T13:53:01.920Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942945109431701504"
+  },
+  "chatId": {
+    "$numberLong": "1942902817324937216"
+  },
+  "type": 1,
+  "content": "您好！我是阿里云开发的一款人工智能助手，名叫通义千问。如果您有任何问题需要帮助，请随时告诉我。",
+  "createTime": {
+    "$date": "2025-07-09T13:53:06.920Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942950165870755840"
+  },
+  "chatId": {
+    "$numberLong": "1942902817324937216"
+  },
+  "type": 0,
+  "content": "桂林电子科技大学北海校区\n网络工程专业人才培养方案主要专业实验有什么\n\n",
+  "createTime": {
+    "$date": "2025-07-09T14:13:12.469Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942950182241124352"
+  },
+  "chatId": {
+    "$numberLong": "1942902817324937216"
+  },
+  "type": 1,
+  "content": "根据您提供的文档内容，桂林电子科技大学北海校区的网络工程专业的培养方案中，没有提到具体的实验课程信息。但是，通常来说，网络工程专业的学生可能会进行以下类型的实验：\n\n1. **硬件实验**：包括计算机组装、网络设备（如路由器、交换机）的安装和配置等。\n2. **软件实验**：涉及操作系统使用、网络安全协议（如TCP/IP、HTTPS）、编程语言（如Python、Java）的应用等。\n3. **通信实验**：通过模拟或实际操作来学习数据传输原理，包括网络协议栈的实现和测试。\n4. **项目开发实验**：学生可能会参与小型网络应用系统的开发，例如网站搭建、服务器配置等。\n\n具体的实验内容需要查阅该专业的培养方案或者联系学校获取详细信息。",
+  "createTime": {
+    "$date": "2025-07-09T14:13:16.372Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

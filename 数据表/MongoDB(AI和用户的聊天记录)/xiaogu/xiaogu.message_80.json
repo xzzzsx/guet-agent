@@ -1,0 +1,56 @@
+[{
+  "_id": {
+    "$numberLong": "1940043770561171456"
+  },
+  "chatId": {
+    "$numberLong": "1940043740492206080"
+  },
+  "type": 0,
+  "content": "你好,你们有什么课程\n\n",
+  "createTime": {
+    "$date": "2025-07-01T13:44:13.829Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1940043780975628288"
+  },
+  "chatId": {
+    "$numberLong": "1940043740492206080"
+  },
+  "type": 1,
+  "content": "RECOMMEND\nRECOMMEND",
+  "createTime": {
+    "$date": "2025-07-01T13:44:16.312Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942785473692987392"
+  },
+  "chatId": {
+    "$numberLong": "1942785136143790080"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-09T03:18:46.795Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942785479623733248"
+  },
+  "chatId": {
+    "$numberLong": "1942785136143790080"
+  },
+  "type": 1,
+  "content": "你好，我可以为你提供桂林电子科技大学的介绍。",
+  "createTime": {
+    "$date": "2025-07-09T03:18:48.208Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

@@ -1,0 +1,84 @@
+[{
+  "_id": {
+    "$numberLong": "1942879574622875648"
+  },
+  "chatId": {
+    "$numberLong": "1942879561033330688"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-09T09:32:42.204Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942879581212127232"
+  },
+  "chatId": {
+    "$numberLong": "1942879561033330688"
+  },
+  "type": 1,
+  "content": "你好，我可以为你提供桂林电子科技大学的介绍。",
+  "createTime": {
+    "$date": "2025-07-09T09:32:43.775Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942879765195272192"
+  },
+  "chatId": {
+    "$numberLong": "1942879561033330688"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-09T09:33:27.640Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942879768252919808"
+  },
+  "chatId": {
+    "$numberLong": "1942879561033330688"
+  },
+  "type": 1,
+  "content": "你好，我可以为你提供桂林电子科技大学的介绍。",
+  "createTime": {
+    "$date": "2025-07-09T09:33:28.369Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942879952370282496"
+  },
+  "chatId": {
+    "$numberLong": "1942879561033330688"
+  },
+  "type": 0,
+  "content": "梧州市第一中学到梧州市第十一中学路线\n\n",
+  "createTime": {
+    "$date": "2025-07-09T09:34:12.266Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942879985673056256"
+  },
+  "chatId": {
+    "$numberLong": "1942879561033330688"
+  },
+  "type": 1,
+  "content": "从梧州市第一中学到梧州市第十一中学的驾车路线如下：\n\n1. 向东北行驶325米右转。\n2. 沿大学路向东南行驶272米左转。\n3. 沿大学路途径桂江一桥、南环路向东行驶1.3千米左转。\n4. 沿中山路途径文化路向北行驶110米左转。\n5. 沿东正路向西北行驶213米左转。\n6. 沿东中路向西南行驶119米到达目的地。\n\n总距离为2.4公里，预计耗时未知。您可以通过以下链接查看地图信息：\n\n[路线地图](https://restapi.amap.com/v3/staticmap?markers=mid%2C0xFF0000%2CA%3A111.303151%2C23.474845%7Cmid%2C0x00FF00%2CB%3A111.317188%2C23.474455&key=cffff33e589b58f3b632ec30e53fe1c0)",
+  "createTime": {
+    "$date": "2025-07-09T09:34:20.206Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

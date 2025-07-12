@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$numberLong": "1942880447939883008"
+  },
+  "chatId": {
+    "$numberLong": "1942880435294056448"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-09T09:36:10.419Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942880451320492032"
+  },
+  "chatId": {
+    "$numberLong": "1942880435294056448"
+  },
+  "type": 1,
+  "content": "你好，我可以为你提供桂林电子科技大学的介绍。",
+  "createTime": {
+    "$date": "2025-07-09T09:36:11.225Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$numberLong": "1942115212261994496"
+  },
+  "chatId": {
+    "$numberLong": "1942115197489655808"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-07T06:55:24.017Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942115220050817024"
+  },
+  "chatId": {
+    "$numberLong": "1942115197489655808"
+  },
+  "type": 1,
+  "content": "你好！有什么可以帮您？",
+  "createTime": {
+    "$date": "2025-07-07T06:55:25.873Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

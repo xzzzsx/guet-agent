@@ -1,0 +1,196 @@
+[{
+  "_id": {
+    "$numberLong": "1938525409654321152"
+  },
+  "chatId": {
+    "$numberLong": "1938525375802093568"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-06-27T09:10:48.379Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938525431988989952"
+  },
+  "chatId": {
+    "$numberLong": "1938525375802093568"
+  },
+  "type": 1,
+  "content": "对不起，我无法提供关于“曾少雄”的信息。如果您有其他问题需要帮助，请告诉我，我会尽力为您提供支持和解答。",
+  "createTime": {
+    "$date": "2025-06-27T09:10:53.704Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938526823336095744"
+  },
+  "chatId": {
+    "$numberLong": "1938525375802093568"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-06-27T09:16:25.427Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938526848346730496"
+  },
+  "chatId": {
+    "$numberLong": "1938525375802093568"
+  },
+  "type": 1,
+  "content": "对不起，我无法提供关于“曾少雄”的信息。如果您有其他问题需要帮助，请告诉我，我会尽力为您提供支持和解答。",
+  "createTime": {
+    "$date": "2025-06-27T09:16:31.390Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938527406604288000"
+  },
+  "chatId": {
+    "$numberLong": "1938525375802093568"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-06-27T09:18:44.489Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938527413667495936"
+  },
+  "chatId": {
+    "$numberLong": "1938525375802093568"
+  },
+  "type": 1,
+  "content": "对不起，我无法提供关于“曾少雄”的具体信息。如果您有其他问题需要帮助或讨论的，请告诉我，我会尽我所能提供帮助。",
+  "createTime": {
+    "$date": "2025-06-27T09:18:46.173Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938527507804454912"
+  },
+  "chatId": {
+    "$numberLong": "1938525375802093568"
+  },
+  "type": 0,
+  "content": "奇安信网址\n\\",
+  "createTime": {
+    "$date": "2025-06-27T09:19:08.617Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938527515530362880"
+  },
+  "chatId": {
+    "$numberLong": "1938525375802093568"
+  },
+  "type": 1,
+  "content": "奇安信（Qianxin）是一家专注于网络安全技术和服务的企业。以下是关于奇安信的一些基本信息：\n\n1. 奇安信成立于2005年，总部位于北京。\n\n2. 公司主要业务包括：\n   - 网络安全产品与解决方案的研发和销售。\n   - 安全服务（如安全咨询、培训等）。\n   - 信息安全产品的研发和销售。\n\n3. 奇安信的产品和服务覆盖了网络安全的多个方面，包括防火墙、入侵检测系统、防病毒软件、网络监控工具等。\n\n4. 公司致力于为客户提供全面的安全解决方案，以保护企业和组织免受各种网络安全威胁。\n\n5. 奇安信在全球范围内拥有广泛的客户基础，并在国内外市场中取得了显著的成绩。\n\n请注意，由于我无法访问实时数据或互联网信息，上述信息可能不是最新的。如果您需要最新和最准确的信息，请查阅相关官方网站或权威的新闻来源。",
+  "createTime": {
+    "$date": "2025-06-27T09:19:10.459Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938599920307167232"
+  },
+  "chatId": {
+    "$numberLong": "1938599860680941568"
+  },
+  "type": 0,
+  "content": "你们有哪些课程\n\n",
+  "createTime": {
+    "$date": "2025-06-27T14:06:53.103Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938599924652466176"
+  },
+  "chatId": {
+    "$numberLong": "1938599860680941568"
+  },
+  "type": 1,
+  "content": "没有找到相关信息",
+  "createTime": {
+    "$date": "2025-06-27T14:06:54.139Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938603283388190720"
+  },
+  "chatId": {
+    "$numberLong": "1938599860680941568"
+  },
+  "type": 0,
+  "content": "你们有哪些课程\n\n",
+  "createTime": {
+    "$date": "2025-06-27T14:20:14.924Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938603291395117056"
+  },
+  "chatId": {
+    "$numberLong": "1938599860680941568"
+  },
+  "type": 1,
+  "content": "没有找到相关信息",
+  "createTime": {
+    "$date": "2025-06-27T14:20:16.833Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938607151610290176"
+  },
+  "chatId": {
+    "$numberLong": "1938599860680941568"
+  },
+  "type": 0,
+  "content": "你们有哪些课程\n\n",
+  "createTime": {
+    "$date": "2025-06-27T14:35:37.180Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938607160040841216"
+  },
+  "chatId": {
+    "$numberLong": "1938599860680941568"
+  },
+  "type": 1,
+  "content": "没有找到相关信息",
+  "createTime": {
+    "$date": "2025-06-27T14:35:39.190Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

@@ -1,0 +1,140 @@
+[{
+  "_id": {
+    "$numberLong": "1943608230966112256"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 0,
+  "content": "你好,你是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-11T09:48:07.414Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943608236037025792"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 1,
+  "content": "您好！我是来自桂林电子科技大学北海校区的AI助手，我叫“小智”。如果您有任何关于桂林电子科技大学北海校区的问题或需要帮助的地方，请随时告诉我。我会尽力提供支持和解答。",
+  "createTime": {
+    "$date": "2025-07-11T09:48:08.623Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943608384666382336"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 0,
+  "content": "你们学校的校区情况怎么样,环境好吗\n\n",
+  "createTime": {
+    "$date": "2025-07-11T09:48:44.059Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943608389540163584"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 1,
+  "content": "桂林电子科技大学北海校区位于广西壮族自治区北海市，校园环境优美。学校占地面积较大，拥有现代化的教学设施和实验室，为学生提供了良好的学习和研究条件。此外，校园内还设有多个休闲娱乐场所，如图书馆、运动场等，为师生提供了一个舒适的学习生活环境。总的来说，桂林电子科技大学北海校区的环境是不错的。",
+  "createTime": {
+    "$date": "2025-07-11T09:48:45.221Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943608517885865984"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 0,
+  "content": "你们学校的校区上课时间是怎么样的,会太早吗\n\n",
+  "createTime": {
+    "$date": "2025-07-11T09:49:15.821Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943608522696732672"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 1,
+  "content": "桂林电子科技大学北海校区的上课时间通常与全国其他高校类似，一般在早上8点到下午5点之间。具体的时间安排可能会根据课程表和教学计划有所不同，建议查看学校官方发布的最新日程表以获取准确信息。如果担心上课时间过早，可以提前了解并规划好自己的作息时间和学习计划。",
+  "createTime": {
+    "$date": "2025-07-11T09:49:16.968Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943621749447057408"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 0,
+  "content": "你们学校的校区情况怎么样,环境好吗\n\n",
+  "createTime": {
+    "$date": "2025-07-11T10:41:50.471Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943621773287481344"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 1,
+  "content": "桂林电子科技大学北海校区位于广西壮族自治区北海市，校园环境优美。学校占地面积较大，拥有现代化的教学设施和实验室，为学生提供了良好的学习和研究条件。此外，校园内还设有多个休闲娱乐场所，如图书馆、运动场等，让学生在学习之余也能享受到放松的时光。总的来说，桂林电子科技大学北海校区的环境是不错的。",
+  "createTime": {
+    "$date": "2025-07-11T10:41:56.155Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943623530054926336"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 0,
+  "content": "你们学校的校区情况怎么样,环境好吗\n\n",
+  "createTime": {
+    "$date": "2025-07-11T10:48:55.001Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943623555774398464"
+  },
+  "chatId": {
+    "$numberLong": "1943608194752491520"
+  },
+  "type": 1,
+  "content": "桂林电子科技大学北海校区位于广西壮族自治区北海市，校园环境优美。学校拥有现代化的教学设施和良好的学习氛围，为学生提供了舒适的学习和生活环境。",
+  "createTime": {
+    "$date": "2025-07-11T10:49:01.133Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

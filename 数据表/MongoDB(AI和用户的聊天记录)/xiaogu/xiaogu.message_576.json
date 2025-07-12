@@ -1,0 +1,560 @@
+[{
+  "_id": {
+    "$numberLong": "1943185538228142080"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "宫保鸡丁做法\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:48:29.612Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943185575200931840"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "### 宫保鸡丁的详细做法：\n\n#### 材料：\n- 鸡胸肉 300 克\n- 花生米 50 克\n- 干辣椒 10 个\n- 葱 2 根\n- 姜 3 片\n- 蒜 3 瓣\n- 花椒 1 小把\n- 生抽 2 汤匙\n- 老抽 1 汤匙\n- 料酒 1 汤匙\n- 白糖 1 汤匙\n- 醋 1 汤匙\n- 淀粉 适量\n\n#### 步骤：\n1. **准备鸡胸肉**：将鸡胸肉切成1厘米见方的丁，放入碗中，加入1汤匙料酒、1/2汤匙生抽和少许盐，搅拌均匀后腌制10分钟。\n2. **炒糖色**：锅中倒入适量食用油，小火慢慢加热，放入花椒和干辣椒段，煸炒出香味。然后将腌好的鸡丁加入锅中快速翻炒，使肉块均匀裹上糖色。\n3. **调味**：加入姜末、蒜末，继续翻炒出香味。然后加入调好的汁（2汤匙生抽、1汤匙老抽、1汤匙白糖、1汤匙醋），快速翻炒均匀。\n4. **炖煮**：将锅中的水烧开后转小火慢炖40-50分钟，直到肉块软烂，汤汁浓稠即可。最后加入炸好的花生米和葱段，翻炒均匀后即可出锅装盘。\n\n#### 小贴士：\n- 炒糖色时要控制好火候，避免糊底。\n- 调味料的比例可以根据个人口味进行调整。\n- 炖煮过程中可以适当加水，使肉块更加入味。",
+  "createTime": {
+    "$date": "2025-07-10T05:48:38.427Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943185700396711936"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:49:08.276Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943185704884617216"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "曾少雄是网络工程领域的专家，毕业于清华大学计算机系，并在奇安信工作多年。他负责过多个重要项目，包括“天宫一号”和“神舟系列”的网络安全保障工作。他的专业技能和经验使他在网络安全领域享有很高的声誉。",
+  "createTime": {
+    "$date": "2025-07-10T05:49:09.346Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943185830252363776"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "鸿蒙项目网址推荐\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:49:39.236Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943185842952716288"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "以下是关于鸿蒙项目的网址推荐：\n\n1. **一、鸿蒙ArkUI开发项目实践**：\n   - 网址：https://harmonyosdev.csdn.net/6836cc1a01ee52251099acc8.html\n\n2. **二、结课项目案例**：\n   - 1. 基于鸿蒙ArkTs语言的健康检测App主页面开发\n     网址：https://harmonyosdev.csdn.net/67fdc32ada5d787fd5cd1fb0.html\n\n   - 2. 基于鸿蒙ArkTs语言的通讯录app应用\n     网址：https://harmonyosdev.csdn.net/67fdc59fc89bb164987f7e9d.html\n\n   - 3. 基于HarmonyOS的天气展示app\n     网址：https://juejin.cn/post/7498494017982971931\n\n   - 4. 鸿蒙五子棋和天气项目\n     网址：https://blog.csdn.net/gao_xin_xing?type=blog\n\n这些网址提供了关于鸿蒙项目的详细开发实践和案例，可以帮助你更好地理解和学习相关技术。",
+  "createTime": {
+    "$date": "2025-07-10T05:49:42.264Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943185967557099520"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "奇安信网址\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:50:11.972Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943185972393132032"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "奇安信的网址是：https://192.168.179.253/。",
+  "createTime": {
+    "$date": "2025-07-10T05:50:13.125Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186074482491392"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄住在哪里\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:50:37.465Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186080794918912"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "对不起，我无法获取或提供关于个人生活的信息。如果您有其他问题需要帮助，请随时告诉我，我会尽力为您提供支持和解答。",
+  "createTime": {
+    "$date": "2025-07-10T05:50:38.970Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186138877640704"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄的宿舍号是多少\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:50:52.818Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186145626275840"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "曾少雄的宿舍号是B705。",
+  "createTime": {
+    "$date": "2025-07-10T05:50:54.427Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186228958707712"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄好朋友是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:51:14.295Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186235338244096"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "曾少雄的好朋友是黄明杰。",
+  "createTime": {
+    "$date": "2025-07-10T05:51:15.816Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186290849857536"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄在哪个学校\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:51:29.051Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186296801574912"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "对不起，我无法获取到具体的信息。如果您有其他相关的问题，欢迎您提问！",
+  "createTime": {
+    "$date": "2025-07-10T05:51:30.470Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186334437064704"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄是哪个专业的\n\n",
+  "createTime": {
+    "$date": "2025-07-10T05:51:39.443Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943186340153901056"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "曾少雄的专业是烹饪。",
+  "createTime": {
+    "$date": "2025-07-10T05:51:40.806Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943509793134329856"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄在哪个学校\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:16:58.006Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943509797823561728"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "曾少雄在桂林电子科技大学北海校区。",
+  "createTime": {
+    "$date": "2025-07-11T03:16:59.124Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943510521022234624"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "宫保鸡丁做法\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:19:51.548Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943510535744241664"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "宫保鸡丁的做法如下：\n\n1. **准备食材**：鸡胸肉切成1厘米见方的丁，放入碗中，加入1汤匙料酒、1/2汤匙生抽和少许盐，搅拌均匀后腌制10分钟。花生米提前炸熟或烤熟备用。葱切成小段，姜蒜切末。\n2. **调汁**：取一个小碗，加入2汤匙生抽、1汤匙老抽、1汤匙白糖、1汤匙醋、1汤匙淀粉和适量清水，搅拌均匀备用。\n3. **炒制**：锅中倒入适量食用油，放入花椒和干辣椒段，小火煸炒出香味。放入腌好的鸡丁，大火快速翻炒至鸡丁变色。\n4. **调味**：加入姜末、蒜末，继续翻炒出香味。倒入调好的汁，快速翻炒，让鸡丁均匀裹上酱汁。\n5. **出锅**：最后加入炸好的花生米和葱段，翻炒均匀后即可出锅装盘。\n\n**小贴士**：宫保鸡丁的关键在于火候和酱汁的调配，鸡丁要炒至嫩滑，酱汁要酸甜适中，辣而不燥。",
+  "createTime": {
+    "$date": "2025-07-11T03:19:55.058Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943510663196557312"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:20:25.445Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943510666984013824"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "奇安信的网址是https://192.168.179.253/。",
+  "createTime": {
+    "$date": "2025-07-11T03:20:26.348Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943510797296844800"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄是谁 \n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:20:57.417Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943510801294016512"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "曾少雄是一名在校的大三学生，就读于桂林电子科技大学北海校区，并且他的专业是网络工程。他与好友lys同住一个宿舍，宿舍号码为B705。",
+  "createTime": {
+    "$date": "2025-07-11T03:20:58.370Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943515813881483264"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:40:53.464Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943515822504972288"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "根据提供的知识库内容，我无法找到关于“曾少雄”的相关信息。因此，答案是：根据提供资料，无法回答此问题。",
+  "createTime": {
+    "$date": "2025-07-11T03:40:55.520Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943515930189533184"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:41:21.194Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943515933620473856"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "奇安信的网址是https://192.168.179.253/。",
+  "createTime": {
+    "$date": "2025-07-11T03:41:22.012Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943516847844618240"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:44:59.980Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943516854354178048"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "曾少雄是桂林电子科技大学北海校区的一名在校大三学生，专业网络工程，学习认真，他的好朋友是lys，宿舍号是B705。",
+  "createTime": {
+    "$date": "2025-07-11T03:45:01.532Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943517440763904000"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:47:21.343Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943517448217182208"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "根据提供的知识库内容，无法回答“奇安信网址是什么”这个问题。",
+  "createTime": {
+    "$date": "2025-07-11T03:47:23.120Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943519336996220928"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:54:53.440Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943519360744370176"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "无法回答。知识库中没有关于“奇安信”的相关信息，因此无法提供该网站的网址。",
+  "createTime": {
+    "$date": "2025-07-11T03:54:59.102Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943520448960675840"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T03:59:18.553Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943520457240231936"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "根据知识库内容，没有提到“奇安信”这个网站的信息。因此，回答是：无法回答此问题。",
+  "createTime": {
+    "$date": "2025-07-11T03:59:20.527Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943521321371738112"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T04:02:46.552Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943521329370275840"
+  },
+  "chatId": {
+    "$numberLong": "1943185512324120576"
+  },
+  "type": 1,
+  "content": "根据知识库内容，没有提到“奇安信”这个网站的信息。因此，回答是：无法回答此问题。",
+  "createTime": {
+    "$date": "2025-07-11T04:02:48.459Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

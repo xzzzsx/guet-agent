@@ -1,0 +1,308 @@
+[{
+  "_id": {
+    "$numberLong": "1941060781311422464"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:05:28.087Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941060788223635456"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "你好！有什么可以帮您？",
+  "createTime": {
+    "$date": "2025-07-04T09:05:29.735Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941060825364197376"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "有什么课程推荐\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:05:38.590Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941060836760121344"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "为了给您推荐合适的课程，请告诉我以下信息：\n1. 您的学历（例如：初中、高中、大专、本科及以上等）。\n2. 您感兴趣的学习方向或领域（例如：编程、设计、自媒体等）。",
+  "createTime": {
+    "$date": "2025-07-04T09:05:41.307Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941060868750077952"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "大专编程\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:05:48.934Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941060894092062720"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "根据您的学历和兴趣，为您推荐以下课程：\n\n| 课程名称       | 学历要求 | 课程类型 | 价格  | 课程时长 |\n|----------------|----------|----------|-------|----------|\n| 鸿蒙应用开发   | 大专     | 编程     | 20999 | 98天      |\n\n如果您需要了解更详细的信息或者有其他需求，请随时告诉我！",
+  "createTime": {
+    "$date": "2025-07-04T09:05:54.976Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941060990628163584"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "怎么去你们那里上课\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:06:17.992Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061000937762816"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "请问您现在所在的位置是哪里？我可以帮您规划一条前往我们校区的路线。",
+  "createTime": {
+    "$date": "2025-07-04T09:06:20.450Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061039982538752"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "我在梧州\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:06:29.759Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061054197035008"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "您好，您是在梧州吗？需要我帮您查询梧州的实时天气情况吗？或者有什么其他需求呢？",
+  "createTime": {
+    "$date": "2025-07-04T09:06:33.148Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061101961768960"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "我在梧州 怎么去你们那里上课\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:06:44.536Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061110472011776"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "请问您具体在梧州的哪个位置？我可以帮您规划一条路线。",
+  "createTime": {
+    "$date": "2025-07-04T09:06:46.565Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061235277721600"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "你们哪个校区离梧州最近\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:07:16.321Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061267267678208"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "以下是我们的校区列表：\n\n| 校区名称 | 地址 |\n| --- | --- |\n| 昌平校区 | 北京 |\n| 顺义校区 | 北京 |\n| 杭州校区 | 杭州 |\n| 上海校区 | 上海 |\n| 南京校区 | 南京 |\n| 西安校区 | 西安 |\n| 郑州校区 | 郑州 |\n| 广东校区 | 广东 |\n| 深圳校区 | 深圳 |\n\n请问您所在的具体省份是哪里？这样我可以为您推荐离您最近的校区。",
+  "createTime": {
+    "$date": "2025-07-04T09:07:23.948Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061410981310464"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "我在梧州啊 离你们哪个校区最近 推荐我去\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:07:58.212Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061453503164416"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "以下是所有校区的列表：\n\n| 校区名称 | 地址 |\n| --- | --- |\n| 昌平校区 | 北京 |\n| 顺义校区 | 北京 |\n| 杭州校区 | 杭州 |\n| 上海校区 | 上海 |\n| 南京校区 | 南京 |\n| 西安校区 | 西安 |\n| 郑州校区 | 郑州 |\n| 广东校区 | 广东 |\n| 深圳校区 | 深圳 |\n\n您位于梧州，从地理位置上看，离广东校区和深圳校区相对较近。您可以选择前往广东校区或深圳校区学习。您希望我为您推荐具体的校区吗？或者您有其他需求可以告诉我，我会尽力帮助您！",
+  "createTime": {
+    "$date": "2025-07-04T09:08:08.350Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061586752008192"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "梧州到深圳有多远 怎么去那里\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:08:40.119Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061610395299840"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "从梧州到深圳的驾车距离约为390公里，预计需要约299分钟（大约5小时），具体时间可能因路况和行驶速度而有所不同。如果您需要其他交通方式（如公交、步行或骑行）的信息，请告诉我！",
+  "createTime": {
+    "$date": "2025-07-04T09:08:45.756Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061672621993984"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "我要预约 怎么预约\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:09:00.592Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061686521917440"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "好的！请提供您的姓名、电话、想预约的课程和校区，例如：张三 13800138000 Java课程 北京校区",
+  "createTime": {
+    "$date": "2025-07-04T09:09:03.906Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061821037441024"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 0,
+  "content": "曾少雄2 1386674567 鸿蒙 深圳校区 最好不要拖堂\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:09:35.977Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941061846182293504"
+  },
+  "chatId": {
+    "$numberLong": "1941060767910621184"
+  },
+  "type": 1,
+  "content": "正在为您生成预约单...\n预约成功！您的预约号是16。",
+  "createTime": {
+    "$date": "2025-07-04T09:09:41.972Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

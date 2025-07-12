@@ -1,0 +1,56 @@
+[{
+  "_id": {
+    "$numberLong": "1942950591714246656"
+  },
+  "chatId": {
+    "$numberLong": "1942950557157376000"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-09T14:14:53.998Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942950597229756416"
+  },
+  "chatId": {
+    "$numberLong": "1942950557157376000"
+  },
+  "type": 1,
+  "content": "曾少雄是一名在校大三学生，专业是网络工程。他学习认真，并且有一个好朋友叫lys，他们的宿舍号是B705。",
+  "createTime": {
+    "$date": "2025-07-09T14:14:55.313Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942950777450610688"
+  },
+  "chatId": {
+    "$numberLong": "1942950557157376000"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-09T14:15:38.281Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942950783196807168"
+  },
+  "chatId": {
+    "$numberLong": "1942950557157376000"
+  },
+  "type": 1,
+  "content": "奇安信的网址是https://192.168.179.253/。",
+  "createTime": {
+    "$date": "2025-07-09T14:15:39.651Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

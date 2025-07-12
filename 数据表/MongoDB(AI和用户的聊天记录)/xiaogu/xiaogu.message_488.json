@@ -1,0 +1,140 @@
+[{
+  "_id": {
+    "$numberLong": "1934245744227782656"
+  },
+  "chatId": {
+    "$numberLong": "1934245737865023488"
+  },
+  "type": 0,
+  "content": "曾少雄是谁 简短回答\n\n",
+  "createTime": {
+    "$date": "2025-06-15T13:44:56.629Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1934245752448618496"
+  },
+  "chatId": {
+    "$numberLong": "1934245737865023488"
+  },
+  "type": 1,
+  "content": "没有找到相关信息。",
+  "createTime": {
+    "$date": "2025-06-15T13:44:58.589Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1934245967775797248"
+  },
+  "chatId": {
+    "$numberLong": "1934245737865023488"
+  },
+  "type": 0,
+  "content": "奇安信的网址\n\n",
+  "createTime": {
+    "$date": "2025-06-15T13:45:49.927Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1934245971638751232"
+  },
+  "chatId": {
+    "$numberLong": "1934245737865023488"
+  },
+  "type": 1,
+  "content": "没有找到相关信息。",
+  "createTime": {
+    "$date": "2025-06-15T13:45:50.848Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941059642545311744"
+  },
+  "chatId": {
+    "$numberLong": "1941059612602175488"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:00:56.584Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941059648555749376"
+  },
+  "chatId": {
+    "$numberLong": "1941059612602175488"
+  },
+  "type": 1,
+  "content": "你好！有什么可以帮您？",
+  "createTime": {
+    "$date": "2025-07-04T09:00:58.017Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941059671666364416"
+  },
+  "chatId": {
+    "$numberLong": "1941059612602175488"
+  },
+  "type": 0,
+  "content": "有什么课程\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:01:03.527Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941059683485913088"
+  },
+  "chatId": {
+    "$numberLong": "1941059612602175488"
+  },
+  "type": 1,
+  "content": "为了给您推荐合适的课程，请告诉我您的学历和感兴趣的学习方向。例如，您可以说“高中学历，想学编程”。",
+  "createTime": {
+    "$date": "2025-07-04T09:01:06.345Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941059703907979264"
+  },
+  "chatId": {
+    "$numberLong": "1941059612602175488"
+  },
+  "type": 0,
+  "content": "编程 大专\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:01:11.214Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1941060220822392832"
+  },
+  "chatId": {
+    "$numberLong": "1941059612602175488"
+  },
+  "type": 0,
+  "content": "编程 大专\n\n",
+  "createTime": {
+    "$date": "2025-07-04T09:03:14.456Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

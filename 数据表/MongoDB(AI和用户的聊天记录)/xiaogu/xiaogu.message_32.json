@@ -1,0 +1,42 @@
+[{
+  "_id": {
+    "$numberLong": "1939193473777434624"
+  },
+  "chatId": {
+    "$numberLong": "1939193423244460032"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-06-29T05:25:27.278Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1939193496376344576"
+  },
+  "chatId": {
+    "$numberLong": "1939193423244460032"
+  },
+  "type": 1,
+  "content": "没有找到相关信息",
+  "createTime": {
+    "$date": "2025-06-29T05:25:32.666Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1939193496489590784"
+  },
+  "chatId": {
+    "$numberLong": "1939193423244460032"
+  },
+  "type": 1,
+  "content": "没有找到相关信息",
+  "createTime": {
+    "$date": "2025-06-29T05:25:32.693Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

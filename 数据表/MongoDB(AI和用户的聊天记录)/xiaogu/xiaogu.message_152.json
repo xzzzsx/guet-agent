@@ -1,0 +1,252 @@
+[{
+  "_id": {
+    "$numberLong": "1934243606470840320"
+  },
+  "chatId": {
+    "$numberLong": "1934243553446449152"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-06-15T13:36:26.948Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1934243612170899456"
+  },
+  "chatId": {
+    "$numberLong": "1934243553446449152"
+  },
+  "type": 1,
+  "content": "没有找到相关信息。",
+  "createTime": {
+    "$date": "2025-06-15T13:36:28.307Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1934243711940808704"
+  },
+  "chatId": {
+    "$numberLong": "1934243553446449152"
+  },
+  "type": 0,
+  "content": "奇安信地址\n\n",
+  "createTime": {
+    "$date": "2025-06-15T13:36:52.094Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1934243715518550016"
+  },
+  "chatId": {
+    "$numberLong": "1934243553446449152"
+  },
+  "type": 1,
+  "content": "没有找到相关信息。",
+  "createTime": {
+    "$date": "2025-06-15T13:36:52.947Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1934243793138339840"
+  },
+  "chatId": {
+    "$numberLong": "1934243553446449152"
+  },
+  "type": 0,
+  "content": "鸿蒙项目\n\n",
+  "createTime": {
+    "$date": "2025-06-15T13:37:11.453Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1934243797814988800"
+  },
+  "chatId": {
+    "$numberLong": "1934243553446449152"
+  },
+  "type": 1,
+  "content": "没有找到相关信息。",
+  "createTime": {
+    "$date": "2025-06-15T13:37:12.568Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867168020258816"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 0,
+  "content": "我想学编程\n\n",
+  "createTime": {
+    "$date": "2025-06-28T07:48:49.923Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867179206467584"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 1,
+  "content": "嗨嗨~欢迎来咨询课程呀！(＾▽＾) 首先想问问你对编程感兴趣呀，那你知道自己是什么学历吗？比如初中、高中、大专还是本科及以上呢？告诉我一下吧！",
+  "createTime": {
+    "$date": "2025-06-28T07:48:52.590Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867230645411840"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 0,
+  "content": "本科学历 \n\n",
+  "createTime": {
+    "$date": "2025-06-28T07:49:04.854Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867298014322688"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 1,
+  "content": "根据你的本科学历，我找到了几门适合你的编程课程呢！(•̀ᴗ•́)و\n\n| 课程名称         | 学历要求     | 类型   | 价格    | 持续时间 |\n|------------------|--------------|--------|---------|----------|\n| JavaEE           | 本科及以上   | 编程   | 保密哦~ | 108天    |\n| 鸿蒙应用开发     | 大专         | 编程   | 保密哦~ | 98天     |\n| AI人工智能       | 本科及以上   | 编程   | 保密哦~ | 100天    |\n| Python大数据开发 | 本科及以上   | 编程   | 保密哦~ | 102天    |\n\n费用是很优惠的，不过跟你能享受的补贴政策有关，建议你来线下试听时跟老师确认下哦！想了解更多关于哪门课程的信息呢？我可以帮你预约试听呀！",
+  "createTime": {
+    "$date": "2025-06-28T07:49:20.916Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867428197130240"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 0,
+  "content": "AI人工智能 \n\n",
+  "createTime": {
+    "$date": "2025-06-28T07:49:51.954Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867438687084544"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 1,
+  "content": "想预约AI人工智能课程的试听呀，太棒啦！(◕‿◕✿) 接下来想问问你希望在哪个校区进行试听呢？我可以帮你查询一下各个校区的情况哦！",
+  "createTime": {
+    "$date": "2025-06-28T07:49:54.455Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867552545660928"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 0,
+  "content": "有什么校区离我近帮我选一个 我在哈尔滨\n\n",
+  "createTime": {
+    "$date": "2025-06-28T07:50:21.601Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867574838386688"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 1,
+  "content": "根据你在哈尔滨的位置，虽然没有哈尔滨的校区，但我会为你推荐较近的校区哦！考虑到距离因素，你可能需要选择线上课程或就近选择其他城市的校区。不过我们可以看看是否有适合你的安排：\n\n| 校区名称   | 所在城市 |\n|------------|----------|\n| 杭州校区   | 杭州     |\n| 上海校区   | 上海     |\n| 南京校区   | 南京     |\n\n这些是相对较近的城市呢！有没有方便你前往的校区呀？或者我可以帮你了解下线上课程的情况！",
+  "createTime": {
+    "$date": "2025-06-28T07:50:26.916Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867804140986368"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 0,
+  "content": "那就南京校区吧 我要预约 姓名 小明 手机号1397745665 想要快点上课尽快安排\n\n",
+  "createTime": {
+    "$date": "2025-06-28T07:51:21.586Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867822260379648"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 1,
+  "content": "好的，小明同学想要在南京校区预约AI人工智能课程的试听呀，太棒啦！(◕‿◕✿) \n\n让我先确认一下你的信息哦：\n- 姓名：小明\n- 联系方式：1397745665\n- 想要快点上课尽快安排（备注）\n\n这些信息对吗？确认无误的话，我就帮你生成预约单啦！",
+  "createTime": {
+    "$date": "2025-06-28T07:51:25.906Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867888849149952"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 0,
+  "content": "确认无误,帮我预约吧\n\n",
+  "createTime": {
+    "$date": "2025-06-28T07:51:41.782Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938867915067744256"
+  },
+  "chatId": {
+    "$numberLong": "1938867098956849152"
+  },
+  "type": 1,
+  "content": "太好啦！小明同学的课程预约已经成功啦！(◕‿◕✿) \n\n你的预约信息如下：\n- 课程名称：AI人工智能\n- 校区：南京校区\n- 预约单号：5\n\n南京校区的老师会尽快联系你安排试听课时间滴！有什么其他问题都可以随时问我哦！",
+  "createTime": {
+    "$date": "2025-06-28T07:51:48.033Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

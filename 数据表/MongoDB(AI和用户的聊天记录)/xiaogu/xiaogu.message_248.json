@@ -1,0 +1,168 @@
+[{
+  "_id": {
+    "$numberLong": "1943572151399563264"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T07:24:45.375Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943572155543535616"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 1,
+  "content": "奇安信的官方网站是www.qianxin.com。",
+  "createTime": {
+    "$date": "2025-07-11T07:24:46.363Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943572849944039424"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T07:27:31.921Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943572854566162432"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 1,
+  "content": "根据提供的信息，我没有找到关于\"奇安信\"的网址。如果您需要查找奇安信的相关信息，请提供更多的上下文或具体问题，我会尽力帮助您。",
+  "createTime": {
+    "$date": "2025-07-11T07:27:33.023Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943572963735506944"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-11T07:27:59.051Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943572967061590016"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 1,
+  "content": "曾少雄是桂林电子科技大学北海校区的一名在校大三学生。",
+  "createTime": {
+    "$date": "2025-07-11T07:27:59.844Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943573114432655360"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 0,
+  "content": "宫保鸡丁做法是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T07:28:34.980Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943573122796097536"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 1,
+  "content": "根据提供的知识库内容，宫保鸡丁的制作方法如下：\n\n1. 准备食材：鸡胸肉、花生米、干辣椒、葱、姜、蒜。\n2. 将鸡胸肉切成小块，用盐、胡椒粉和料酒腌制30分钟。\n3. 花生米提前炒香备用。\n4. 干辣椒切段，葱切段，姜切片，蒜切末。\n5. 热锅凉油，下入干辣椒、花椒爆香。\n6. 加入葱、姜、蒜翻炒出香味。\n7. 倒入鸡胸肉块，快速翻炒至鸡肉变色。\n8. 加入适量的盐和生抽调味。\n9. 最后加入炒好的花生米，翻炒均匀即可。\n\n这样就可以做出一道美味的宫保鸡丁了。",
+  "createTime": {
+    "$date": "2025-07-11T07:28:36.974Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943573245982806016"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 0,
+  "content": "宫保鸡丁食材是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T07:29:06.344Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943573251120828416"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 1,
+  "content": "根据提供的知识库内容，宫保鸡丁的食材包括：\n\n- 鸡胸肉切成1厘米见方的丁\n- 花生米提前炸熟或烤熟备用\n- 葱切成小段\n- 姜蒜切末\n\n这些是制作宫保鸡丁的基本材料。",
+  "createTime": {
+    "$date": "2025-07-11T07:29:07.569Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943573634366967808"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 0,
+  "content": "鸿蒙项目网址推荐一个\n\n",
+  "createTime": {
+    "$date": "2025-07-11T07:30:38.942Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943573642625552384"
+  },
+  "chatId": {
+    "$numberLong": "1943572145301045248"
+  },
+  "type": 1,
+  "content": "根据文档1中的信息，HarmonyOS Next 实现登录注册页面(ARKTS) 并使用Springboot作为后端提供接口的链接是：https://mp.weixin.qq.com/s?__biz=MzI3ODAyNTEzMA==&mid=2456087978&idx=1&sn=b711f7f91a58698cbf4559405c5145b4&chksm=fd913862f56c9288853a7ab8987e87518a61989d25a42ad3857548400b04dd103d8d76937700&scene=27。",
+  "createTime": {
+    "$date": "2025-07-11T07:30:40.911Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

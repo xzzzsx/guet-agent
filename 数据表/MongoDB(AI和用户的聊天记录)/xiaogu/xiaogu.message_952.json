@@ -1,0 +1,252 @@
+[{
+  "_id": {
+    "$numberLong": "1942115908113805312"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-07T06:58:09.920Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942115931769679872"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 1,
+  "content": "你好！很高兴为你提供帮助。请问有什么我可以帮你解答的问题？",
+  "createTime": {
+    "$date": "2025-07-07T06:58:15.560Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942115997154684928"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "奇安信网址是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-07T06:58:31.149Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942116001994911744"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 1,
+  "content": "奇安信的网址是https://192.168.179.253/。",
+  "createTime": {
+    "$date": "2025-07-07T06:58:32.303Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942116058710290432"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "鸿蒙项目推荐一个带网址\n\\",
+  "createTime": {
+    "$date": "2025-07-07T06:58:45.825Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942116062447415296"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 1,
+  "content": "基于鸿蒙ArkTs语言的健康检测App主页面开发，参考链接：https://harmonyosdev.csdn.net/67fdc32ada5d787fd5cd1fb0.html。",
+  "createTime": {
+    "$date": "2025-07-07T06:58:46.716Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942116091786571776"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "曾少雄住在哪里\n\n",
+  "createTime": {
+    "$date": "2025-07-07T06:58:53.711Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942116097553739776"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 1,
+  "content": "曾少雄是桂林电子科技大学北海校区的一名在校大三学生,专业网络工程,学习认真,他的好朋友是lys,宿舍号是B705。",
+  "createTime": {
+    "$date": "2025-07-07T06:58:55.086Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942518206044536832"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "曾少雄住在哪里\n\n",
+  "createTime": {
+    "$date": "2025-07-08T09:36:45.221Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942518314232414208"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "曾少雄住在哪里\n\n",
+  "createTime": {
+    "$date": "2025-07-08T09:37:11.015Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942518333744316416"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 1,
+  "content": "曾少雄是桂林电子科技大学北海校区的一名在校大三学生,专业网络工程,学习认真,他的好朋友是lys,宿舍号是B705。",
+  "createTime": {
+    "$date": "2025-07-08T09:37:15.667Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942518378610786304"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-08T09:37:26.364Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942518383736225792"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 1,
+  "content": "你好！很高兴为你提供帮助。请问有什么我可以帮你解答的问题？",
+  "createTime": {
+    "$date": "2025-07-08T09:37:27.586Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942518413142491136"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "你是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-08T09:37:34.597Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942518418762858496"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 1,
+  "content": "我是来自阿里云的AI助手，我叫通义千问。",
+  "createTime": {
+    "$date": "2025-07-08T09:37:35.937Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942880772172165120"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-09T09:37:27.722Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942880960932622336"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-09T09:38:12.726Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942880988141072384"
+  },
+  "chatId": {
+    "$numberLong": "1942115868414717952"
+  },
+  "type": 1,
+  "content": "曾少雄是桂林电子科技大学北海校区的一名在校大三学生,专业网络工程,学习认真,他的好朋友是lys,宿舍号是B705。",
+  "createTime": {
+    "$date": "2025-07-09T09:38:19.213Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

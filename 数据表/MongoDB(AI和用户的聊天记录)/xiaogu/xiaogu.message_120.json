@@ -1,0 +1,56 @@
+[{
+  "_id": {
+    "$numberLong": "1938516788744712192"
+  },
+  "chatId": {
+    "$numberLong": "1938516757107077120"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-06-27T08:36:32.994Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938516799217889280"
+  },
+  "chatId": {
+    "$numberLong": "1938516757107077120"
+  },
+  "type": 1,
+  "content": "曾少雄是桂林电子科技大学北海校区的一名在校大三学生，专业为网络工程，学习认真。他的好朋友是lys，宿舍号为B705。",
+  "createTime": {
+    "$date": "2025-06-27T08:36:35.491Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938516900778766336"
+  },
+  "chatId": {
+    "$numberLong": "1938516757107077120"
+  },
+  "type": 0,
+  "content": "鸿蒙项目学习网址推荐\n\n",
+  "createTime": {
+    "$date": "2025-06-27T08:36:59.705Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1938517016122126336"
+  },
+  "chatId": {
+    "$numberLong": "1938516757107077120"
+  },
+  "type": 1,
+  "content": "以下是一些鸿蒙项目学习的推荐网址：\n\n1. **鸿蒙ArkUI开发项目实践（课程内容复习+鸿蒙元服务）**  \n   [https://harmonyosdev.csdn.net/6836cc1a01ee52251099acc8.html](https://harmonyosdev.csdn.net/6836cc1a01ee52251099acc8.html)  \n   - 内容包括：网络访问axios获取新浪头条、生肖命理小程序、生鲜超市首页设计等项目开发。\n\n2. **基于鸿蒙ArkTs语言的健康检测App主页面开发**  \n   [https://harmonyosdev.csdn.net/67fdc32ada5d787fd5cd1fb0.html](https://harmonyosdev.csdn.net/67fdc32ada5d787fd5cd1fb0.html)\n\n3. **基于鸿蒙ArkTs语言的通讯录app应用**  \n   [https://harmonyosdev.csdn.net/67fdc59fc89bb164987f7e9d.html](https://harmonyosdev.csdn.net/67fdc59fc89bb164987f7e9d.html)\n\n4. **基于HarmonyOS的天气展示app**  \n   [https://juejin.cn/post/7498494017982971931](https://juejin.cn/post/7498494017982971931)\n\n5. **鸿蒙五子棋和天气项目**  \n   [https://blog.csdn.net/gao_xin_xing?type=blog](https://blog.csdn.net/gao_xin_xing?type=blog)\n\n6. **行业实践项目参考**  \n   [https://developer.huawei.com/consumer/cn/doc/architecture-guides/shaking_to_dialog-0000001903742656](https://developer.huawei.com/consumer/cn/doc/architecture-guides/shaking_to_dialog-0000001903742656)\n\n7. **毕业设计项目参考**  \n   [https://blog.csdn.net/coder1998?type=blog](https://blog.csdn.net/coder1998?type=blog)",
+  "createTime": {
+    "$date": "2025-06-27T08:37:27.205Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

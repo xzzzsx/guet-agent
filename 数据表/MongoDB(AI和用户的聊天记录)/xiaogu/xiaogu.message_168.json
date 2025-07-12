@@ -1,0 +1,84 @@
+[{
+  "_id": {
+    "$numberLong": "1939198205745053696"
+  },
+  "chatId": {
+    "$numberLong": "1939198155488903168"
+  },
+  "type": 0,
+  "content": "奇安信账号\n\n",
+  "createTime": {
+    "$date": "2025-06-29T05:44:15.467Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1939198225412145152"
+  },
+  "chatId": {
+    "$numberLong": "1939198155488903168"
+  },
+  "type": 1,
+  "content": "没有找到相关信息。",
+  "createTime": {
+    "$date": "2025-06-29T05:44:20.156Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1939199548585144320"
+  },
+  "chatId": {
+    "$numberLong": "1939198155488903168"
+  },
+  "type": 0,
+  "content": "奇安信账号\n\n",
+  "createTime": {
+    "$date": "2025-06-29T05:49:35.626Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1939199565928591360"
+  },
+  "chatId": {
+    "$numberLong": "1939198155488903168"
+  },
+  "type": 1,
+  "content": "没有找到相关信息。",
+  "createTime": {
+    "$date": "2025-06-29T05:49:39.760Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1939205551116513280"
+  },
+  "chatId": {
+    "$numberLong": "1939198155488903168"
+  },
+  "type": 0,
+  "content": "奇安信账号\n\n",
+  "createTime": {
+    "$date": "2025-06-29T06:13:26.740Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1939205572658458624"
+  },
+  "chatId": {
+    "$numberLong": "1939198155488903168"
+  },
+  "type": 1,
+  "content": "奇安信的账号是学号，密码是Qwer@123。",
+  "createTime": {
+    "$date": "2025-06-29T06:13:31.876Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

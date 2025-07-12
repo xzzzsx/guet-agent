@@ -1,0 +1,196 @@
+[{
+  "_id": {
+    "$numberLong": "1943585524908433408"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 0,
+  "content": "桂林电子科技大学北海校区学生安全告知书 第十条规定是什么\n\n",
+  "createTime": {
+    "$date": "2025-07-11T08:17:53.868Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943585531787091968"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 1,
+  "content": "第十条规定：严禁在校园内酗酒、打架斗殴，禁止携带管制刀具、易燃易爆物品进入校园。",
+  "createTime": {
+    "$date": "2025-07-11T08:17:55.508Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943589650237104128"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 0,
+  "content": "校保卫处电话是多少\n\n",
+  "createTime": {
+    "$date": "2025-07-11T08:34:17.423Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943589653802262528"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 1,
+  "content": "校保卫处电话是0779-3221218。",
+  "createTime": {
+    "$date": "2025-07-11T08:34:18.273Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943589925014347776"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 0,
+  "content": "食堂与餐饮服务怎么样\n\n",
+  "createTime": {
+    "$date": "2025-07-11T08:35:22.935Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943589929200263168"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 1,
+  "content": "根据提供的知识库内容，关于食堂和餐饮服务的信息非常有限。文档4提到“校外就餐提示”，但没有提供具体的学校食堂信息或详细描述。因此，无法基于现有资料回答这个问题。",
+  "createTime": {
+    "$date": "2025-07-11T08:35:23.933Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943591173608341504"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 0,
+  "content": "食堂与餐饮服务怎么样\n\n",
+  "createTime": {
+    "$date": "2025-07-11T08:40:20.623Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943591181774651392"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 1,
+  "content": "根据提供的知识库内容，关于食堂和餐饮服务的信息非常有限。文档4提到“校外就餐提示”，但没有提供具体的餐厅信息或详细描述。因此，无法从这些资料中获取关于食堂和餐饮服务的详细信息。",
+  "createTime": {
+    "$date": "2025-07-11T08:40:22.570Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943591357620846592"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 0,
+  "content": "教室与教学设施怎么样\n\n",
+  "createTime": {
+    "$date": "2025-07-11T08:41:04.495Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943591362586902528"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 1,
+  "content": "根据提供的知识库内容，关于教室和教学设施的信息有限。文档中提到的“校外就餐提示”、“食品安全与采购”以及“转专业规则”等信息与教室和教学设施无关。因此，无法从这些文档中获取有关教室和教学设施的具体信息。",
+  "createTime": {
+    "$date": "2025-07-11T08:41:05.679Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943592102076223488"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 0,
+  "content": "教室与教学设施怎么样\n\n",
+  "createTime": {
+    "$date": "2025-07-11T08:44:01.987Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943592115347001344"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 1,
+  "content": "根据提供的知识库内容，北海校区的教室和教学设施情况如下：\n\n1. 教室类型：北海校区提供多种类型的宿舍，包括4人间和8人间。其中8人间的费用为每年1100元人民币。\n\n2. 住宿条件与管理：\n   - 宿舍类型与费用：北海校区提供了4人间和8人间两种宿舍类型，每种类型都包含空调、独立卫生间等设施。\n   - 外国合作项目：北海校区的学生可以参加中外合作项目，其住宿费统一为8人间1100元/年。\n\n3. 教学设施：\n   - 实验室配备VR数控仿真系统及智能工程设备，提供竞赛支持，学生可参与美国数学建模大赛、全国电子设计竞赛等。\n   - 特色推荐：北海校区的美食街“小火曼美食店”螺蛳粉最受欢迎，南珠大道辅路夜市烧烤摊营业至凌晨。\n\n4. 教学特色：\n   - 竞赛支持：学生可参加美国数学建模大赛、全国电子设计竞赛等。\n   - 转专业规则：北海校区的学生仅限校区内转专业，艺术类不可转非艺术类，每年4月开放申请。",
+  "createTime": {
+    "$date": "2025-07-11T08:44:05.151Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943592309107068928"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 0,
+  "content": "食堂与餐饮服务怎么样\n\n",
+  "createTime": {
+    "$date": "2025-07-11T08:44:51.347Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943592315520159744"
+  },
+  "chatId": {
+    "$numberLong": "1943585454511235072"
+  },
+  "type": 1,
+  "content": "校内餐饮分布包括商业街和南珠大道辅路夜市烧烤摊。商业街位于银海区学者路，含益禾堂等奶茶店及快餐店，可乘坐16路公交到达；南珠大道辅路夜市烧烤摊营业至凌晨。食品安全与采购方面，2024年7月通过竞争性磋商采购食堂大宗物资，确保源头安全。",
+  "createTime": {
+    "$date": "2025-07-11T08:44:52.876Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

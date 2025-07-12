@@ -1,0 +1,42 @@
+[{
+  "_id": {
+    "$numberLong": "1942058595785097216"
+  },
+  "chatId": {
+    "$numberLong": "1942058580161314816"
+  },
+  "type": 0,
+  "content": "你好\n\n",
+  "createTime": {
+    "$date": "2025-07-07T03:10:25.596Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942058607143272448"
+  },
+  "chatId": {
+    "$numberLong": "1942058580161314816"
+  },
+  "type": 1,
+  "content": "你好！有什么可以帮您？",
+  "createTime": {
+    "$date": "2025-07-07T03:10:28.304Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942090736011034624"
+  },
+  "chatId": {
+    "$numberLong": "1942058580161314816"
+  },
+  "type": 0,
+  "content": "桂林电子科技大学北海校区到北海市第二人民医院驾车路线带地图\n\n",
+  "createTime": {
+    "$date": "2025-07-07T05:18:08.423Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

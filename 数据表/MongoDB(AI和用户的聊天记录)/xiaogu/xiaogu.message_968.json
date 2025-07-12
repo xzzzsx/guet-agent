@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$numberLong": "1943295004051177472"
+  },
+  "chatId": {
+    "$numberLong": "1943294984962899968"
+  },
+  "type": 0,
+  "content": "2020 级数字媒体艺术专业人才培养方案（专升本）\n（专业代码是多少\n\n",
+  "createTime": {
+    "$date": "2025-07-10T13:03:28.298Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943295007406620672"
+  },
+  "chatId": {
+    "$numberLong": "1943294984962899968"
+  },
+  "type": 1,
+  "content": "根据提供的信息，2020级数字媒体艺术专业的培养方案中没有提到具体的专业代码。因此，无法提供该专业代码的答案。",
+  "createTime": {
+    "$date": "2025-07-10T13:03:29.098Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]

@@ -1,0 +1,252 @@
+[{
+  "_id": {
+    "$numberLong": "1942952948854374400"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-09T14:24:15.984Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942952956773220352"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "曾少雄是《中国好声音》第二季的选手。他来自湖南，是一位实力派歌手和音乐制作人。在节目中，他凭借自己的才华和努力赢得了观众的喜爱，并最终成为了一名知名歌手。",
+  "createTime": {
+    "$date": "2025-07-09T14:24:17.872Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942953308092317696"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "曾少雄好朋友是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-09T14:25:41.633Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942953314278916096"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "曾少雄的好朋友是刘洋。",
+  "createTime": {
+    "$date": "2025-07-09T14:25:43.108Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942953367538188288"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "鸿蒙项目推荐一个\n\n",
+  "createTime": {
+    "$date": "2025-07-09T14:25:55.806Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942953385183625216"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "在鸿蒙（HarmonyOS）开发中，有许多优秀的项目可以参考和学习。以下是一些基于HarmonyOS的健康检测App、通讯录app应用以及天气展示app的详细信息：\n\n1. **基于HarmonyOS的健康检测App主页面开发**\n   - 该项目旨在提供一个基础的健康监测功能，包括心率、血压等基本生理指标的监控。\n   - 参考链接：https://harmonyosdev.csdn.net/67fdc32ada5d787fd5cd1fb0.html\n\n2. **基于HarmonyOS的通讯录app应用**\n   - 该项目提供一个简单的通讯录功能，包括添加、删除和查找联系人。\n   - 参考链接：https://harmonyosdev.csdn.net/67fdc59fc89bb164987f7e9d.html\n\n3. **基于HarmonyOS的天气展示app**\n   - 该项目提供一个简单的天气查询功能，用户可以输入城市名称获取当前和未来几天的天气预报。\n   - 参考链接：https://juejin.cn/post/7498494017982971931\n\n这些项目都是基于HarmonyOS开发的基础应用，可以帮助你快速上手并理解HarmonyOS的基本架构和功能。你可以根据自己的兴趣选择一个开始学习。",
+  "createTime": {
+    "$date": "2025-07-09T14:26:00.013Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942953468486696960"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "奇安信账号密码是啥\n\n",
+  "createTime": {
+    "$date": "2025-07-09T14:26:19.874Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942953476334239744"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "奇安信的账号和密码是：学号/Qwer@123",
+  "createTime": {
+    "$date": "2025-07-09T14:26:21.745Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942953522228314112"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "有什么菜系推荐\n\n",
+  "createTime": {
+    "$date": "2025-07-09T14:26:32.687Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1942953535067078656"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "当然可以！这里有一些中式和西式的菜系推荐：\n\n### 中式菜肴推荐：\n1. **宫保鸡丁**：这是一道经典的川菜，以其独特的酸甜麻辣口味而闻名。\n2. **清蒸鲈鱼**：这道菜以清淡的调味方式著称，非常适合喜欢清淡口味的人。\n3. **红烧肉**：这是一道传统的中国菜肴，以其色泽红亮、味道醇厚的特点受到广泛喜爱。\n\n### 西式菜肴推荐：\n1. **番茄意面**：这是一种结合了意大利面和番茄酱的经典西餐，适合喜欢尝试新菜系的食客。\n2. **牛排**：无论是煎、烤还是慢煮，牛排都是西餐中的经典选择，可以根据个人口味调整调味。\n\n希望这些推荐能帮助你找到心仪的菜肴！",
+  "createTime": {
+    "$date": "2025-07-09T14:26:35.748Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943134601442721792"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-10T02:26:05.336Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943134635538219008"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "曾少雄是你的一个朋友或同事的名字。如果您有关于他的具体问题或者需要了解更多信息，请告诉我，我会尽力帮助您。",
+  "createTime": {
+    "$date": "2025-07-10T02:26:13.465Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943134724063199232"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "奇安信账号密码是啥\n\n",
+  "createTime": {
+    "$date": "2025-07-10T02:26:34.571Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943134729792618496"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "奇安信的账号和密码是：学号/Qwer@123",
+  "createTime": {
+    "$date": "2025-07-10T02:26:35.937Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943134831701622784"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "学校怎么样\n\n",
+  "createTime": {
+    "$date": "2025-07-10T02:27:00.234Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943134837833695232"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "很抱歉，我无法提供关于您所在学校的详细信息或评价。如果您有具体的问题或者需要了解某个特定方面的信息，请告诉我，我会尽力帮助您查找相关信息。",
+  "createTime": {
+    "$date": "2025-07-10T02:27:01.696Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943138734006558720"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 0,
+  "content": "曾少雄是谁\n\n",
+  "createTime": {
+    "$date": "2025-07-10T02:42:30.616Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+},
+{
+  "_id": {
+    "$numberLong": "1943138774292848640"
+  },
+  "chatId": {
+    "$numberLong": "1942952941992493056"
+  },
+  "type": 1,
+  "content": "曾少雄是您提到的菜谱中的一个食材名称，通常用于制作中式菜肴如宫保鸡丁、清蒸鲈鱼和红烧肉等。这些菜品以其独特的口味和烹饪方法而闻名。如果您需要更多关于这些菜品的信息或有其他问题，请随时告诉我！",
+  "createTime": {
+    "$date": "2025-07-10T02:42:40.221Z"
+  },
+  "_class": "com.atguigu.guliai.pojo.Message"
+}]
