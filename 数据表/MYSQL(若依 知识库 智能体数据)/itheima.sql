@@ -11,7 +11,7 @@
  Target Server Version : 80026 (8.0.26)
  File Encoding         : 65001
 
- Date: 17/07/2025 14:17:51
+ Date: 26/07/2025 12:02:27
 */
 
 SET NAMES utf8mb4;
@@ -83,13 +83,13 @@ CREATE TABLE `course`  (
 -- ----------------------------
 -- Records of course
 -- ----------------------------
-INSERT INTO `course` VALUES (1, '网络工程', 3, '计算机工程学院', 7400, 58);
-INSERT INTO `course` VALUES (2, '物流管理', 2, '经济与管理学院', 4000, 98);
-INSERT INTO `course` VALUES (3, '机械工程', 1, '海洋工程学院', 4500, 100);
-INSERT INTO `course` VALUES (4, '电信工程及管理', 2, '电子信息学院', 4200, 102);
-INSERT INTO `course` VALUES (5, '大数据管理与应用', 4, '计算机工程学院', 5700, 68);
-INSERT INTO `course` VALUES (6, '工业设计', 1, '设计与创意学院', 4000, 61);
-INSERT INTO `course` VALUES (7, '网络工程(NIIT)', 2, '计算机工程学院', 12500, 66);
+INSERT INTO `course` VALUES (1, '网络工程', 3, '计算机工程学院', 7500, 1460);
+INSERT INTO `course` VALUES (2, '物流管理', 2, '经济与管理学院', 4000, 1460);
+INSERT INTO `course` VALUES (3, '机械工程', 1, '海洋工程学院', 4500, 1460);
+INSERT INTO `course` VALUES (4, '电信工程及管理', 2, '电子信息学院', 4200, 1460);
+INSERT INTO `course` VALUES (5, '大数据管理与应用', 4, '计算机工程学院', 5700, 1460);
+INSERT INTO `course` VALUES (6, '工业设计', 1, '设计与创意学院', 4000, 1460);
+INSERT INTO `course` VALUES (7, '网络工程(NIIT)', 2, '计算机工程学院', 12500, 1460);
 
 -- ----------------------------
 -- Table structure for course_reservation
@@ -103,7 +103,7 @@ CREATE TABLE `course_reservation`  (
   `school` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '预约校区',
   `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of course_reservation
@@ -130,6 +130,10 @@ INSERT INTO `course_reservation` VALUES (19, '网络工程', '张三', '13800138
 INSERT INTO `course_reservation` VALUES (20, '网络工程', '张三', '13800138000', '北海校区', '大概后天到达');
 INSERT INTO `course_reservation` VALUES (21, '网络工程(NIIT', '曾少雄', '1357745644', '花江校区', '明天会早点到');
 INSERT INTO `course_reservation` VALUES (22, '网络工程(NIIT)', '曾少雄', '1387745600', '北海校区', '可能晚点');
+INSERT INTO `course_reservation` VALUES (23, '网络工程(NIIT)', '曾少雄', '1387745600', '北海校区', '可能晚点');
+INSERT INTO `course_reservation` VALUES (24, '网络工程(NIIT)', '曾少雄', '1387745600', '北海校区', '可能晚点');
+INSERT INTO `course_reservation` VALUES (25, '网络工程(NIIT)', '曾少雄', '1387745600', '北海校区', '可能晚点');
+INSERT INTO `course_reservation` VALUES (26, '网络工程(NIIT)', '曾少雄少', '13877408723', '北海校区', '大概明天出发');
 
 -- ----------------------------
 -- Table structure for gen_table
@@ -454,7 +458,7 @@ CREATE TABLE `sys_logininfor`  (
   PRIMARY KEY (`info_id`) USING BTREE,
   INDEX `idx_sys_logininfor_s`(`status` ASC) USING BTREE,
   INDEX `idx_sys_logininfor_lt`(`login_time` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 227 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 228 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_logininfor
@@ -586,6 +590,7 @@ INSERT INTO `sys_logininfor` VALUES (223, 'admin', '127.0.0.1', '内网IP', 'Chr
 INSERT INTO `sys_logininfor` VALUES (224, 'admin', '127.0.0.1', '内网IP', 'Chrome 12', 'Windows 10', '1', '验证码错误', '2025-07-11 19:44:37');
 INSERT INTO `sys_logininfor` VALUES (225, 'admin', '127.0.0.1', '内网IP', 'Chrome 12', 'Windows 10', '0', '登录成功', '2025-07-11 19:44:41');
 INSERT INTO `sys_logininfor` VALUES (226, 'admin', '127.0.0.1', '内网IP', 'Chrome 12', 'Windows 10', '0', '登录成功', '2025-07-12 18:03:14');
+INSERT INTO `sys_logininfor` VALUES (227, 'admin', '127.0.0.1', '内网IP', 'Chrome 12', 'Windows 10', '0', '登录成功', '2025-07-25 19:45:20');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -1036,7 +1041,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 103, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2025-07-12 18:03:14', 'admin', '2024-06-26 08:47:33', '', '2025-07-12 18:03:14', '管理员');
+INSERT INTO `sys_user` VALUES (1, 103, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2025-07-25 19:45:20', 'admin', '2024-06-26 08:47:33', '', '2025-07-25 19:45:20', '管理员');
 INSERT INTO `sys_user` VALUES (2, 105, 'ry', '若依', '00', 'ry@qq.com', '15666666666', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2024-06-26 08:47:33', 'admin', '2024-06-26 08:47:33', '', NULL, '测试员');
 
 -- ----------------------------

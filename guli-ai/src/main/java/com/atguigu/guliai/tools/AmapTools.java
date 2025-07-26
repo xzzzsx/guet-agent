@@ -21,22 +21,6 @@ public class AmapTools {
     @Value("${amap.api.key}")
     private String apiKey;
 
-    @Tool(name = "maps_weather", description = "查询城市实时天气")
-    public String getWeather(@ToolParam(description = "城市名称") String city) {
-        String url = "https://restapi.amap.com/v3/weather/weatherInfo?key=" + apiKey + "&city=" + city;
-        String response = HttpUtil.get(url);
-        JSONObject json = JSONUtil.parseObj(response);
-
-        JSONObject lives = json.getJSONArray("lives").getJSONObject(0);
-        return String.format("%s天气：%s，温度%s°C，湿度%s%%，风向%s，风力%s级",
-                lives.getStr("city"),
-                lives.getStr("weather"),
-                lives.getStr("temperature"),
-                lives.getStr("humidity"),
-                lives.getStr("winddirection"),
-                lives.getStr("windpower"));
-    }
-
     @Tool(name = "maps_future_weather", description = "查询城市未来天气，最多可查询未来4天天气")
     public String getFutureWeather(@ToolParam(description = "城市名称") String city) {
         String url = "https://restapi.amap.com/v3/weather/weatherInfo?key=" + apiKey + "&city=" + city + "&extensions=all";
@@ -64,22 +48,6 @@ public class AmapTools {
         return result.toString();
     }
 
-    @Tool(name = "maps_ip_location", description = "通过IP地址查询位置信息")
-    public String getLocationByIp() {
-        String url = "https://restapi.amap.com/v3/ip?key=" + apiKey;
-        String response = HttpUtil.get(url);
-        JSONObject json = JSONUtil.parseObj(response);
-
-        if (!"1".equals(json.getStr("status"))) {
-            return "定位失败：" + json.getStr("info");
-        }
-
-        return String.format("当前位置：%s%s（IP：%s）",
-                json.getStr("province"),
-                json.getStr("city"),
-                json.getStr("ip"));
-    }
-
     private Map<String, String> geocodeAddress(String address) {
         if (address.endsWith("市")) {
             address = address.substring(0, address.length() - 1);
@@ -105,7 +73,7 @@ public class AmapTools {
         return null;
     }
 
-    @Tool(name = "maps_route", description = "路线规划工具，支持驾车和步行，必须返回包含地图的路线信息")
+    @Tool(name = "maps_route", description = "路线规划工具，支持驾车和步行，必须返回包含地图的路线信息和地图图片")
     public String getRoute(
             @ToolParam(description = "起点地址（城市+地点名称）") String origin,
             @ToolParam(description = "终点地址（城市+地点名称）") String destination,
@@ -287,7 +255,6 @@ public class AmapTools {
         return routeInfo.toString();
     }
 
-    // 步行路线解析
     // 步行路线解析
     private String parseWalkingRoute(JSONObject json, StringBuilder routeInfo,
                                      String originalOrigin, String originalDest,

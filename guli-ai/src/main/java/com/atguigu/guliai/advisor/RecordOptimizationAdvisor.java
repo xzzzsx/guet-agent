@@ -72,6 +72,6 @@ public class RecordOptimizationAdvisor implements CallAroundAdvisor, StreamAroun
     }
 
     private boolean isRoutingTag(String text) {
-        return "RECOMMEND".equals(text) || "RESERVATION".equals(text) || "SCHOOL_QUERY".equals(text);
+        return "RECOMMEND".equals(text) || "RESERVATION".equals(text) || "SCHOOL_QUERY".equals(text) || "MAPS_QUERY".equals(text);
     }
 }
