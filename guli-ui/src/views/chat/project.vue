@@ -364,23 +364,8 @@ export default {
       console.log("已将项目ID存入localStorage:", projectIdStr);
       this.$message.success("已选择项目: " + row.projectName);
 
-      // 使用BroadcastChannel通知聊天页面刷新
-      const channel = new BroadcastChannel("project_channel");
-      const message = {
-        type: "projectChanged",
-        projectId: Number(row.projectId),
-        timestamp: Date.now(),
-      };
-      console.log("准备通过BroadcastChannel发送消息:", message);
-      channel.postMessage(message);
-      console.log("BroadcastChannel消息已发送");
-      channel.close();
-
-      // 保留原有window.opener.postMessage作为后备
-      if (window.opener) {
-        console.log("通过window.opener.postMessage发送消息:", message);
-        window.opener.postMessage(message, "*");
-      }
+      // 在新窗口打开聊天页面
+      window.open(`http://localhost:5173/?projectId=${row.projectId}`, '_blank');
     },
     /** 新增按钮操作 */
     handleAdd() {
