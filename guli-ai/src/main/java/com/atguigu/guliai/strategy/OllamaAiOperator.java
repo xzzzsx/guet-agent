@@ -167,42 +167,55 @@ public class OllamaAiOperator implements AiOperator {
             this.chatModel = model;
         }
 
-        public String rewrite(String query) {
+        public String rewrite(String query, String documentKeywords) {
             try {
                 String prompt = """
-                        请严格按以下要求转换查询关键词：
-                                    
+                        请严格按以下要求转换查询关键词，结合文档内容提取最相关的搜索关键词：
+                        
                         ## 要求
                         1. 只输出最终关键词，不要包含"输出"等前缀
                         2. 用空格分隔3-5个关键词
-                        3. 示例格式：
-                           输入：校区环境怎么样？
-                           校区环境 教学设施 卫生条件
+                        3. 结合用户查询和文档关键词提取最相关的关键词
+                        4. 示例格式：
+                           输入查询：校区环境怎么样？
+                           文档关键词：校区环境 教学设施 卫生条件
+                           输出：校区环境 教学设施 卫生条件
                            
-                           输入：宿舍条件好吗？
-                           宿舍条件 住宿环境 生活设施
-                                    
-                        ## 待转换查询
+                           输入查询：宿舍条件好吗？
+                           文档关键词：宿舍条件 住宿环境 生活设施
+                           输出：宿舍条件 住宿环境 生活设施
+                        
+                        ## 用户查询
                         {query}
-                                    
+                        
+                        ## 文档关键词
+                        {documentKeywords}
+                        
                         ## 关键词结果
-                        """;  // 注意这里没有冒号
+                        """;
 
                 String rewritten = ChatClient.create(chatModel)
                         .prompt()
-                        .user(new PromptTemplate(prompt).render(Map.of("query", query)))
+                        .user(new PromptTemplate(prompt).render(
+                                Map.of("query", query, "documentKeywords", documentKeywords)))
                         .call()
                         .content();
 
+                log.info("重写后的查询: {}", rewritten); // 添加这行日志
                 return cleanKeywords(rewritten);
             } catch (Exception e) {
                 log.error("查询重写失败，使用原始查询", e);
                 return query;
             }
         }
+        
+        // 重载方法保持向后兼容
+        public String rewrite(String query) {
+            return rewrite(query, "");
+        }
 
         private String cleanKeywords(String raw) {
-            return raw.replace("输出", "")  // 移除可能的"输出"字样
+            return raw.replace("输出", "")
                     .replaceAll("[^\\w\u4e00-\u9fa5]", " ")
                     .replaceAll("\\s+", " ")
                     .trim();
@@ -218,7 +231,28 @@ public class OllamaAiOperator implements AiOperator {
                 return searchWithOriginalQuery(queryVo);
             }
 
-            String rewrittenQuery = queryRewriter.rewrite(queryVo.getMsg());
+            // 先进行一次初步搜索获取相关文档的关键词
+            SearchRequest initialRequest = buildSearchRequest(queryVo, queryVo.getMsg());
+            List<Document> initialDocuments = this.ollamaVectorStore.similaritySearch(initialRequest);
+            
+            log.info("初始搜索返回 {} 个文档", initialDocuments.size()); // 添加这行日志
+            
+            // 提取文档关键词
+            StringBuilder keywordBuilder = new StringBuilder();
+            for (Document doc : initialDocuments) {
+                String keywords = (String) doc.getMetadata().get("keywords");
+                if (keywords != null && !keywords.isEmpty()) {
+                    keywordBuilder.append(keywords).append(" ");
+                    log.info("文档 {} 包含关键词: {}", doc.getMetadata().get("knowledgeId"), keywords); // 添加这行日志
+                } else {
+                    log.warn("文档 {} 没有关键词元数据", doc.getMetadata().get("knowledgeId")); // 添加这行日志
+                }
+            }
+            String documentKeywords = keywordBuilder.toString().trim();
+            log.info("提取的文档关键词: {}", documentKeywords); // 添加这行日志
+
+            // 使用文档关键词重写查询
+            String rewrittenQuery = queryRewriter.rewrite(queryVo.getMsg(), documentKeywords);
             log.info("查询重写结果: '{}' -> '{}'", queryVo.getMsg(), rewrittenQuery);
 
             SearchRequest request = buildSearchRequest(queryVo, rewrittenQuery);
@@ -241,7 +275,7 @@ public class OllamaAiOperator implements AiOperator {
 
     private SearchRequest buildSearchRequest(QueryVo queryVo, String query) {
         return SearchRequest.builder()
-                .query(query)
+                .query(query) // 这里使用的是重写后的查询
                 .filterExpression(new FilterExpressionBuilder()
                         .eq("projectId", queryVo.getProjectId().toString())
                         .build())
