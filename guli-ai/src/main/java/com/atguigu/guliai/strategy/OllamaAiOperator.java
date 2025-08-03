@@ -7,8 +7,7 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
-import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.ai.chat.messages.SystemMessage;
@@ -20,6 +19,9 @@ import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.rag.Query;
 import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
 import org.springframework.ai.rag.preretrieval.query.transformation.RewriteQueryTransformer;
+import org.springframework.ai.rag.retrieval.search.DocumentRetriever;
+import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
+import org.springframework.ai.rag.generation.augmentation.ContextualQueryAugmenter;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
@@ -45,8 +47,8 @@ public class OllamaAiOperator implements AiOperator {
 
     private QueryTransformer queryTransformer;
     private KeywordMetadataEnricher keywordMetadataEnricher;
-    private QuestionAnswerAdvisor questionAnswerAdvisor;
-    private PromptTemplate emptyContextPromptTemplate;
+    private RetrievalAugmentationAdvisor retrievalAugmentationAdvisor;
+    private List<Document> retrievedDocuments; // 添加检索到的文档列表
 
     @PostConstruct
     public void init() {
@@ -56,25 +58,19 @@ public class OllamaAiOperator implements AiOperator {
                 throw new IllegalArgumentException("ollamaChatModel 不能为 null");
             }
 
-            // 初始化空上下文提示词模板
-            emptyContextPromptTemplate = new PromptTemplate("""
-                您提问的问题位于我的知识库之外。我无法回答您关于 '{question}' 的问题。
-                请尝试重新表述您的问题或联系学校相关部门获取帮助。
-                """);
-
             // 修改提示词模板，明确指示只重写查询，不生成回答
             String promptTemplate = """
-                你是一个查询重写助手。你的任务是将用户查询重写为更适合向量检索的形式，但必须保持原始语言（中文）不变。
-                
-                要求：
-                1. 只输出重写后的查询，不要添加任何解释、回答或其他内容
-                2. 不要将查询翻译成英文或其他语言
-                3. 保持查询的原始意图，但使用更简洁、更直接的表达方式
-                
-                原始查询：{query}
-                
-                重写后的查询：{target}
-                """;
+            你是一个查询重写助手。你的任务是将用户查询重写为更适合向量检索的形式，但必须保持原始语言（中文）不变。
+            
+            要求：
+            1. 只输出重写后的查询，不要添加任何解释、回答或其他内容
+            2. 不要将查询翻译成英文或其他语言
+            3. 保持查询的原始意图，但使用更简洁、更直接的表达方式
+            
+            原始查询：{query}
+            
+            重写后的查询：{target}
+            """;
 
             // 使用自定义提示词模板
             ChatClient.Builder builder = ChatClient.builder(ollamaChatModel);
@@ -86,20 +82,31 @@ public class OllamaAiOperator implements AiOperator {
             // 初始化KeywordMetadataEnricher，提取8个关键词
             this.keywordMetadataEnricher = new KeywordMetadataEnricher(ollamaChatModel, 8);
 
-            // 创建QuestionAnswerAdvisor
-            SearchRequest searchRequest = SearchRequest.builder()
-                    .similarityThreshold(0.9f)
-                    .topK(3)
+            // 创建空上下文提示词模板
+            PromptTemplate emptyContextPromptTemplate = PromptTemplate.builder()
+                    .template("您提问的问题位于我的知识库之外，我无法回答您提问的问题。请尝试重新表述您的问题或联系学校相关部门获取帮助。")
                     .build();
 
-            this.questionAnswerAdvisor = QuestionAnswerAdvisor.builder(ollamaVectorStore)
-                    .searchRequest(searchRequest)
+            // 创建上下文查询增强器
+            ContextualQueryAugmenter queryAugmenter = ContextualQueryAugmenter.builder()
+                    .allowEmptyContext(false)
+                    .emptyContextPromptTemplate(emptyContextPromptTemplate)
                     .build();
 
+            // 移除硬编码的DocumentRetriever创建
+            // 创建RAG检索增强顾问 - 使用简化的方式，不预创建DocumentRetriever
+            this.retrievalAugmentationAdvisor = RetrievalAugmentationAdvisor.builder()
+                    .documentRetriever(VectorStoreDocumentRetriever.builder()
+                            .vectorStore(ollamaVectorStore)
+                            .similarityThreshold(0.45)
+                            .topK(3)
+                            .build())
+                    .queryAugmenter(queryAugmenter)
+                    .build();
+
+            // 初始化检索到的文档列表
+            this.retrievedDocuments = new ArrayList<>();
             log.info("组件初始化成功");
-
-            // 在初始化成功后自动运行查询重写测试
-            // testQueryRewriteSimilarity();
         } catch (Exception e) {
             log.error("组件初始化失败", e);
             throw new RuntimeException("初始化失败", e);
@@ -215,7 +222,7 @@ public class OllamaAiOperator implements AiOperator {
                         .eq("projectId", queryVo.getProjectId().toString())
                         .build())
                 .topK(3)
-                .similarityThreshold(0.9f)
+                .similarityThreshold(0.45)
                 .build();
     }
 
@@ -241,8 +248,6 @@ public class OllamaAiOperator implements AiOperator {
                 preview);
     }
 
-    private List<Document> retrievedDocuments;
-
     @Override
     public Flux<String> chat_stream(Message[] messages) {
         try {
@@ -256,49 +261,42 @@ public class OllamaAiOperator implements AiOperator {
                 userQuery = userMessages.get(userMessages.size() - 1).getText();
             }
 
-            // 检查是否有检索到的文档
-            if (retrievedDocuments != null && !retrievedDocuments.isEmpty()) {
-                // 有文档时，使用QuestionAnswerAdvisor处理聊天
-                ChatClient chatClient = ChatClient.builder(ollamaChatModel)
-                        .defaultAdvisors(questionAnswerAdvisor,new SimpleLoggerAdvisor())
-                        .build();
+            // 使用RetrievalAugmentationAdvisor处理聊天
+            ChatClient chatClient = ChatClient.builder(ollamaChatModel)
+                    .defaultAdvisors(retrievalAugmentationAdvisor)
+                    .build();
 
-                // 构建系统提示
-                StringBuilder systemPrompt = new StringBuilder("""
-                    你是一个严格基于桂林电子科技大学北海校区知识库内容回答问题的AI助手，请遵守以下规则:
-                                        
-                    1. 回答必须基于提供的知识库内容,如果用户询问的内容是知识库内容有的,把用户提问想了解的的内容在知识库里找到后把相关的都回答出来,不相关的不用回答(即使没有直接找到知识库的内容但是可能与用户的提问间接相关)
-                    2. 引用原文时必须注明出处(如"根据文档1...")
-                    3. 如果问题超出知识库范围，请回答"根据现有资料无法回答该问题"
-                    """);
+            // 构建系统提示
+            StringBuilder systemPrompt = new StringBuilder("""
+                你是一个严格基于桂林电子科技大学北海校区知识库内容回答问题的AI助手，请遵守以下规则:
+                                    
+                1. 回答必须基于提供的知识库内容,如果用户询问的内容是知识库内容有的,把用户提问想了解的的内容在知识库里找到后把相关的都回答出来,不相关的不用回答(即使没有直接找到知识库的内容但是可能与用户的提问间接相关)
+                2. 引用原文时必须注明出处(如"根据文档1...")
+                """);
 
-                Message systemMessage = new SystemMessage(systemPrompt.toString());
-                List<Message> messageList = new ArrayList<>();
-                messageList.add(systemMessage);
+            Message systemMessage = new SystemMessage(systemPrompt.toString());
+            List<Message> messageList = new ArrayList<>();
+            messageList.add(systemMessage);
 
-                if (!userMessages.isEmpty()) {
-                    messageList.add(userMessages.get(userMessages.size() - 1));
-                }
-
-                return chatClient.prompt()
-                        .messages(messageList)
-                        .stream()
-                        .content()
-                        .doOnError(e -> log.error("聊天流处理错误", e));
-            } else {
-                // 没有文档时，使用空上下文提示
-                Map<String, Object> model = new HashMap<>();
-                model.put("question", userQuery);
-                String emptyContextResponse = emptyContextPromptTemplate.render(model);
-
-                return Flux.just(emptyContextResponse);
+            if (!userMessages.isEmpty()) {
+                messageList.add(userMessages.get(userMessages.size() - 1));
             }
+
+            return chatClient.prompt()
+                    .messages(messageList)
+                    .stream()
+                    .content()
+                    .doOnError(e -> log.error("聊天流处理错误", e));
         } catch (Exception e) {
             log.error("构建聊天流失败", e);
             return Flux.error(e);
         }
     }
 
+    /**
+     * 设置检索到的文档
+     * @param documents 检索到的文档列表
+     */
     public void setRetrievedDocuments(List<Document> documents) {
         this.retrievedDocuments = documents != null ?
                 new ArrayList<>(documents) : Collections.emptyList();
@@ -317,7 +315,7 @@ public class OllamaAiOperator implements AiOperator {
                 "普通话考试你们学校有考点吗?普通话考试对于我来说很重要的呀,这是必须要考的呢,妈妈告诉我!",
                 "你们学校周边出行情况怎么样,方便吗?",
                 "我如果有事情需要请假的话怎么个流程呢,你能告诉我吗,我真的很想知道呀,需要打电话确认吗还是什么呢?",
-                "你们上课时间是不是很早丫,我可能起不来呢"
+                "你们上课时间是不是很早丫,我可能起不起来呢"
         };
 
         for (String originalQuery : testQueries) {
@@ -329,7 +327,7 @@ public class OllamaAiOperator implements AiOperator {
                 SearchRequest originalRequest = SearchRequest.builder()
                         .query(originalQuery)
                         .topK(3)
-                        .similarityThreshold(0.5f)
+                        .similarityThreshold(0.45)
                         .build();
                 List<Document> originalResults = this.ollamaVectorStore.similaritySearch(originalRequest);
 
@@ -337,7 +335,7 @@ public class OllamaAiOperator implements AiOperator {
                 SearchRequest rewrittenRequest = SearchRequest.builder()
                         .query(rewrittenQuery)
                         .topK(3)
-                        .similarityThreshold(0.5f)
+                        .similarityThreshold(0.45)
                         .build();
                 List<Document> rewrittenResults = this.ollamaVectorStore.similaritySearch(rewrittenRequest);
 
