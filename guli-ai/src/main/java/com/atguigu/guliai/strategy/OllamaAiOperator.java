@@ -1,5 +1,4 @@
 package com.atguigu.guliai.strategy;
-
 import com.atguigu.common.utils.StringUtils;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.vo.QueryVo;
@@ -8,12 +7,15 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.model.transformer.KeywordMetadataEnricher;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.rag.Query;
 import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
@@ -25,14 +27,12 @@ import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 @AiBean(SystemConstant.MODEL_TYPE_OLLAMA)
 public class OllamaAiOperator implements AiOperator {
-
     private static final Logger log = LoggerFactory.getLogger(OllamaAiOperator.class);
     private static final String METADATA_CHUNK_SIZE = "chunkSize";
     private static final String METADATA_KNOWLEDGE_ID = "knowledgeId";
@@ -40,11 +40,13 @@ public class OllamaAiOperator implements AiOperator {
 
     @Autowired
     private QdrantVectorStore ollamaVectorStore;
-
     @Autowired
     private OllamaChatModel ollamaChatModel;
 
-    private QueryRewriter queryRewriter;
+    private QueryTransformer queryTransformer;
+    private KeywordMetadataEnricher keywordMetadataEnricher;
+    private QuestionAnswerAdvisor questionAnswerAdvisor;
+    private PromptTemplate emptyContextPromptTemplate;
 
     @PostConstruct
     public void init() {
@@ -54,13 +56,68 @@ public class OllamaAiOperator implements AiOperator {
                 throw new IllegalArgumentException("ollamaChatModel 不能为 null");
             }
 
-            // 初始化queryRewriter
-            this.queryRewriter = new QueryRewriter(ollamaChatModel);
+            // 初始化空上下文提示词模板
+            emptyContextPromptTemplate = new PromptTemplate("""
+                您提问的问题位于我的知识库之外。我无法回答您关于 '{question}' 的问题。
+                请尝试重新表述您的问题或联系学校相关部门获取帮助。
+                """);
+
+            // 修改提示词模板，明确指示只重写查询，不生成回答
+            String promptTemplate = """
+                你是一个查询重写助手。你的任务是将用户查询重写为更适合向量检索的形式，但必须保持原始语言（中文）不变。
+                
+                要求：
+                1. 只输出重写后的查询，不要添加任何解释、回答或其他内容
+                2. 不要将查询翻译成英文或其他语言
+                3. 保持查询的原始意图，但使用更简洁、更直接的表达方式
+                
+                原始查询：{query}
+                
+                重写后的查询：{target}
+                """;
+
+            // 使用自定义提示词模板
+            ChatClient.Builder builder = ChatClient.builder(ollamaChatModel);
+            this.queryTransformer = RewriteQueryTransformer.builder()
+                    .chatClientBuilder(builder)
+                    .promptTemplate(new PromptTemplate(promptTemplate))
+                    .build();
+
+            // 初始化KeywordMetadataEnricher，提取8个关键词
+            this.keywordMetadataEnricher = new KeywordMetadataEnricher(ollamaChatModel, 8);
+
+            // 创建QuestionAnswerAdvisor
+            SearchRequest searchRequest = SearchRequest.builder()
+                    .similarityThreshold(0.9f)
+                    .topK(3)
+                    .build();
+
+            this.questionAnswerAdvisor = QuestionAnswerAdvisor.builder(ollamaVectorStore)
+                    .searchRequest(searchRequest)
+                    .build();
+
             log.info("组件初始化成功");
+
+            // 在初始化成功后自动运行查询重写测试
+            // testQueryRewriteSimilarity();
         } catch (Exception e) {
             log.error("组件初始化失败", e);
             throw new RuntimeException("初始化失败", e);
         }
+    }
+
+    /**
+     * 执行查询重写
+     *
+     * @param prompt
+     * @return
+     */
+    public String doQueryRewrite(String prompt) {
+        Query query = new Query(prompt);
+        // 执行查询重写
+        Query transformedQuery = queryTransformer.transform(query);
+        // 输出重写后的查询
+        return transformedQuery.text();
     }
 
     @Override
@@ -68,7 +125,6 @@ public class OllamaAiOperator implements AiOperator {
         try {
             log.info("=== 开始处理文档: {} (项目ID: {}) ===",
                     chatKnowledge.getFileName(), chatKnowledge.getProjectId());
-
             if (StringUtils.isEmpty(chatKnowledge.getContent())) {
                 log.error("文档内容为空，跳过处理");
                 return;
@@ -89,174 +145,53 @@ public class OllamaAiOperator implements AiOperator {
             TokenTextSplitter splitter = new TokenTextSplitter(CHUNK_SIZE, 100, 10, 5000, true);
             List<Document> splitDocuments = splitter.apply(Collections.singletonList(document));
 
-            log.info("开始提取{}个分块的关键词", splitDocuments.size());
+            log.info("开始为{}个分块提取关键词", splitDocuments.size());
+
+            // 使用KeywordMetadataEnricher为每个分块添加关键词
             for (Document doc : splitDocuments) {
                 doc.getMetadata().put(METADATA_CHUNK_SIZE, String.valueOf(CHUNK_SIZE));
                 doc.getMetadata().put(METADATA_KNOWLEDGE_ID, String.valueOf(chatKnowledge.getKnowledgeId()));
+            }
 
-                log.debug("分块{}元数据: chunkSize={}, knowledgeId={}",
-                        splitDocuments.indexOf(doc) + 1,
-                        doc.getMetadata().get(METADATA_CHUNK_SIZE),
-                        doc.getMetadata().get(METADATA_KNOWLEDGE_ID));
+            // 使用KeywordMetadataEnricher为所有分块添加关键词元数据
+            List<Document> enrichedDocuments = keywordMetadataEnricher.transform(splitDocuments);
 
-                String chunkPreview = doc.getText().length() > 50 ? doc.getText().substring(0, 50) + "..." : doc.getText();
-                log.debug("分块{}内容预览: {}", splitDocuments.indexOf(doc) + 1, chunkPreview);
-
-                String keywords = extractKeywords(doc.getText());
-                if (StringUtils.isNotEmpty(keywords)) {
-                    doc.getMetadata().put("keywords", keywords);
-                    log.debug("提取关键词: {}", keywords);
-                } else {
-                    log.warn("分块{}关键词提取失败", splitDocuments.indexOf(doc) + 1);
+            // 控制台输出提取的关键词
+            for (int i = 0; i < enrichedDocuments.size(); i++) {
+                Document doc = enrichedDocuments.get(i);
+                String keywords = (String) doc.getMetadata().get("keywords");
+                if (keywords != null) {
+                    System.out.println("控制台输出 - 分块 " + (i + 1) + " 关键词: " + keywords);
                 }
             }
 
-            log.info("准备写入向量库 - 分块数: {}", splitDocuments.size());
-            ollamaVectorStore.add(splitDocuments);
+            log.info("关键词提取完成，准备写入向量库 - 分块数: {}", enrichedDocuments.size());
+            ollamaVectorStore.add(enrichedDocuments);
             log.info("向量库写入完成");
-
         } catch (Exception e) {
             log.error("文档处理失败", e);
-        }
-    }
-
-    private String extractKeywords(String text) {
-        try {
-            String prompt = """
-                    请从文本中提取最具检索价值的关键词：
-                    1. 提取3-5个最能代表文本内容的关键词
-                    2. 可以是名词、动词或形容词
-                    3. 关键词长度不限但需精炼
-                    4. 必须用单个空格分隔
-                    5. 示例：
-                       输入：学校东区晚上有很多小吃摊
-                       输出：东区 夜间餐饮 小吃摊
-                       
-                    文本内容：{text}
-                                    
-                    关键词：""";
-
-            PromptTemplate template = new PromptTemplate(prompt);
-            String result = ChatClient.create(ollamaChatModel)
-                    .prompt()
-                    .user(template.render(Map.of("text", text)))
-                    .call()
-                    .content();
-
-            // 格式化处理
-            return result.replace("输出", "")  // 新增清理
-                    .replaceAll("[^\\w\u4e00-\u9fa5]", " ")
-                    .replaceAll("\\s+", " ")
-                    .trim();
-        } catch (Exception e) {
-            log.error("关键词提取失败，使用备用方案", e);
-            // 备用方案：按标点分割取前5个非空短语
-            return Arrays.stream(text.split("[，。；！？、]"))
-                    .filter(s -> !s.isBlank())
-                    .limit(5)
-                    .map(s -> s.trim().replaceAll("[^\\u4e00-\\u9fa5]", ""))
-                    .filter(s -> !s.isEmpty())
-                    .collect(Collectors.joining(" "));
-        }
-    }
-
-    public class QueryRewriter {
-        private final ChatModel chatModel;
-
-        public QueryRewriter(ChatModel model) {
-            this.chatModel = model;
-        }
-
-        public String rewrite(String query, String documentKeywords) {
-            try {
-                String prompt = """
-                        请严格按以下要求转换查询关键词，结合文档内容提取最相关的搜索关键词：
-                        
-                        ## 要求
-                        1. 只输出最终关键词，不要包含"输出"等前缀
-                        2. 用空格分隔3-5个关键词
-                        3. 结合用户查询和文档关键词提取最相关的关键词
-                        4. 示例格式：
-                           输入查询：校区环境怎么样？
-                           文档关键词：校区环境 教学设施 卫生条件
-                           输出：校区环境 教学设施 卫生条件
-                           
-                           输入查询：宿舍条件好吗？
-                           文档关键词：宿舍条件 住宿环境 生活设施
-                           输出：宿舍条件 住宿环境 生活设施
-                        
-                        ## 用户查询
-                        {query}
-                        
-                        ## 文档关键词
-                        {documentKeywords}
-                        
-                        ## 关键词结果
-                        """;
-
-                String rewritten = ChatClient.create(chatModel)
-                        .prompt()
-                        .user(new PromptTemplate(prompt).render(
-                                Map.of("query", query, "documentKeywords", documentKeywords)))
-                        .call()
-                        .content();
-
-                log.info("重写后的查询: {}", rewritten); // 添加这行日志
-                return cleanKeywords(rewritten);
-            } catch (Exception e) {
-                log.error("查询重写失败，使用原始查询", e);
-                return query;
-            }
-        }
-        
-        // 重载方法保持向后兼容
-        public String rewrite(String query) {
-            return rewrite(query, "");
-        }
-
-        private String cleanKeywords(String raw) {
-            return raw.replace("输出", "")
-                    .replaceAll("[^\\w\u4e00-\u9fa5]", " ")
-                    .replaceAll("\\s+", " ")
-                    .trim();
         }
     }
 
     @Override
     public List<Document> similaritySearch(QueryVo queryVo) {
         try {
-            // 添加null检查
-            if (queryRewriter == null) {
-                log.error("queryRewriter未初始化，使用原始查询");
+            if (queryTransformer == null) {
+                log.error("queryTransformer未初始化，使用原始查询");
                 return searchWithOriginalQuery(queryVo);
             }
 
-            // 先进行一次初步搜索获取相关文档的关键词
-            SearchRequest initialRequest = buildSearchRequest(queryVo, queryVo.getMsg());
-            List<Document> initialDocuments = this.ollamaVectorStore.similaritySearch(initialRequest);
-            
-            log.info("初始搜索返回 {} 个文档", initialDocuments.size()); // 添加这行日志
-            
-            // 提取文档关键词
-            StringBuilder keywordBuilder = new StringBuilder();
-            for (Document doc : initialDocuments) {
-                String keywords = (String) doc.getMetadata().get("keywords");
-                if (keywords != null && !keywords.isEmpty()) {
-                    keywordBuilder.append(keywords).append(" ");
-                    log.info("文档 {} 包含关键词: {}", doc.getMetadata().get("knowledgeId"), keywords); // 添加这行日志
-                } else {
-                    log.warn("文档 {} 没有关键词元数据", doc.getMetadata().get("knowledgeId")); // 添加这行日志
-                }
-            }
-            String documentKeywords = keywordBuilder.toString().trim();
-            log.info("提取的文档关键词: {}", documentKeywords); // 添加这行日志
-
-            // 使用文档关键词重写查询
-            String rewrittenQuery = queryRewriter.rewrite(queryVo.getMsg(), documentKeywords);
+            // 使用doQueryRewrite方法进行查询重写
+            String rewrittenQuery = doQueryRewrite(queryVo.getMsg());
             log.info("查询重写结果: '{}' -> '{}'", queryVo.getMsg(), rewrittenQuery);
 
             SearchRequest request = buildSearchRequest(queryVo, rewrittenQuery);
             List<Document> documents = this.ollamaVectorStore.similaritySearch(request);
+
+            // 处理检索结果，如果为空则使用空上下文提示
+            if (documents.isEmpty()) {
+                log.info("未检索到相关文档，将使用空上下文提示");
+            }
 
             return processSearchResults(documents, queryVo);
         } catch (Exception e) {
@@ -275,12 +210,12 @@ public class OllamaAiOperator implements AiOperator {
 
     private SearchRequest buildSearchRequest(QueryVo queryVo, String query) {
         return SearchRequest.builder()
-                .query(query) // 这里使用的是重写后的查询
+                .query(query)
                 .filterExpression(new FilterExpressionBuilder()
                         .eq("projectId", queryVo.getProjectId().toString())
                         .build())
                 .topK(3)
-                .similarityThreshold(0.5f)
+                .similarityThreshold(0.9f)
                 .build();
     }
 
@@ -299,14 +234,6 @@ public class OllamaAiOperator implements AiOperator {
         String preview = text.length() > 100 ? text.substring(0, 100) + "..." : text;
         String chunkSize = (String) doc.getMetadata().getOrDefault("chunkSize", "未知");
         double score = doc.getScore() != null ? doc.getScore() : 0;
-
-        if (text.isEmpty()) {
-            log.warn("文档{}内容为空，知识ID: {}", index, doc.getMetadata().get("knowledgeId"));
-        }
-        if ("未知".equals(chunkSize)) {
-            log.warn("文档{}分块大小元数据缺失，知识ID: {}", index, doc.getMetadata().get("knowledgeId"));
-        }
-
         log.info("文档{}: 相似度={}, 分块大小={}, 内容预览={}",
                 index,
                 String.format("%.4f", score),
@@ -319,43 +246,53 @@ public class OllamaAiOperator implements AiOperator {
     @Override
     public Flux<String> chat_stream(Message[] messages) {
         try {
-            StringBuilder systemPrompt = new StringBuilder("""
-                    你是一个严格基于桂林电子科技大学北海校区知识库内容回答问题的AI助手，请遵守以下规则:
-                                        
-                    1. 回答必须基于提供的知识库内容,如果用户询问的内容是知识库内容有的,把用户提问想了解的的内容在知识库里找到后把相关的都回答出来,不相关的不用回答(即使没有直接找到知识库的内容但是可能与用户的提问间接相关)
-                    2. 引用原文时必须注明出处(如"根据文档1...")
-                    3. 如果问题超出知识库范围，请回答"根据现有资料无法回答该问题"
-                                        
-                    当前知识库内容:
-                    """);
-
-            if (retrievedDocuments != null && !retrievedDocuments.isEmpty()) {
-                for (int i = 0; i < retrievedDocuments.size(); i++) {
-                    Document doc = retrievedDocuments.get(i);
-                    if (doc != null && StringUtils.hasText(doc.getText())) {
-                        systemPrompt.append("\n\n--- 文档").append(i + 1).append(" ---");
-                        systemPrompt.append("\n").append(doc.getText());
-                    }
-                }
-            } else {
-                systemPrompt.append("\n无相关内容");
-            }
-
-            Message systemMessage = new SystemMessage(systemPrompt.toString());
-
-            List<Message> messageList = new ArrayList<>();
-            messageList.add(systemMessage);
-
+            // 获取用户查询
+            String userQuery = "";
             List<Message> userMessages = Arrays.stream(messages)
                     .filter(m -> m.getMessageType() == MessageType.USER)
                     .collect(Collectors.toList());
 
             if (!userMessages.isEmpty()) {
-                messageList.add(userMessages.get(userMessages.size() - 1));
+                userQuery = userMessages.get(userMessages.size() - 1).getText();
             }
 
-            return ollamaChatModel.stream(messageList.toArray(new Message[0]))
-                    .doOnError(e -> log.error("聊天流处理错误", e));
+            // 检查是否有检索到的文档
+            if (retrievedDocuments != null && !retrievedDocuments.isEmpty()) {
+                // 有文档时，使用QuestionAnswerAdvisor处理聊天
+                ChatClient chatClient = ChatClient.builder(ollamaChatModel)
+                        .defaultAdvisors(questionAnswerAdvisor,new SimpleLoggerAdvisor())
+                        .build();
+
+                // 构建系统提示
+                StringBuilder systemPrompt = new StringBuilder("""
+                    你是一个严格基于桂林电子科技大学北海校区知识库内容回答问题的AI助手，请遵守以下规则:
+                                        
+                    1. 回答必须基于提供的知识库内容,如果用户询问的内容是知识库内容有的,把用户提问想了解的的内容在知识库里找到后把相关的都回答出来,不相关的不用回答(即使没有直接找到知识库的内容但是可能与用户的提问间接相关)
+                    2. 引用原文时必须注明出处(如"根据文档1...")
+                    3. 如果问题超出知识库范围，请回答"根据现有资料无法回答该问题"
+                    """);
+
+                Message systemMessage = new SystemMessage(systemPrompt.toString());
+                List<Message> messageList = new ArrayList<>();
+                messageList.add(systemMessage);
+
+                if (!userMessages.isEmpty()) {
+                    messageList.add(userMessages.get(userMessages.size() - 1));
+                }
+
+                return chatClient.prompt()
+                        .messages(messageList)
+                        .stream()
+                        .content()
+                        .doOnError(e -> log.error("聊天流处理错误", e));
+            } else {
+                // 没有文档时，使用空上下文提示
+                Map<String, Object> model = new HashMap<>();
+                model.put("question", userQuery);
+                String emptyContextResponse = emptyContextPromptTemplate.render(model);
+
+                return Flux.just(emptyContextResponse);
+            }
         } catch (Exception e) {
             log.error("构建聊天流失败", e);
             return Flux.error(e);
@@ -365,5 +302,111 @@ public class OllamaAiOperator implements AiOperator {
     public void setRetrievedDocuments(List<Document> documents) {
         this.retrievedDocuments = documents != null ?
                 new ArrayList<>(documents) : Collections.emptyList();
+    }
+
+    /**
+     * 测试查询重写效果：对比原始查询和重写查询的真实相似度
+     */
+    public void testQueryRewriteSimilarity() {
+        System.out.println("=== 查询重写效果测试（真实相似度对比） ===");
+
+        // 测试用例
+        String[] testQueries = {
+                "你们学校的校区情况怎么样，环境好吗？我着急想知道呀!",
+                "教室凉快吗,因为北海会很热的呢听说,热的话受不了啊!",
+                "普通话考试你们学校有考点吗?普通话考试对于我来说很重要的呀,这是必须要考的呢,妈妈告诉我!",
+                "你们学校周边出行情况怎么样,方便吗?",
+                "我如果有事情需要请假的话怎么个流程呢,你能告诉我吗,我真的很想知道呀,需要打电话确认吗还是什么呢?",
+                "你们上课时间是不是很早丫,我可能起不来呢"
+        };
+
+        for (String originalQuery : testQueries) {
+            try {
+                // 获取重写后的查询
+                String rewrittenQuery = doQueryRewrite(originalQuery);
+
+                // 使用原始查询搜索
+                SearchRequest originalRequest = SearchRequest.builder()
+                        .query(originalQuery)
+                        .topK(3)
+                        .similarityThreshold(0.5f)
+                        .build();
+                List<Document> originalResults = this.ollamaVectorStore.similaritySearch(originalRequest);
+
+                // 使用重写查询搜索
+                SearchRequest rewrittenRequest = SearchRequest.builder()
+                        .query(rewrittenQuery)
+                        .topK(3)
+                        .similarityThreshold(0.5f)
+                        .build();
+                List<Document> rewrittenResults = this.ollamaVectorStore.similaritySearch(rewrittenRequest);
+
+                // 计算最高相似度
+                double originalMaxScore = originalResults.stream()
+                        .mapToDouble(doc -> doc.getScore() != null ? doc.getScore() : 0.0)
+                        .max().orElse(0.0);
+
+                double rewrittenMaxScore = rewrittenResults.stream()
+                        .mapToDouble(doc -> doc.getScore() != null ? doc.getScore() : 0.0)
+                        .max().orElse(0.0);
+
+                System.out.println("\n原始查询: " + originalQuery);
+                System.out.println("原始查询相似度: " + String.format("%.4f", originalMaxScore));
+                System.out.println("重写查询: " + rewrittenQuery);
+                System.out.println("重写查询相似度: " + String.format("%.4f", rewrittenMaxScore));
+
+                if (rewrittenMaxScore > originalMaxScore) {
+                    System.out.println("提升: +" + String.format("%.4f", rewrittenMaxScore - originalMaxScore));
+                } else if (rewrittenMaxScore < originalMaxScore) {
+                    System.out.println("下降: -" + String.format("%.4f", originalMaxScore - rewrittenMaxScore));
+                } else {
+                    System.out.println("无变化");
+                }
+            } catch (Exception e) {
+                System.err.println("测试查询失败: " + originalQuery + " - " + e.getMessage());
+            }
+        }
+        System.out.println("\n=== 测试完成 ===");
+    }
+
+    /**
+     * 计算两个文本的相似度（简单实现）
+     */
+    private double calculateSimilarity(String text1, String text2) {
+        if (text1 == null || text2 == null || text1.isEmpty() || text2.isEmpty()) {
+            return 0.0;
+        }
+
+        Set<String> tokens1 = getTokens(text1);
+        Set<String> tokens2 = getTokens(text2);
+
+        if (tokens1.isEmpty() || tokens2.isEmpty()) {
+            return 0.0;
+        }
+
+        // 计算交集
+        Set<String> intersection = new HashSet<>(tokens1);
+        intersection.retainAll(tokens2);
+
+        // 计算并集
+        Set<String> union = new HashSet<>(tokens1);
+        union.addAll(tokens2);
+
+        // Jaccard相似度
+        return (double) intersection.size() / union.size();
+    }
+
+    /**
+     * 简单的中文分词（按字符分割）
+     */
+    private Set<String> getTokens(String text) {
+        Set<String> tokens = new HashSet<>();
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (Character.isLetterOrDigit(c) || Character.isIdeographic(c)) {
+                tokens.add(String.valueOf(c));
+            }
+        }
+        return tokens;
     }
 }
