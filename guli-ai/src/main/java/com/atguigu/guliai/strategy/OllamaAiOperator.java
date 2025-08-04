@@ -1,4 +1,5 @@
 package com.atguigu.guliai.strategy;
+
 import com.atguigu.common.utils.StringUtils;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.vo.QueryVo;
@@ -29,6 +30,7 @@ import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,7 @@ public class OllamaAiOperator implements AiOperator {
     private static final String METADATA_CHUNK_SIZE = "chunkSize";
     private static final String METADATA_KNOWLEDGE_ID = "knowledgeId";
     private static final int CHUNK_SIZE = 500;
+    private static final double SIMILARITY_THRESHOLD = 0.6;
 
     @Autowired
     private QdrantVectorStore ollamaVectorStore;
@@ -60,17 +63,17 @@ public class OllamaAiOperator implements AiOperator {
 
             // 修改提示词模板，明确指示只重写查询，不生成回答
             String promptTemplate = """
-            你是一个查询重写助手。你的任务是将用户查询重写为更适合向量检索的形式，但必须保持原始语言（中文）不变。
-            
-            要求：
-            1. 只输出重写后的查询，不要添加任何解释、回答或其他内容
-            2. 不要将查询翻译成英文或其他语言
-            3. 保持查询的原始意图，但使用更简洁、更直接的表达方式
-            
-            原始查询：{query}
-            
-            重写后的查询：{target}
-            """;
+                你是一个查询重写助手。你的任务是将用户查询重写为更适合向量检索的形式，但必须保持原始语言（中文）不变。
+                            
+                要求：
+                1. 只输出重写后的查询，不要添加任何解释、回答或其他内容
+                2. 不要将查询翻译成英文或其他语言
+                3. 保持查询的原始意图，但使用更简洁、更直接的表达方式
+                            
+                原始查询：{query}
+                            
+                重写后的查询：{target}
+                """;
 
             // 使用自定义提示词模板
             ChatClient.Builder builder = ChatClient.builder(ollamaChatModel);
@@ -84,7 +87,10 @@ public class OllamaAiOperator implements AiOperator {
 
             // 创建空上下文提示词模板
             PromptTemplate emptyContextPromptTemplate = PromptTemplate.builder()
-                    .template("您提问的问题位于我的知识库之外，我无法回答您提问的问题。请尝试重新表述您的问题或联系学校相关部门获取帮助。")
+                    .template("""
+                        你一定只能输出下面的内容一字不差：
+                        很抱歉丫，我无法回答您的问题呢。桂林电子科技大学北海校区官网是 https://www.guet.edu.cn/gdbh/，您可以前往官网寻找您想了解的相关信息呢！
+                        """)
                     .build();
 
             // 创建上下文查询增强器
@@ -98,7 +104,7 @@ public class OllamaAiOperator implements AiOperator {
             this.retrievalAugmentationAdvisor = RetrievalAugmentationAdvisor.builder()
                     .documentRetriever(VectorStoreDocumentRetriever.builder()
                             .vectorStore(ollamaVectorStore)
-                            .similarityThreshold(0.45)
+                            .similarityThreshold(SIMILARITY_THRESHOLD)
                             .topK(3)
                             .build())
                     .queryAugmenter(queryAugmenter)
@@ -107,6 +113,12 @@ public class OllamaAiOperator implements AiOperator {
             // 初始化检索到的文档列表
             this.retrievedDocuments = new ArrayList<>();
             log.info("组件初始化成功");
+
+            // 在初始化完成后调用测试方法
+            // log.info("=== 开始测试查询重写效果 ===");
+            // testQueryRewriteSimilarity();
+            // log.info("=== 测试完成 ===");
+
         } catch (Exception e) {
             log.error("组件初始化失败", e);
             throw new RuntimeException("初始化失败", e);
@@ -222,7 +234,7 @@ public class OllamaAiOperator implements AiOperator {
                         .eq("projectId", queryVo.getProjectId().toString())
                         .build())
                 .topK(3)
-                .similarityThreshold(0.45)
+                .similarityThreshold(SIMILARITY_THRESHOLD)
                 .build();
     }
 
@@ -256,9 +268,24 @@ public class OllamaAiOperator implements AiOperator {
             List<Message> userMessages = Arrays.stream(messages)
                     .filter(m -> m.getMessageType() == MessageType.USER)
                     .collect(Collectors.toList());
-
             if (!userMessages.isEmpty()) {
                 userQuery = userMessages.get(userMessages.size() - 1).getText();
+            }
+
+            // 创建系统消息，明确指示回答范围
+            SystemMessage systemMessage = new SystemMessage("""
+            你是一个严格基于桂林电子科技大学北海校区知识库内容回答问题的AI助手。
+            
+            规则：
+            1. 只回答与桂林电子科技大学北海校区直接相关的问题
+            2. 如果检索到的文档与用户问题关联性不强，礼貌的拒绝回答
+            3. 不要基于你的通用知识回答问题，只能基于已有知识库内容回答，不能胡编乱造或者篡改知识库
+            """);
+
+            List<Message> messageList = new ArrayList<>();
+            messageList.add(systemMessage);
+            if (!userMessages.isEmpty()) {
+                messageList.add(userMessages.get(userMessages.size() - 1));
             }
 
             // 使用RetrievalAugmentationAdvisor处理聊天
@@ -266,24 +293,8 @@ public class OllamaAiOperator implements AiOperator {
                     .defaultAdvisors(retrievalAugmentationAdvisor)
                     .build();
 
-            // 构建系统提示
-            StringBuilder systemPrompt = new StringBuilder("""
-                你是一个严格基于桂林电子科技大学北海校区知识库内容回答问题的AI助手，请遵守以下规则:
-                                    
-                1. 回答必须基于提供的知识库内容,如果用户询问的内容是知识库内容有的,把用户提问想了解的的内容在知识库里找到后把相关的都回答出来,不相关的不用回答(即使没有直接找到知识库的内容但是可能与用户的提问间接相关)
-                2. 引用原文时必须注明出处(如"根据文档1...")
-                """);
-
-            Message systemMessage = new SystemMessage(systemPrompt.toString());
-            List<Message> messageList = new ArrayList<>();
-            messageList.add(systemMessage);
-
-            if (!userMessages.isEmpty()) {
-                messageList.add(userMessages.get(userMessages.size() - 1));
-            }
-
             return chatClient.prompt()
-                    .messages(messageList)
+                    .messages(messageList)  // 包含系统消息和用户消息
                     .stream()
                     .content()
                     .doOnError(e -> log.error("聊天流处理错误", e));
@@ -295,6 +306,7 @@ public class OllamaAiOperator implements AiOperator {
 
     /**
      * 设置检索到的文档
+     *
      * @param documents 检索到的文档列表
      */
     public void setRetrievedDocuments(List<Document> documents) {
