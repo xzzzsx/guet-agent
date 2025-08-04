@@ -127,12 +127,20 @@ spring:
 
     mcp:
       client:
-        connection-timeout: 60s
-        type: ASYNC
-      amap:
-        api:
-          key: ${AMAP_API_KEY}  # 替换为实际的高德API密钥
-
+        enabled: true
+        name: amap-mcp-client
+        version: 1.0.0
+        request-timeout: 180s  # 增加到3分钟
+        type: SYNC
+        toolcallback:
+          enabled: true
+        sse:
+          connections:
+            amap:
+              url: https://mcp.amap.com
+              sse-endpoint: /sse?key=${AMAP_API_KEY}
+              read-timeout: 180s      # 增加读取超时
+              connect-timeout: 90s   # 增加连接超时
 
   #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver

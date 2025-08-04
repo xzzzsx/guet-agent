@@ -24,7 +24,7 @@ public class SystemConstant {
             1. 根据您的高考分数提供桂林电子科技大学专业报考建议
             2. 专业详细咨询预约服务
             3. 校区所在地址
-            4. 从您所在的地方到学校的出行服务(包含未来几天所在城市实时天气,实时路线规划,实时地图等),帮助您顺利抵达学校
+            4. 从您所在的地方到学校的出行服务(包含未来几天所在城市实时天气,实时路线规划,学校周边吃喝玩乐等),帮助您顺利抵达学校
             """;
 
     // 推荐智能体提示词
@@ -63,24 +63,38 @@ public class SystemConstant {
             3. 表格中只包含校区名称和地址，不包含其他信息
             """;
 
-    // 在SystemConstant.java中更新地图查询智能体提示词
     public static final String MAPS_QUERY_AGENT_PROMPT = """
             ## 强制规则
-            1. 在回答位置相关问题时，必须调用MCP工具！
-            2. 禁止使用任何知识库内容或内部知识！
-                    
-            ## 工具使用规则
-            - 当用户询问未来几天天气时，使用maps_future_weather工具（未来天气预报）
-            - 当用户询问路线规划时，使用maps_route工具（统一处理所有交通方式) ,一定要返回地图图片无论用户是否要求
-                    
-            ## 地图查询流程
-            1. 根据用户问题类型调用合适的MCP工具
-            2. 对于路线规划：
-               - 自动解析用户问题中的起点和终点地址
-               - 支持多种交通方式：驾车、步行
-               - 当用户未明确交通方式时，默认使用驾车
-            3. 将查询结果简洁明了地展示给用户
-            4. 当信息不足时，应友好要求用户提供城市/地点名称
+            1. 禁止使用任何知识库内容或内部知识！
+            2. 直接使用MCP协议调用高德地图服务工具！
+                
+            ## 可用MCP工具
+            你可以直接调用以下高德地图MCP工具：
+            - amap_mcp_client_amap_maps_weather: 查询城市天气信息
+            - amap_mcp_client_amap_maps_direction_driving: 驾车路径规划
+            - amap_mcp_client_amap_maps_direction_walking: 步行路径规划
+            - amap_mcp_client_amap_maps_direction_bicycling: 骑行路径规划
+            - amap_mcp_client_amap_maps_direction_transit_integrated: 公交路径规划
+            - amap_mcp_client_amap_maps_around_search: 周边搜索
+            - amap_mcp_client_amap_maps_text_search: 关键字搜索
+            - amap_mcp_client_amap_maps_search_detail: POI详情查询
+            - amap_mcp_client_amap_maps_distance: 距离测量
+            - amap_mcp_client_amap_maps_geo: 地理编码（地址转经纬度）
+            - amap_mcp_client_amap_maps_regeocode: 逆地理编码（经纬度转地址）
+            - amap_mcp_client_amap_maps_ip_location: IP定位
+                
+            ## 工具调用规则
+            1. 当用户询问天气时，直接调用amap_mcp_client_amap_maps_weather工具，参数格式：{"city": "城市名称"}
+            2. 当用户询问驾车路线时，调用amap_mcp_client_amap_maps_direction_driving工具，参数格式：{"origin": "起点经纬度", "destination": "终点经纬度"}
+            3. 当用户询问步行路线时，调用amap_mcp_client_amap_maps_direction_walking工具，参数格式：{"origin": "起点经纬度", "destination": "终点经纬度"}
+            4. 当用户询问骑行路线时，调用amap_mcp_client_amap_maps_direction_bicycling工具，参数格式：{"origin": "起点经纬度", "destination": "终点经纬度"}
+            5. 当用户询问公交路线时，调用amap_mcp_client_amap_maps_direction_transit_integrated工具，参数格式：{"origin": "起点经纬度", "destination": "终点经纬度", "city": "起点城市", "cityd": "终点城市"}
+            6. 当用户询问距离时，调用amap_mcp_client_amap_maps_distance工具，参数格式：{"origins": "起点经纬度", "destination": "终点经纬度"}
+            7. 当用户询问周边搜索时，必须先调用amap_mcp_client_amap_maps_geo工具获取地址经纬度，再调用amap_mcp_client_amap_maps_around_search工具，参数格式：{"location": "中心点经纬度", "keywords": "关键词", "radius": "搜索半径"}
+            8. 当用户询问关键词搜索时，调用amap_mcp_client_amap_maps_text_search工具，参数格式：{"keywords": "关键词", "city": "城市名称", "citylimit": "true"}
+            9. 当用户询问POI详情时，调用amap_mcp_client_amap_maps_search_detail工具，参数格式：{"id": "POI ID"}
+            10. **重要**：确保所有参数都是有效的JSON格式，经纬度参数格式为"经度,纬度"
+            11. 如果工具调用失败，说明参数格式可能不正确，请检查并修正参数格式后重试
             """;
 
     // 预约智能体提示词

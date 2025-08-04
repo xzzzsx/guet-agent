@@ -1,15 +1,13 @@
 package com.atguigu.guliai.config;
 
-import com.atguigu.guliai.advisor.RecordOptimizationAdvisor;
-import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.tools.*;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SafeGuardAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.mcp.AsyncMcpToolCallbackProvider;
 import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,12 +28,15 @@ public class AiAdvisorConfig {
     // Builder interfaces
     public interface PromptSpec {
         PromptSpec system(Function<SystemSpec, SystemSpec> fn);
+
         PromptSpec user(String message);
+
         StreamSpec stream();
     }
 
     public interface SystemSpec {
         SystemSpec text(String text);
+
         String getText(); // Add getter method
     }
 
@@ -130,10 +131,6 @@ public class AiAdvisorConfig {
         return chatModel;
     }
 
-    @Bean
-    public Advisor recordOptimizationAdvisor() {
-        return new RecordOptimizationAdvisor(); // 不再需要AiService参数
-    }
 
     // 添加 ServiceChatClient bean
     @Bean
@@ -141,27 +138,26 @@ public class AiAdvisorConfig {
         return new ServiceChatClientImpl(chatClient);
     }
 
+
     @Bean
     public ChatClient chatClient(OpenAiChatModel openAiChatModel,
                                  Advisor simpleLoggerAdvisor,
                                  Advisor safeGuardAdvisor,
-                                 Advisor recordOptimizationAdvisor,
-                                 CourseQueryTools courseQueryTools,      // 注入工具
-                                 DatabaseQueryTools databaseQueryTools, // 注入工具
+                                 CourseQueryTools courseQueryTools,
+                                 DatabaseQueryTools databaseQueryTools,
                                  ReservationTools reservationTools,
-                                 SchoolQueryTools schoolQueryTools,
-                                 AmapTools amapTools) {   // 注入工具
+                                 SchoolQueryTools schoolQueryTools) {
 
         return ChatClient.builder(openAiChatModel)
                 .defaultAdvisors(
                         simpleLoggerAdvisor,
-                        safeGuardAdvisor,
-                        recordOptimizationAdvisor
+                        safeGuardAdvisor
                 )
-                // 注册所有可能用到的工具
-                .defaultTools(courseQueryTools, databaseQueryTools, reservationTools,schoolQueryTools,amapTools)
+                // 注册所有工具（包括MCP工具和自定义工具）
+                .defaultTools(courseQueryTools, databaseQueryTools, reservationTools, schoolQueryTools)
                 .build();
     }
+
 
     @Bean
     public Advisor simpleLoggerAdvisor() {

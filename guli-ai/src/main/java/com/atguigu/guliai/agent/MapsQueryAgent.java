@@ -1,33 +1,51 @@
 package com.atguigu.guliai.agent;
 
-import com.atguigu.guliai.config.AiAdvisorConfig;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.enums.AgentTypeEnum;
-import com.atguigu.guliai.tools.AmapTools;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class MapsQueryAgent extends AbstractAgent {
-
-    private final AmapTools amapTools;
-    private final AiAdvisorConfig.ServiceChatClient serviceChatClient;
-
-    @Autowired
-    public MapsQueryAgent(AmapTools amapTools,
-                          AiAdvisorConfig.ServiceChatClient serviceChatClient) {
-        this.amapTools = amapTools;
-        this.serviceChatClient = serviceChatClient;
-    }
+    private final ChatClient chatClient;
 
     @Override
+    @Retryable(value = {Exception.class},
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 3000, multiplier = 2))
     public Flux<String> processStream(String question, String sessionId, Long projectId) {
-        return serviceChatClient.prompt()
-                .system(s -> s.text(SystemConstant.MAPS_QUERY_AGENT_PROMPT)) // 使用更新后的提示词
+        log.info("MapsQueryAgent处理问题: {}", question);
+
+        return chatClient.prompt()
+                .system(s -> s.text(SystemConstant.MAPS_QUERY_AGENT_PROMPT))
                 .user(question)
                 .stream()
-                .content();
+                .content()
+                .timeout(Duration.ofSeconds(90))  // 增加超时时间到90秒
+                .onErrorResume(throwable -> {
+                    log.warn("MCP工具调用失败，尝试返回默认响应: {}", throwable.getMessage());
+
+                    // 检查是否是连接问题
+                    if (throwable.getMessage() != null &&
+                            (throwable.getMessage().contains("Connection reset") ||
+                                    throwable.getMessage().contains("timeout") ||
+                                    throwable.getMessage().contains("Did not observe"))) {
+
+                        log.info("检测到连接问题，建议用户稍后重试");
+                        return Flux.just("抱歉，地图服务连接暂时不稳定，请稍后重试。这通常是网络波动导致的，很快就会恢复。");
+                    }
+
+                    return Flux.just("抱歉，地图服务暂时不可用，请稍后再试。您可以尝试提供更具体的位置信息。");
+                });
     }
 
     @Override
@@ -37,7 +55,6 @@ public class MapsQueryAgent extends AbstractAgent {
 
     @Override
     public Object[] tools() {
-        // 返回全部地图工具（包含新增的未来天气和IP定位工具）
-        return new Object[]{amapTools};
+        return new Object[]{};
     }
 }
