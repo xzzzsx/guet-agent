@@ -59,34 +59,6 @@ public class OpenAiOperator implements AiOperator {
     }
 
     @Override
-    public List<Document> similaritySearch(QueryVo queryVo) {
-        SearchRequest request = SearchRequest.builder()
-                .query(queryVo.getMsg())  //相似度的查询条件
-                .filterExpression(new FilterExpressionBuilder()
-                        .eq("projectId", queryVo.getProjectId().toString()).build())  //只查询当前项目的知识库
-                .topK(3)  //增加返回文档数量以提高召回率
-                .similarityThreshold(0.2f)  //降低阈值以捕获更多潜在相关文档
-                .build();
-
-        List<Document> documents = this.openAiVectorStore.similaritySearch(request);
-        // 记录检索结果日志
-        log.info("OpenAI向量检索: 查询词={}, 项目ID={}, 检索到{}条文档",
-                queryVo.getMsg(), queryVo.getProjectId(), documents.size());
-        for (int i = 0; i < documents.size(); i++) {
-            Document doc = documents.get(i);
-            double score = doc.getScore() != null ? doc.getScore() : 0.0d;
-            log.info("文档{}: projectId={}, 相似度={}, 内容={}", i+1, doc.getMetadata().get("projectId"), score, doc.getText().substring(0, Math.min(100, doc.getText().length())));
-        }
-        return documents;
-    }
-
-    private List<Document> retrievedDocuments;
-
-    public void setRetrievedDocuments(List<Document> documents) {
-        this.retrievedDocuments = documents;
-    }
-
-    @Override
     public Flux<String> chat_stream(org.springframework.ai.chat.messages.Message[] messages) {
         // 只保留最新的用户消息
         Optional<Message> latestUserMessage = Arrays.stream(messages)
@@ -114,17 +86,5 @@ public class OpenAiOperator implements AiOperator {
                 .stream()
                 .content();
     }
-    // // 构建消息数组，过滤null消息
-    // List<org.springframework.ai.chat.messages.Message> validMessages = Arrays.stream(messages)
-    //         .filter(Objects::nonNull)
-    //         .collect(Collectors.toList());
-    //
-    // List<org.springframework.ai.chat.messages.Message> messageList = new ArrayList<>();
-    // // messageList.add(new SystemMessage(systemPromptStr));
-    // messageList.addAll(validMessages);
-    // org.springframework.ai.chat.messages.Message[] newMessages = messageList.stream()
-    //         .filter(Objects::nonNull)
-    //         .toArray(org.springframework.ai.chat.messages.Message[]::new);
-    // return openAiChatModel.stream(newMessages);
 }
 

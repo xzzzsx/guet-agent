@@ -28,6 +28,8 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
+import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,12 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
     @Autowired
     @Lazy // 添加延迟加载注解解决循环依赖
     private AgentCoordinatorService agentCoordinatorService; // 新增注入
+
+    // 注入向量库（按项目类型选择）
+    @Autowired
+    private QdrantVectorStore openAiVectorStore;
+    @Autowired
+    private QdrantVectorStore ollamaVectorStore;
 
     private static final Map<String, AiOperator> MAP = new ConcurrentHashMap<>();
 
@@ -203,20 +211,7 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
             throw new RuntimeException("对应的项目不存在!");
         }
 
-        // 执行向量数据库检索
-        List<Document> docs = new ArrayList<>();
-        AiOperator retrievalOperator = this.getAiOperator(modelType);
-
-        // 明确排除OpenAI模型的向量检索
-        if (retrievalOperator instanceof OpenAiOperator) {
-            log.info("OpenAI模型跳过向量数据库检索");
-        } else if (retrievalOperator instanceof OllamaAiOperator) {
-            docs = retrievalOperator.similaritySearch(queryVo);
-            log.debug("执行向量检索，获取{}条文档", docs.size());
-        } else {
-            docs = new ArrayList<>();
-            log.warn("未找到对应模型的检索实现，不执行向量数据库检索");
-        }
+        // 向量检索改为仅在 ChatClient + RetrievalAugmentationAdvisor 中执行，移除预检索
 
         //3.查询历史问答（包含刚保存的用户消息）
         String collectionName = MongoUtil.getMsgCollectionName(queryVo.getChatId());
@@ -241,14 +236,8 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
                 }
             });
         }
-        // 设置检索到的文档
+
         AiOperator aiOperator = this.getAiOperator(modelType);
-        System.out.println("使用AI模型类型: " + modelType);
-        // 仅对Ollama模型设置检索文档
-        if (aiOperator instanceof OllamaAiOperator) {
-            ((OllamaAiOperator) aiOperator).setRetrievedDocuments(docs);
-        }
-        // OpenAI模型不使用向量数据库检索结果
 
         // 4.发送请求给大模型，获取问答结果
         // 将List转换为数组，确保类型一致
@@ -416,5 +405,65 @@ public class AiService implements ApplicationContextAware, ApplicationListener<R
     @Override
     public void onApplicationEvent(RecordOptimizationAdvisor.DeleteMessagesEvent event) {
         deleteLastTwoMessages(event.getSessionId());
+    }
+
+    @Transactional
+    public void deleteKnowledgeVectors(Long[] knowledgeIds) {
+        if (knowledgeIds == null || knowledgeIds.length == 0) {
+            return;
+        }
+        for (Long knowledgeId : knowledgeIds) {
+            try {
+                ChatKnowledge ck = this.chatKnowledgeMapper.selectChatKnowledgeByKnowledgeId(knowledgeId);
+                if (ck == null) {
+                    continue;
+                }
+                ChatProject project = this.chatProjectMapper.selectChatProjectByProjectId(ck.getProjectId());
+                if (project == null) {
+                    log.warn("删除向量跳过：未找到项目，knowledgeId={} projectId={}", knowledgeId, ck.getProjectId());
+                    continue;
+                }
+                QdrantVectorStore targetStore = SystemConstant.MODEL_TYPE_OLLAMA.equals(project.getType())
+                        ? ollamaVectorStore : openAiVectorStore;
+
+                String pid = String.valueOf(ck.getProjectId());
+                String kid = String.valueOf(ck.getKnowledgeId());
+
+                // 优先按 projectId + knowledgeId 精确删除
+                try {
+                    targetStore.delete(new FilterExpressionBuilder()
+                            .and(
+                                    new FilterExpressionBuilder().eq("projectId", pid),
+                                    new FilterExpressionBuilder().eq("knowledgeId", kid)
+                            ).build());
+                    log.info("已删除向量：projectId={}, knowledgeId={}", pid, kid);
+                } catch (Exception preciseEx) {
+                    // 兼容旧数据（可能缺少 knowledgeId 元数据）时，退化为按 projectId 删除
+                    log.warn("按projectId+knowledgeId删除失败，尝试按projectId。pid={}, kid={}, err={}", pid, kid, preciseEx.getMessage());
+                    targetStore.delete(new FilterExpressionBuilder().eq("projectId", pid).build());
+                    log.info("已按projectId删除向量：projectId={}", pid);
+                }
+            } catch (Exception e) {
+                log.error("删除向量失败 knowledgeId={}，原因：{}", knowledgeId, e.getMessage());
+            }
+        }
+    }
+
+    @Transactional
+    public void deleteKnowledgeVectorsByProjectId(Long projectId) {
+        try {
+            ChatProject project = this.chatProjectMapper.selectChatProjectByProjectId(projectId);
+            if (project == null) {
+                log.warn("按projectId删除向量跳过：未找到项目，projectId={}", projectId);
+                return;
+            }
+            QdrantVectorStore targetStore = SystemConstant.MODEL_TYPE_OLLAMA.equals(project.getType())
+                    ? ollamaVectorStore : openAiVectorStore;
+            String pid = String.valueOf(projectId);
+            targetStore.delete(new FilterExpressionBuilder().eq("projectId", pid).build());
+            log.info("已按projectId删除向量：projectId={}", pid);
+        } catch (Exception e) {
+            log.error("按projectId删除向量失败 projectId={}，原因：{}", projectId, e.getMessage());
+        }
     }
 }

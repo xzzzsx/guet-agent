@@ -7,6 +7,10 @@ import com.atguigu.system.mapper.ChatProjectMapper;
 import com.atguigu.system.service.IChatProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+// 新增
+import com.atguigu.system.mapper.ChatKnowledgeMapper;
 
 /**
  * 项目配置Service业务层处理
@@ -19,6 +23,10 @@ public class ChatProjectServiceImpl implements IChatProjectService
 {
     @Autowired
     private ChatProjectMapper chatProjectMapper;
+
+    // 注入知识库Mapper用于级联删除
+    @Autowired
+    private ChatKnowledgeMapper chatKnowledgeMapper;
 
     /**
      * 查询项目配置
@@ -77,8 +85,14 @@ public class ChatProjectServiceImpl implements IChatProjectService
      * @return 结果
      */
     @Override
+    @Transactional
     public int deleteChatProjectByProjectIds(Long[] projectIds)
     {
+        // 先删除每个项目下的知识库记录
+        for (Long pid : projectIds) {
+            chatKnowledgeMapper.deleteByProjectId(pid);
+        }
+        // 再删除项目
         return chatProjectMapper.deleteChatProjectByProjectIds(projectIds);
     }
 
@@ -89,8 +103,10 @@ public class ChatProjectServiceImpl implements IChatProjectService
      * @return 结果
      */
     @Override
+    @Transactional
     public int deleteChatProjectByProjectId(Long projectId)
     {
+        chatKnowledgeMapper.deleteByProjectId(projectId);
         return chatProjectMapper.deleteChatProjectByProjectId(projectId);
     }
 }

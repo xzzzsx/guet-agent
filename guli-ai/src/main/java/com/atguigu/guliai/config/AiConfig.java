@@ -13,10 +13,4 @@ public class AiConfig {
     public AiConfig(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
-
-    // 移除错误的TikaDocumentReader配置，因为当前场景不需要预定义该Bean
-    // @Bean
-    // public TikaDocumentReader tikaDocumentReader() {
-    //     return new TikaDocumentReader((Resource) resourceLoader); // 这行存在类型转换错误
-    // }
 }

@@ -87,4 +87,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{knowledgeId}
         </foreach>
     </delete>
+
+    <!-- 新增：按项目ID批量删除该项目下的知识库记录 -->
+    <delete id="deleteByProjectId" parameterType="Long">
+        delete from chat_knowledge where project_id = #{projectId}
+    </delete>
 </mapper>

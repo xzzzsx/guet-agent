@@ -95,5 +95,4 @@ public class ChatKnowledgeServiceImpl implements IChatKnowledgeService
     {
         return chatKnowledgeMapper.deleteChatKnowledgeByKnowledgeId(knowledgeId);
     }
-
 }

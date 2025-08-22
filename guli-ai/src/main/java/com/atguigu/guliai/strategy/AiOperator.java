@@ -19,13 +19,6 @@ public interface AiOperator {
     void addDocs(ChatKnowledge chatKnowledge);
 
     /**
-     * 从向量数据库中进行相似性搜索,返回相似的文档列表
-     * @param queryVo
-     * @return
-     */
-    List<Document> similaritySearch(QueryVo queryVo);
-
-    /**
      * 流式聊天方法
      * @param messages
      * @return

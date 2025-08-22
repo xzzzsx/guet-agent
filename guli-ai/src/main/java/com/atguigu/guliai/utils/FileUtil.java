@@ -11,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+// 新增：PDFBox 3.x Loader
+import org.apache.pdfbox.Loader;
+
 @Slf4j
 public class FileUtil {
 
@@ -75,7 +78,7 @@ public class FileUtil {
      * @return
      */
     public static String getContentFromPdf(MultipartFile file) {
-        try (PDDocument document = PDDocument.load(file.getInputStream())) {
+        try (PDDocument document = Loader.loadPDF(file.getBytes())) {
             if (!document.isEncrypted()) {
                 PDFTextStripper stripper = new PDFTextStripper();
                 return stripper.getText(document);

@@ -7,9 +7,12 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.document.DocumentWriter;
 import org.springframework.ai.model.transformer.KeywordMetadataEnricher;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.reader.ExtractedTextFormatter;
 import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.reader.markdown.MarkdownDocumentReader;
 import org.springframework.ai.reader.markdown.config.MarkdownDocumentReaderConfig;
+import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
+import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
@@ -57,7 +60,7 @@ public class OllamaKnowledgeEtlService {
     }
 
     /**
-     * Extract：从 DB 中的文本内容构造 Resource，并根据后缀选择 Text/Markdown Reader。
+     * Extract：从 DB 中的文本内容构造 Resource，并根据后缀选择官方 Reader。
      */
     public List<Document> extract(ChatKnowledge chatKnowledge) {
         String fileName = chatKnowledge.getFileName();
@@ -87,6 +90,28 @@ public class OllamaKnowledgeEtlService {
                     .build();
             MarkdownDocumentReader reader = new MarkdownDocumentReader(resource, config);
             documents.addAll(reader.read());
+        } else if (fileName != null && fileName.toLowerCase().endsWith(".pdf")) {
+            // 官方 PDF Page 级读取器：每页1个Document；失败则退回 TextReader 保障稳定
+            try {
+                PdfDocumentReaderConfig pdfConfig = PdfDocumentReaderConfig.builder()
+                        .withPageTopMargin(0)
+                        .withPageExtractedTextFormatter(ExtractedTextFormatter.builder()
+                                .withNumberOfTopTextLinesToDelete(0)
+                                .build())
+                        .withPagesPerDocument(1)
+                        .build();
+                PagePdfDocumentReader pdfReader = new PagePdfDocumentReader(resource, pdfConfig);
+                List<Document> pdfDocs = pdfReader.read();
+                for (Document d : pdfDocs) {
+                    d.getMetadata().putAll(commonMetadata);
+                }
+                documents.addAll(pdfDocs);
+            } catch (Exception ex) {
+                log.warn("PDF解析失败，回退为纯文本读取。file={} err={}", fileName, ex.getMessage());
+                TextReader textReader = new TextReader(resource);
+                textReader.getCustomMetadata().putAll(commonMetadata);
+                documents.addAll(textReader.read());
+            }
         } else {
             TextReader textReader = new TextReader(resource);
             textReader.getCustomMetadata().putAll(commonMetadata);

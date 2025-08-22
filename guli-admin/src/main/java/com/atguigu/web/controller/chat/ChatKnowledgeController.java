@@ -17,6 +17,10 @@ import com.atguigu.common.utils.poi.ExcelUtil;
 import com.atguigu.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
 
+// 新增日志
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 知识库管理Controller
  * 
@@ -27,6 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/chat/knowledge")
 public class ChatKnowledgeController extends BaseController
 {
+    private static final Logger log = LoggerFactory.getLogger(ChatKnowledgeController.class);
+
     @Autowired
     private IChatKnowledgeService chatKnowledgeService;
 
@@ -91,13 +97,20 @@ public class ChatKnowledgeController extends BaseController
     }
 
     /**
-     * 删除知识库管理
+     * 删除知识库管理（同时删除向量库中的对应内容）
      */
     @PreAuthorize("@ss.hasPermi('chat:knowledge:remove')")
     @Log(title = "知识库管理", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{knowledgeIds}")
+    @DeleteMapping("/{knowledgeIds}")
     public AjaxResult remove(@PathVariable Long[] knowledgeIds)
     {
+        try {
+            log.info("开始删除Qdrant向量，knowledgeIds={}", (Object) knowledgeIds);
+            aiService.deleteKnowledgeVectors(knowledgeIds);
+            log.info("已触发Qdrant向量删除。");
+        } catch (Exception e) {
+            log.error("删除Qdrant向量失败: {}", e.getMessage());
+        }
         return toAjax(chatKnowledgeService.deleteChatKnowledgeByKnowledgeIds(knowledgeIds));
     }
 

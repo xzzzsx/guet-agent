@@ -59,4 +59,11 @@ public interface ChatKnowledgeMapper
      * @return 结果
      */
     public int deleteChatKnowledgeByKnowledgeIds(Long[] knowledgeIds);
+
+    /**
+     * 按项目ID删除该项目下的全部知识库记录
+     * @param projectId 项目ID
+     * @return 结果
+     */
+    public int deleteByProjectId(Long projectId);
 }

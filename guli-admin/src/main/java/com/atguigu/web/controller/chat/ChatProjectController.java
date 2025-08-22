@@ -2,6 +2,7 @@ package com.atguigu.web.controller.chat;
 
 import java.util.List;
 
+import com.atguigu.guliai.service.AiService;
 import com.atguigu.system.domain.ChatProject;
 import com.atguigu.system.service.IChatProjectService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +23,9 @@ import com.atguigu.common.enums.BusinessType;
 import com.atguigu.common.utils.poi.ExcelUtil;
 import com.atguigu.common.core.page.TableDataInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 项目配置Controller
  * 
@@ -32,8 +36,13 @@ import com.atguigu.common.core.page.TableDataInfo;
 @RequestMapping("/chat/project")
 public class ChatProjectController extends BaseController
 {
+    private static final Logger log = LoggerFactory.getLogger(ChatProjectController.class);
+
     @Autowired
     private IChatProjectService chatProjectService;
+
+    @Autowired
+    private AiService aiService;
 
     /**
      * 查询项目配置列表
@@ -93,13 +102,23 @@ public class ChatProjectController extends BaseController
     }
 
     /**
-     * 删除项目配置
+     * 删除项目配置（同时删除该项目在向量库中的所有内容）
      */
     @PreAuthorize("@ss.hasPermi('chat:project:remove')")
     @Log(title = "项目配置", businessType = BusinessType.DELETE)
     @DeleteMapping("/{projectIds}")
     public AjaxResult remove(@PathVariable Long[] projectIds)
     {
+        try {
+            log.info("开始按projectId删除Qdrant向量，projectIds={}", (Object) projectIds);
+            // 循环按项目删除（AiService中按projectId删除）
+            for (Long pid : projectIds) {
+                aiService.deleteKnowledgeVectorsByProjectId(pid);
+            }
+            log.info("已触发按projectId删除Qdrant向量。");
+        } catch (Exception e) {
+            log.error("按项目删除Qdrant向量失败: {}", e.getMessage());
+        }
         return toAjax(chatProjectService.deleteChatProjectByProjectIds(projectIds));
     }
 }
