@@ -4,6 +4,7 @@ import com.atguigu.common.utils.StringUtils;
 import com.atguigu.guliai.constant.SystemConstant;
 import com.atguigu.guliai.vo.QueryVo;
 import com.atguigu.system.domain.ChatKnowledge;
+import com.atguigu.guliai.etl.OllamaKnowledgeEtlService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,8 @@ public class OllamaAiOperator implements AiOperator {
     private KeywordMetadataEnricher keywordMetadataEnricher;
     private RetrievalAugmentationAdvisor retrievalAugmentationAdvisor;
     private List<Document> retrievedDocuments; // 添加检索到的文档列表
+
+    private final OllamaKnowledgeEtlService etlService;
 
     @PostConstruct
     public void init() {
@@ -125,6 +128,11 @@ public class OllamaAiOperator implements AiOperator {
         }
     }
 
+    @Autowired
+    public OllamaAiOperator(OllamaKnowledgeEtlService etlService) {
+        this.etlService = etlService;
+    }
+
     /**
      * 执行查询重写
      *
@@ -148,45 +156,8 @@ public class OllamaAiOperator implements AiOperator {
                 log.error("文档内容为空，跳过处理");
                 return;
             }
-
-            Document document = new Document(
-                    chatKnowledge.getContent(),
-                    Map.of(
-                            "projectId", String.valueOf(chatKnowledge.getProjectId()),
-                            "knowledgeId", String.valueOf(chatKnowledge.getKnowledgeId()),
-                            "fileName", chatKnowledge.getFileName(),
-                            "contentLength", String.valueOf(chatKnowledge.getContent().length()),
-                            "uploadTime", new Date().toString(),
-                            "documentType", "text"
-                    )
-            );
-
-            TokenTextSplitter splitter = new TokenTextSplitter(CHUNK_SIZE, 100, 10, 5000, true);
-            List<Document> splitDocuments = splitter.apply(Collections.singletonList(document));
-
-            log.info("开始为{}个分块提取关键词", splitDocuments.size());
-
-            // 使用KeywordMetadataEnricher为每个分块添加关键词
-            for (Document doc : splitDocuments) {
-                doc.getMetadata().put(METADATA_CHUNK_SIZE, String.valueOf(CHUNK_SIZE));
-                doc.getMetadata().put(METADATA_KNOWLEDGE_ID, String.valueOf(chatKnowledge.getKnowledgeId()));
-            }
-
-            // 使用KeywordMetadataEnricher为所有分块添加关键词元数据
-            List<Document> enrichedDocuments = keywordMetadataEnricher.transform(splitDocuments);
-
-            // 控制台输出提取的关键词
-            for (int i = 0; i < enrichedDocuments.size(); i++) {
-                Document doc = enrichedDocuments.get(i);
-                String keywords = (String) doc.getMetadata().get("keywords");
-                if (keywords != null) {
-                    System.out.println("控制台输出 - 分块 " + (i + 1) + " 关键词: " + keywords);
-                }
-            }
-
-            log.info("关键词提取完成，准备写入向量库 - 分块数: {}", enrichedDocuments.size());
-            ollamaVectorStore.add(enrichedDocuments);
-            log.info("向量库写入完成");
+            // 使用标准ETL流程：Extract -> Transform -> Load
+            this.etlService.etlIngest(chatKnowledge);
         } catch (Exception e) {
             log.error("文档处理失败", e);
         }

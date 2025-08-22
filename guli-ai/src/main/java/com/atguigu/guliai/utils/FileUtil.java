@@ -22,16 +22,17 @@ public class FileUtil {
     public static String getContentFromFile(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
         try {
-            // 优先使用文件名后缀判断类型
-            if (originalFilename.endsWith(".txt")) {
+            String lowerName = originalFilename == null ? "" : originalFilename.toLowerCase();
+            // 优先使用文件名后缀判断类型（不区分大小写）
+            if (lowerName.endsWith(".txt") || lowerName.endsWith(".md")) {
                 return getContentFromText(file);
-            } else if (originalFilename.endsWith(".pdf")) {
+            } else if (lowerName.endsWith(".pdf")) {
                 return getContentFromPdf(file);
-            } else if (originalFilename.endsWith(".doc") || originalFilename.endsWith(".docx")) {
+            } else if (lowerName.endsWith(".doc") || lowerName.endsWith(".docx")) {
                 return getContentFromWord(file);
             } else {
                 log.error("不支持的文件类型: {}", originalFilename);
-                throw new RuntimeException("仅支持txt、pdf、doc/docx文件");
+                throw new RuntimeException("仅支持txt、md、pdf、doc/docx文件");
             }
         } catch (Exception e) {
             log.error("文件解析异常: {}", e.getMessage());
