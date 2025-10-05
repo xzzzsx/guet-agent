@@ -51,3 +51,5 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+.cursor/rules/
+*.class
